@@ -13,7 +13,7 @@
 
 **Transform Your Amazon Advertising Strategy with Data-Driven Insights**
 
-[🚀 Live Demo](https://myamazonanalytics.vercel.app/) • [Production Domain](https://myamazonanalytics.vercel.app/) • [📚 Documentation](https://github.com/johnwesleyquintero/my-amazon-analytics/tree/8892d351e1ac4f1d2f5b1fdacecef628a819c68e/docs) • [🐞 Report Issue](https://github.com/johnwesleyquintero/my-amazon-analytics/issues)
+[🚀 Live Demo](https://myamazonanalytics.vercel.app/) • [Production Domain](https://myamazonanalytics.vercel.app/) • [📚 Documentation](https://github.com/johnwesleyquintero/my-amazon-analytics/tree/8892d351e1ac4f1d2f5b1fdacecef628a819c68e/docs) • [🐞 Report Issue](https://github.com/johnwesleyquintero/my-amazon-analytics/issues) • [🛣️ Roadmap](TODO.md)
 
 </div>
 
@@ -52,8 +52,6 @@ graph TD
     C --> F[Email/SMS Alerts]
 ```
 
----
-
 ## 🚀 Getting Started
 
 ### Prerequisites
@@ -72,8 +70,8 @@ cp .env.example .env
 
 ### Configuration
 
-1. Update environment variables in `.env`
-2. Set up Amazon API credentials
+- Update environment variables in `.env`
+- Set up Amazon API credentials
 
 ### Running Locally
 
@@ -87,47 +85,33 @@ npm run dev
 npm run build
 ```
 
----
-
 ## 📈 Feature Roadmap
 
+> For a detailed breakdown of our development plans, please refer to our Roadmap.
+
 | Quarter | Features                               |
-| ------- | -------------------------------------- |
+| :------ | :------------------------------------- |
 | Q3 2023 | Basic Dashboard                        |
 | Q4 2023 | Chrome Extension, Automated Rules      |
 | Q1 2024 | AI Optimization, Multi-Account Support |
 | Q2 2024 | Mobile App, Advanced Reporting         |
 
----
-
 ## 🤝 Contributing
 
 We welcome contributions! Please see our [Contribution Guidelines](CONTRIBUTING.md) for details.
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
----
+1.  Fork the repository
+2.  Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3.  Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4.  Push to the branch (`git push origin feature/AmazingFeature`)
+5.  Open a Pull Request
 
 ## 📜 License
 
 Distributed under the MIT License. See `LICENSE` for more information.
 
----
-
 ## 📞 Contact
 
 John Wesley Quintero - [@wescode](https://twitter.com/wescode) - info.wescode@gmail.com
 
-Project Link: [https://github.com/johnwesleyquintero/my-amazon-analytics](https://github.com/johnwesleyquintero/my-amazon-analytics)
-
----
-
-## 🙏 Acknowledgments
-
-- Amazon Advertising API Team
-- Vercel for deployment tools
-- All our beta testers and contributors
+Project Link: https://github.com/johnwesleyquintero/my-amazon-analytics
