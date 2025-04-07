@@ -6,11 +6,14 @@ import AmazonSellerTools from '@/components/tools/AmazonSellerTools';
 
 const Tools = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-butterfly-bush to-slate-900 text-white">
+    <div className="min-h-screen bg-white text-gray-900">
       <nav className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          <div className="text-2xl font-bold text-white hover:text-burnt-sienna transition-colors">
-            Amazon Analytics
+          <div className="flex items-center gap-2">
+            <img src="/logo.svg" className="h-8 w-8" alt="Amazon Analytics Logo" />
+            <span className="text-2xl font-bold text-gray-900 hover:text-burnt-sienna transition-colors">
+              My Amazon Analytics
+            </span>
           </div>
           <div className="space-x-4">
             <Link to="/dashboard">
@@ -31,7 +34,7 @@ const Tools = () => {
             <Badge className="bg-green-500">Status: Active</Badge>
             <Badge className="bg-blue-500">Version: 2.0</Badge>
           </div>
-          <p className="text-lg text-gray-200 leading-relaxed mt-4">
+          <p className="text-lg text-gray-600 leading-relaxed mt-4">
             A comprehensive suite of tools designed to help Amazon sellers optimize their listings, 
             analyze performance, and maximize profitability.
           </p>

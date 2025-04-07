@@ -17,7 +17,7 @@ const ToolsOverview: React.FC<ToolsOverviewProps> = ({
   className = "" 
 }) => {
   return (
-    <div className={`p-6 bg-card rounded-lg border shadow-sm ${className}`}>
+    <div className={`p-6 bg-card rounded-lg border shadow-sm bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCI+PHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSJyZ2JhKDIxNSwyMTUsMjE1LDAuMSkiIHN0cm9rZS13aWR0aD0iMSIgZD0iTTAgMEgxMDBWMTAwIi8+PC9zdmc+')] bg-opacity-10 ${className}`}>
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">
           <Wrench className="h-5 w-5 text-burnt-sienna" />

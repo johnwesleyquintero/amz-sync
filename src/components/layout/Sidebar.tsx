@@ -23,10 +23,8 @@ const Sidebar = () => {
       <div className="flex flex-col h-full">
         <div className="p-4 border-b border-border">
           <div className="flex items-center gap-2">
-            <div className="bg-burnt-sienna rounded-md p-1">
-              <BarChart3 className="h-6 w-6 text-white" />
-            </div>
-            <h1 className="text-xl font-bold">Amazon Analytics</h1>
+            <img src="/logo.svg" className="h-8 w-8" alt="Amazon Analytics Logo" />
+            <h1 className="text-xl font-bold">My Amazon Analytics</h1>
           </div>
         </div>
         

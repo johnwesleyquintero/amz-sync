@@ -5,7 +5,8 @@
 
 @layer base {
   :root {
-    --background: 220 33% 98%;
+    --background: 220 80% 98%; /* Solid color */
+  --catskill-white: 220 80% 98%; /* ED F2 F7 in HSL */
     --foreground: 222 47% 11%;
 
     --card: 0 0% 100%;
@@ -35,7 +36,7 @@
 
     --radius: 0.5rem;
 
-    --sidebar-background: 0 0% 98%;
+    --sidebar-background: 220 80% 98%; /* Solid color */
     --sidebar-foreground: 240 5% 26%;
     --sidebar-primary: 240 6% 10%;
     --sidebar-primary-foreground: 0 0% 98%;
@@ -46,7 +47,7 @@
   }
 
   .dark {
-    --background: 222 47% 11%;
+    --background: 222 47% 11%; /* Dark mode background */
     --foreground: 210 40% 98%;
 
     --card: 222 47% 11%;
@@ -74,7 +75,7 @@
     --input: 217 33% 18%;
     --ring: 213 27% 84%;
 
-    --sidebar-background: 240 6% 10%;
+    --sidebar-background: 240 6% 10%; /* Dark mode sidebar */
     --sidebar-foreground: 240 5% 96%;
     --sidebar-primary: 224 76% 48%;
     --sidebar-primary-foreground: 0 0% 100%;

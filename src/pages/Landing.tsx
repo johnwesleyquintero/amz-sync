@@ -5,11 +5,14 @@ import { ArrowRight, Wrench } from 'lucide-react';
 
 const Landing = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-butterfly-bush to-slate-900 text-white">
+    <div className="min-h-screen bg-white text-gray-900">
       <nav className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          <div className="text-2xl font-bold text-white hover:text-burnt-sienna transition-colors">
-            My Amazon Analytics
+          <div className="flex items-center gap-2">
+            <img src="/logo.svg" className="h-8 w-8" alt="Amazon Analytics Logo" />
+            <span className="text-2xl font-bold text-gray-900 hover:text-burnt-sienna transition-colors">
+              My Amazon Analytics
+            </span>
           </div>
           <div className="flex items-center gap-4">
             <Link to="/tools">
@@ -32,7 +35,7 @@ const Landing = () => {
           <h1 className="text-6xl font-bold mb-6 text-burnt-sienna">
             Transform Your Amazon Ads Data
           </h1>
-          <p className="text-xl text-gray-200 mb-8 leading-relaxed">
+          <p className="text-xl text-gray-600 mb-8 leading-relaxed">
             Powerful analytics dashboard for monitoring and optimizing your Amazon advertising
             performance. Get started today and unlock the potential of your data.
           </p>
@@ -49,8 +52,8 @@ const Landing = () => {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-gold text-gold hover:bg-gold/10 font-bold px-8 py-6 text-lg"
-              >
+                className="bg-burnt-sienna hover:bg-burnt-sienna/90 text-white font-bold px-6 py-3 text-lg">
+              
                 Explore Seller Tools <Wrench className="ml-2 w-6 h-6" />
               </Button>
             </Link>
@@ -58,28 +61,27 @@ const Landing = () => {
         </div>
 
         <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="bg-iceberg bg-opacity-10 p-8 rounded-xl hover:bg-opacity-20 transition-colors duration-300 border border-iceberg border-opacity-30">
+          <div className="bg-white p-8 rounded-xl hover:bg-gray-100 transition-colors duration-300 border border-gray-300 shadow-lg">
             <h3 className="text-xl font-bold text-shakespeare mb-4">Real-time Analytics</h3>
-            <p className="text-gray-200">
-              Monitor your Amazon advertising performance metrics in real-time with our intuitive
-              dashboard.
+            <p className="text-gray-700">
+              Monitor your Amazon advertising performance metrics in real-time with our intuitive dashboard.
             </p>
           </div>
-          <div className="bg-hampton bg-opacity-10 p-8 rounded-xl hover:bg-opacity-20 transition-colors duration-300 border border-hampton border-opacity-30">
+          <div className="bg-white p-8 rounded-xl hover:bg-gray-100 transition-colors duration-300 border border-gray-300 shadow-lg">
             <h3 className="text-xl font-bold text-jaffa mb-4">Custom Reports</h3>
-            <p className="text-gray-200">
+            <p className="text-gray-700">
               Generate detailed reports and export them in multiple formats for deeper insights.
             </p>
           </div>
-          <div className="bg-butterfly-bush bg-opacity-10 p-8 rounded-xl hover:bg-opacity-20 transition-colors duration-300 border border-butterfly-bush border-opacity-30">
+          <div className="bg-white p-8 rounded-xl hover:bg-gray-100 transition-colors duration-300 border border-gray-300 shadow-lg">
             <h3 className="text-xl font-bold text-apricot mb-4">Seller Tools Suite</h3>
-            <p className="text-gray-200">
+            <p className="text-gray-700">
               Access our comprehensive suite of 11 specialized tools for Amazon sellers to optimize listings and increase profits.
             </p>
           </div>
         </div>
 
-        <div className="mt-16 pt-16 border-t border-white/10">
+        <div className="mt-16 pt-16 border-t border-gray-200">
           <div className="text-center">
             <h2 className="text-4xl font-bold text-shakespeare mb-8">
               Start Optimizing Your Amazon Ads Today

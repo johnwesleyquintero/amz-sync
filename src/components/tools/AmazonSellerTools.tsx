@@ -335,23 +335,23 @@ const AmazonSellerTools: React.FC<AmazonSellerToolsProps> = ({
       )}
 
       {showTable && (
-        <div className="bg-slate-800 bg-opacity-50 rounded-xl p-6">
-          <h2 className="text-2xl font-bold mb-4 text-shakespeare">Tool Status Overview</h2>
+        <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+          <h2 className="text-2xl font-bold mb-4 text-gray-800">Tool Status Overview</h2>
           <div className="overflow-x-auto">
             <Table>
-              <TableCaption>Current status of all available tools</TableCaption>
+              <TableCaption className="text-gray-600">Current status of all available tools</TableCaption>
               <TableHeader>
-                <TableRow>
-                  <TableHead>Tool</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Version</TableHead>
-                  <TableHead>Category</TableHead>
+                <TableRow className="bg-gray-100 hover:bg-gray-100">
+                  <TableHead className="text-gray-800 font-semibold">Tool</TableHead>
+                  <TableHead className="text-gray-800 font-semibold">Status</TableHead>
+                  <TableHead className="text-gray-800 font-semibold">Version</TableHead>
+                  <TableHead className="text-gray-800 font-semibold">Category</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {tools.map((tool) => (
-                  <TableRow key={tool.name}>
-                    <TableCell className="font-medium">
+                  <TableRow key={tool.name} className="hover:bg-gray-50">
+                    <TableCell className="font-medium text-gray-800">
                       <div className="flex items-center gap-2">
                         {tool.icon}
                         {tool.name}
@@ -360,21 +360,21 @@ const AmazonSellerTools: React.FC<AmazonSellerToolsProps> = ({
                     <TableCell>
                       <Badge 
                         className={
-                          tool.status === 'Active' ? "bg-green-600" : 
-                          tool.status === 'Beta' ? "bg-amber-500" : "bg-blue-600"
+                          tool.status === 'Active' ? "bg-green-600 text-white" : 
+                          tool.status === 'Beta' ? "bg-amber-500 text-white" : "bg-blue-600 text-white"
                         }
                       >
                         {tool.status}
                       </Badge>
                     </TableCell>
-                    <TableCell>{tool.version}</TableCell>
+                    <TableCell className="text-gray-700">{tool.version}</TableCell>
                     <TableCell>
                       <Badge 
                         variant="outline" 
                         className={
-                          tool.category === 'Analytics' ? "border-shakespeare text-shakespeare" : 
-                          tool.category === 'Financial' ? "border-burnt-sienna text-burnt-sienna" : 
-                          "border-gold text-gold"
+                          tool.category === 'Analytics' ? "border-shakespeare text-shakespeare bg-shakespeare/10" : 
+                          tool.category === 'Financial' ? "border-burnt-sienna text-burnt-sienna bg-burnt-sienna/10" : 
+                          "border-gold text-gold bg-gold/10"
                         }
                       >
                         {tool.category}
