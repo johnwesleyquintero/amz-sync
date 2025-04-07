@@ -5,7 +5,6 @@
 
 ### Enterprise-Grade Amazon Advertising Analytics Platform
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/0d302c72-98c3-402a-b452-dd9a680ab17f/deploy-status)](https://app.netlify.com/sites/my-amazon-analytics/deploys)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-3178C6.svg)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-18.2+-61DAFB.svg)](https://reactjs.org/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
