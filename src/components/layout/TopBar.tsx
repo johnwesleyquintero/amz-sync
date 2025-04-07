@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import { Bell, Search, Tool } from "lucide-react";
+import { Bell, Search, Wrench } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const TopBar = () => {
@@ -30,7 +30,7 @@ const TopBar = () => {
         
         <Link to="/tools">
           <Button variant="outline" className="bg-gold text-black hover:bg-gold/90">
-            <Tool className="mr-2 h-4 w-4" />
+            <Wrench className="mr-2 h-4 w-4" />
             Seller Tools
           </Button>
         </Link>

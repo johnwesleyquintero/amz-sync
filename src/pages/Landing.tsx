@@ -1,7 +1,7 @@
 
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Tool } from 'lucide-react';
+import { ArrowRight, Wrench } from 'lucide-react';
 
 const Landing = () => {
   return (
@@ -14,7 +14,7 @@ const Landing = () => {
           <div className="flex items-center gap-4">
             <Link to="/tools">
               <Button className="bg-gold text-black hover:bg-gold/90 font-bold">
-                <Tool className="mr-2 h-4 w-4" />
+                <Wrench className="mr-2 h-4 w-4" />
                 Seller Tools
               </Button>
             </Link>
@@ -51,7 +51,7 @@ const Landing = () => {
                 variant="outline"
                 className="border-gold text-gold hover:bg-gold/10 font-bold px-8 py-6 text-lg"
               >
-                Explore Seller Tools <Tool className="ml-2 w-6 h-6" />
+                Explore Seller Tools <Wrench className="ml-2 w-6 h-6" />
               </Button>
             </Link>
           </div>
