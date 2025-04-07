@@ -1,5 +1,6 @@
 
 import React from "react";
+import { Link } from "react-router-dom";
 import { Bell, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -30,6 +31,12 @@ const TopBar = () => {
         <Button variant="outline" className="bg-shakespeare text-white hover:bg-shakespeare/90">
           Connect Google Sheets
         </Button>
+        
+        <Link to="/">
+          <Button variant="outline" className="bg-burnt-sienna text-white hover:bg-burnt-sienna/90">
+            Landing Page
+          </Button>
+        </Link>
       </div>
     </header>
   );
