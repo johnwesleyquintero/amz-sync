@@ -33,12 +33,26 @@ import {
   Users,
   LineChart,
   Percent,
+  Package,
+  LayoutDashboard,
+  Target,
 } from 'lucide-react';
 
-export default function FeaturedToolsSection() {
-  const [activeTab, setActiveTab] = useState('fba-calculator');
+interface Tool {
+  id: string;
+  name: string;
+  description: string;
+  icon: React.ReactNode;
+  status: 'active' | 'beta';
+  version: string;
+  component: React.ReactNode;
+  category: string;
+}
 
-  const tools = [
+export default function FeaturedToolsSection() {
+  const [activeTab, setActiveTab] = useState<string>('fba-calculator');
+
+  const tools: Tool[] = [
     {
       id: 'competitor-analyzer',
       name: 'Competitor Analyzer',
@@ -58,6 +72,7 @@ export default function FeaturedToolsSection() {
       status: 'active',
       version: '1.0.0',
       component: <KeywordTrendAnalyzer />,
+      category: 'Keyword Optimization',
     },
     {
       id: 'profit-margin-calculator',
@@ -68,16 +83,18 @@ export default function FeaturedToolsSection() {
       status: 'active',
       version: '1.0.0',
       component: <ProfitMarginCalculator />,
+      category: 'Financial Analysis',
     },
     {
       id: 'fba-calculator',
       name: 'FBA Calculator',
       description:
         'Calculate profitability for FBA products with real-time ROI analysis',
-      icon: <Calculator className="h-5 w-5" />,
+      icon: <Package className="h-5 w-5" />,
       status: 'active',
       version: '1.0.0',
       component: <FbaCalculator />,
+      category: 'Financial Analysis',
     },
     {
       id: 'keyword-analyzer',
@@ -87,6 +104,7 @@ export default function FeaturedToolsSection() {
       status: 'active',
       version: '1.1.0',
       component: <KeywordAnalyzer />,
+      category: 'Keyword Optimization',
     },
     {
       id: 'listing-quality-checker',
@@ -96,6 +114,7 @@ export default function FeaturedToolsSection() {
       status: 'beta',
       version: '0.9.0',
       component: <ListingQualityChecker />,
+      category: 'Listing Optimization',
     },
     {
       id: 'ppc-campaign-auditor',
@@ -105,6 +124,7 @@ export default function FeaturedToolsSection() {
       status: 'active',
       version: '1.2.0',
       component: <PpcCampaignAuditor />,
+      category: 'PPC Management',
     },
     {
       id: 'description-editor',
@@ -114,6 +134,7 @@ export default function FeaturedToolsSection() {
       status: 'active',
       version: '1.0.1',
       component: <DescriptionEditor />,
+      category: 'Listing Optimization',
     },
     {
       id: 'keyword-deduplicator',
@@ -124,6 +145,7 @@ export default function FeaturedToolsSection() {
       status: 'active',
       version: '1.0.0',
       component: <KeywordDeduplicator />,
+      category: 'Keyword Optimization',
     },
     {
       id: 'acos-calculator',
@@ -134,6 +156,7 @@ export default function FeaturedToolsSection() {
       status: 'active',
       version: '1.0.0',
       component: <AcosCalculator />,
+      category: 'PPC Management',
     },
     {
       id: 'sales-estimator',
@@ -144,8 +167,20 @@ export default function FeaturedToolsSection() {
       status: 'beta',
       version: '0.8.0',
       component: <SalesEstimator />,
+      category: 'Market Analysis',
     },
   ];
+
+  // Group tools by category
+  const categorizedTools = tools.reduce((acc, tool) => {
+    if (!acc[tool.category]) {
+      acc[tool.category] = [];
+    }
+    acc[tool.category].push(tool);
+    return acc;
+  }, {} as { [key: string]: Tool[] });
+
+  const categories = Object.keys(categorizedTools);
 
   return (
     <section
@@ -153,7 +188,6 @@ export default function FeaturedToolsSection() {
       className="py-16 md:py-24 bg-gradient-to-b from-white to-blue-50 dark:from-gray-900 dark:to-gray-800"
     >
       <div className="container px-4 md:px-6">
-        {/* Removed the icon container div */}
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden group">
           <div className="p-6 border-b border-gray-200 dark:border-gray-700">
             <Tabs
@@ -162,58 +196,34 @@ export default function FeaturedToolsSection() {
               className="w-full"
             >
               <div className="flex flex-col gap-8">
-                <div className="flex justify-center">
-                  <TabsList className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                    {tools.slice(0, 4).map((tool) => (
-                      <TabsTrigger
-                        key={tool.id}
-                        value={tool.id}
-                        className="flex items-center gap-2 hover:bg-accent/50 transition-colors duration-300"
-                      >
-                        {tool.icon}
-                        <span className="hidden md:inline">{tool.name}</span>
-                        {tool.status === 'beta' && (
-                          <Badge
-                            variant="secondary"
-                            className="ml-1 px-1.5 py-0.5 text-xs"
-                          >
-                            Beta
-                          </Badge>
-                        )}
-                      </TabsTrigger>
-                    ))}
-                  </TabsList>
-                </div>
-                <div className="flex justify-center">
-                  <TabsList className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                    {tools.slice(4, 8).map((tool) => (
-                      <TabsTrigger
-                        key={tool.id}
-                        value={tool.id}
-                        className="flex items-center gap-2 hover:bg-accent/50 transition-colors duration-300"
-                      >
-                        {tool.icon}
-                        <span className="hidden md:inline">{tool.name}</span>
-                      </TabsTrigger>
-                    ))}
-                  </TabsList>
-                </div>
-                <div className="flex justify-center">
-                  <TabsList className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                    {tools.slice(8).map((tool) => (
-                      <TabsTrigger
-                        key={tool.id}
-                        value={tool.id}
-                        className="flex items-center gap-2 hover:bg-accent/50 transition-colors duration-300"
-                      >
-                        {tool.icon}
-                        <span className="hidden md:inline">{tool.name}</span>
-                      </TabsTrigger>
-                    ))}
-                  </TabsList>
-                </div>
+                {/* Render Tabs by Category */}
+                {categories.map((category) => (
+                  <div key={category} className="flex justify-center">
+                    <TabsList className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                      {categorizedTools[category].map((tool) => (
+                        <TabsTrigger
+                          key={tool.id}
+                          value={tool.id}
+                          className="flex items-center gap-2 hover:bg-accent/50 transition-colors duration-300"
+                        >
+                          {tool.icon}
+                          <span className="hidden md:inline">{tool.name}</span>
+                          {tool.status === 'beta' && (
+                            <Badge
+                              variant="secondary"
+                              className="ml-1 px-1.5 py-0.5 text-xs"
+                            >
+                              Beta
+                            </Badge>
+                          )}
+                        </TabsTrigger>
+                      ))}
+                    </TabsList>
+                  </div>
+                ))}
               </div>
 
+              {/* Render Tab Contents */}
               {tools.map((tool) => (
                 <TabsContent key={tool.id} value={tool.id} className="mt-4">
                   <Card className="hover:shadow-lg transition-all duration-300">
@@ -249,9 +259,9 @@ export default function FeaturedToolsSection() {
               <p className="font-medium mb-2">About These Tools:</p>
               <p>
                 This comprehensive suite helps Amazon sellers optimize listings,
-                analyze performance, and maximize profitability. All tools support
-                CSV uploads for bulk processing and provide detailed analysis
-                with actionable insights.
+                analyze performance, and maximize profitability. All tools
+                support CSV uploads for bulk processing and provide detailed
+                analysis with actionable insights.
               </p>
               <p className="mt-2">
                 For a demo, you can upload your own CSV files or use the manual
