@@ -153,26 +153,7 @@ export default function FeaturedToolsSection() {
       className="py-16 md:py-24 bg-gradient-to-b from-white to-blue-50 dark:from-gray-900 dark:to-gray-800"
     >
       <div className="container px-4 md:px-6">
-        <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
-          <div className="inline-flex items-center justify-center p-2 bg-blue-100 dark:bg-blue-900/30 rounded-full mb-4">
-            <Calculator className="h-6 w-6 text-primary" />
-          </div>
-          <Badge className="px-3 py-1 text-sm mb-2" variant="outline">
-            Amazon Seller Tools
-          </Badge>
-          <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-            Amazon Seller Tools Suite
-          </h2>
-          <div className="flex justify-center gap-2 mb-2">
-            <Badge className="bg-green-500">Status: Active</Badge>
-            <Badge className="bg-blue-500">Version: 2.0</Badge>
-          </div>
-          <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl">
-            A comprehensive suite of tools designed to help Amazon sellers optimize their listings,
-            analyze performance, and maximize profitability.
-          </p>
-        </div>
-
+        {/* Removed the icon container div */}
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden group">
           <div className="p-6 border-b border-gray-200 dark:border-gray-700">
             <Tabs
