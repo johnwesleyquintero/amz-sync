@@ -3,9 +3,9 @@
 import type React from 'react';
 
 import { useState, useRef } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { Label } from '../ui/label';
 import {
   Table,
   TableBody,
@@ -13,8 +13,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { Card, CardContent, Progress } from '@/components/ui';
+} from '../ui/table';
+import { Card, CardContent } from '../ui/card';
+import { Progress } from '../ui/progress';
 import { Upload, AlertCircle, Download, Percent } from 'lucide-react';
 import Papa from 'papaparse';
 import SampleCsvButton from './sample-csv-button';
@@ -30,7 +31,7 @@ import {
   LineChart,
   Line,
 } from 'recharts';
-import { ChartContainer } from '@/components/ui';
+import { ChartContainer } from '../ui/chart';
 
 type ProductData = {
   product: string;

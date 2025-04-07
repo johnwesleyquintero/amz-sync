@@ -1,14 +1,11 @@
 'use client';
 
-import {
-  Badge,
-  Button,
-  Card,
-  CardContent,
-  ChartContainer,
-  Input,
-  Progress,
-} from '@/components/ui';
+import { Badge } from '../ui/badge';
+import { Button } from '../ui/button';
+import { Card, CardContent } from '../ui/card';
+import { ChartContainer } from '../ui/chart';
+import { Input } from '../ui/input';
+import { Progress } from '../ui/progress';
 import {
   acosRatingGuide,
   calculateMetrics,
@@ -152,7 +149,7 @@ export default function AcosCalculator() {
       return;
     }
 
-    const newACOSCampaign = {
+    const manualACOSCampaign = {
       campaign: manualCampaignData.campaign,
       adSpend,
       sales,

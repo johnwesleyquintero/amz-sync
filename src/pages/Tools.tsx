@@ -1,54 +1,17 @@
 
-import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Badge } from "@/components/ui/badge";
-import AmazonSellerTools from '@/components/tools/AmazonSellerTools';
+import AmazonSellerTools from '@/pages/AmazonSellerTools';
+import MainLayout from '@/components/layout/MainLayout';
 
 const Tools = () => {
   return (
-    <div className="min-h-screen bg-white text-gray-900">
-      <nav className="container mx-auto px-6 py-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <img src="/logo.svg" className="h-8 w-8" alt="Amazon Analytics Logo" />
-            <span className="text-2xl font-bold text-gray-900 hover:text-burnt-sienna transition-colors">
-              My Amazon Analytics
-            </span>
-          </div>
-          <div className="space-x-4">
-            <Link to="/dashboard">
-              <Button className="bg-shakespeare hover:bg-shakespeare/90 text-white font-bold">
-                Dashboard
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </nav>
-
-      <main className="container mx-auto px-6 py-12">
-        <div className="text-center max-w-4xl mx-auto space-y-4 mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-burnt-sienna">
-            Amazon Seller Tools Suite
-          </h1>
-          <div className="flex justify-center gap-2">
-            <Badge className="bg-green-500">Status: Active</Badge>
-            <Badge className="bg-blue-500">Version: 2.0</Badge>
-          </div>
-          <p className="text-lg text-gray-600 leading-relaxed mt-4">
-            A comprehensive suite of tools designed to help Amazon sellers optimize their listings, 
-            analyze performance, and maximize profitability.
-          </p>
-        </div>
-
-        {/* Use the AmazonSellerTools component with all features enabled */}
-        <AmazonSellerTools 
-          showCategories={true}
-          showTable={true}
-          showDetails={true}
-          showCTA={true}
-        />
-      </main>
-    </div>
+    <MainLayout>
+      <AmazonSellerTools 
+        showCategories={true}
+        showTable={true}
+        showDetails={true}
+        showCTA={true}
+      />
+    </MainLayout>
   );
 };
 

@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { Card } from '@/components/ui';
+import { Card } from '../ui/card';
 import {
   ResponsiveContainer,
   LineChart,
