@@ -2,7 +2,7 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { BarChart3, FileSpreadsheet, Settings, Home, Users, LayoutDashboard, Search, ShoppingBag } from "lucide-react";
+import { BarChart3, FileSpreadsheet, Settings, Home, Users, LayoutDashboard, Search, ShoppingBag, Tool } from "lucide-react";
 
 const Sidebar = () => {
   const location = useLocation();
@@ -12,6 +12,7 @@ const Sidebar = () => {
     { name: "Search Analytics", href: "/search-analytics", icon: Search },
     { name: "Campaign Manager", href: "/campaign-manager", icon: BarChart3 },
     { name: "Products", href: "/products", icon: ShoppingBag },
+    { name: "Tools", href: "/tools", icon: Tool },
     { name: "Google Sheets", href: "/sheets-integration", icon: FileSpreadsheet },
     { name: "Team", href: "/team", icon: Users },
     { name: "Settings", href: "/settings", icon: Settings },

@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import { Bell, Search } from "lucide-react";
+import { Bell, Search, Tool } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const TopBar = () => {
@@ -27,6 +27,13 @@ const TopBar = () => {
           <Bell className="h-5 w-5" />
           <span className="absolute top-0 right-0 w-2 h-2 rounded-full bg-burnt-sienna"></span>
         </Button>
+        
+        <Link to="/tools">
+          <Button variant="outline" className="bg-gold text-black hover:bg-gold/90">
+            <Tool className="mr-2 h-4 w-4" />
+            Seller Tools
+          </Button>
+        </Link>
         
         <Button variant="outline" className="bg-shakespeare text-white hover:bg-shakespeare/90">
           Connect Google Sheets

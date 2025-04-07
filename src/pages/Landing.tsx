@@ -1,7 +1,7 @@
 
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Tool } from 'lucide-react';
 
 const Landing = () => {
   return (
@@ -11,7 +11,13 @@ const Landing = () => {
           <div className="text-2xl font-bold text-white hover:text-burnt-sienna transition-colors">
             My Amazon Analytics
           </div>
-          <div>
+          <div className="flex items-center gap-4">
+            <Link to="/tools">
+              <Button className="bg-gold text-black hover:bg-gold/90 font-bold">
+                <Tool className="mr-2 h-4 w-4" />
+                Seller Tools
+              </Button>
+            </Link>
             <Link to="/dashboard">
               <Button className="bg-shakespeare hover:bg-shakespeare/90 text-white font-bold">
                 Go to Dashboard
@@ -30,14 +36,25 @@ const Landing = () => {
             Powerful analytics dashboard for monitoring and optimizing your Amazon advertising
             performance. Get started today and unlock the potential of your data.
           </p>
-          <Link to="/dashboard">
-            <Button
-              size="lg"
-              className="bg-gold hover:bg-gold/90 text-black font-bold px-8 py-6 text-lg"
-            >
-              Open Dashboard <ArrowRight className="ml-2 w-6 h-6" />
-            </Button>
-          </Link>
+          <div className="flex flex-wrap justify-center gap-4">
+            <Link to="/dashboard">
+              <Button
+                size="lg"
+                className="bg-gold hover:bg-gold/90 text-black font-bold px-8 py-6 text-lg"
+              >
+                Open Dashboard <ArrowRight className="ml-2 w-6 h-6" />
+              </Button>
+            </Link>
+            <Link to="/tools">
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-gold text-gold hover:bg-gold/10 font-bold px-8 py-6 text-lg"
+              >
+                Explore Seller Tools <Tool className="ml-2 w-6 h-6" />
+              </Button>
+            </Link>
+          </div>
         </div>
 
         <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -55,9 +72,9 @@ const Landing = () => {
             </p>
           </div>
           <div className="bg-butterfly-bush bg-opacity-10 p-8 rounded-xl hover:bg-opacity-20 transition-colors duration-300 border border-butterfly-bush border-opacity-30">
-            <h3 className="text-xl font-bold text-apricot mb-4">Data Integration</h3>
+            <h3 className="text-xl font-bold text-apricot mb-4">Seller Tools Suite</h3>
             <p className="text-gray-200">
-              Seamlessly integrate with your Amazon Ads data sources for comprehensive analysis.
+              Access our comprehensive suite of 11 specialized tools for Amazon sellers to optimize listings and increase profits.
             </p>
           </div>
         </div>
@@ -67,11 +84,18 @@ const Landing = () => {
             <h2 className="text-4xl font-bold text-shakespeare mb-8">
               Start Optimizing Your Amazon Ads Today
             </h2>
-            <Link to="/dashboard">
-              <Button className="bg-burnt-sienna hover:bg-burnt-sienna/90 text-white font-bold px-6 py-3 text-lg">
-                Launch Dashboard
-              </Button>
-            </Link>
+            <div className="flex flex-wrap justify-center gap-4">
+              <Link to="/dashboard">
+                <Button className="bg-burnt-sienna hover:bg-burnt-sienna/90 text-white font-bold px-6 py-3 text-lg">
+                  Launch Dashboard
+                </Button>
+              </Link>
+              <Link to="/tools">
+                <Button className="bg-gold hover:bg-gold/90 text-black font-bold px-6 py-3 text-lg">
+                  View Seller Tools
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </main>

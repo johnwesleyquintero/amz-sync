@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Landing from "./pages/Landing";
 import NotFound from "./pages/NotFound";
+import Tools from "./pages/Tools";
 
 const queryClient = new QueryClient();
 
@@ -19,6 +20,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/dashboard" element={<Index />} />
+          <Route path="/tools" element={<Tools />} />
           <Route path="/search-analytics" element={<Index />} />
           <Route path="/campaign-manager" element={<Index />} />
           <Route path="/products" element={<Index />} />
