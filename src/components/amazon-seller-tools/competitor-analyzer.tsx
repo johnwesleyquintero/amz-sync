@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useCallback, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
 import {
@@ -22,22 +24,14 @@ import {
 } from '../ui/tooltip';
 import { Info, FileText } from 'lucide-react';
 import { useIsMobile } from '../../hooks/use-mobile';
-import Papa from 'papaparse';
 import { ProcessedRow, ChartDataPoint } from '@/lib/amazon-types';
 import { Progress } from '../ui/progress';
 import { cn } from '@/lib/utils';
+import { CsvRow, processCsvData, parseAndValidateCsv } from '@/lib/csv-utils';
 
 // Constants
 const COMPETITOR_ANALYSIS_ENDPOINT = '/api/amazon/competitor-analysis';
 const COMPETITOR_ANALYSES_KEY = 'competitorAnalyses';
-const REQUIRED_CSV_HEADERS = [
-  'asin',
-  'price',
-  'reviews',
-  'rating',
-  'conversion_rate',
-  'click_through_rate',
-];
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const MAX_SAVED_ANALYSES = 10;
 
@@ -49,16 +43,6 @@ type MetricType =
   | 'inventory_levels'
   | 'conversion_rate'
   | 'click_through_rate';
-
-interface CsvRow {
-  asin: string;
-  price: string;
-  reviews: string;
-  rating: string;
-  conversion_rate: string;
-  click_through_rate: string;
-  niche?: string;
-}
 
 const getChartColor = (metric: MetricType): string => {
   switch (metric) {
@@ -101,17 +85,6 @@ export default function CompetitorAnalyzer() {
   const [isLoading, setIsLoading] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
-  const processCsvData = (csvData: CsvRow[]): ProcessedRow[] => {
-    return csvData.map((row) => ({
-      asin: row.asin,
-      price: parseFloat(row.price),
-      reviews: parseInt(row.reviews),
-      rating: parseFloat(row.rating),
-      conversion_rate: parseFloat(row.conversion_rate),
-      click_through_rate: parseFloat(row.click_through_rate),
-    }));
-  };
-
   useEffect(() => {
     if (chartData) {
       setSelectedMetrics(metrics);
@@ -119,7 +92,7 @@ export default function CompetitorAnalyzer() {
   }, [chartData, metrics]);
 
   const handleFileUpload = useCallback(
-    (
+    async (
       event: React.ChangeEvent<HTMLInputElement>,
       setData: (data: ProcessedRow | ProcessedRow[]) => void,
       type: 'seller' | 'competitor',
@@ -164,65 +137,35 @@ export default function CompetitorAnalyzer() {
       }
 
       setIsLoading(true);
-      const reader = new FileReader();
-      reader.onload = (e: ProgressEvent<FileReader>) => {
-        try {
-          const content = e.target?.result;
-          if (typeof content !== 'string') {
-            throw new Error('Invalid file content - file must be text-based');
-          }
+      try {
+        const { data, error } = await parseAndValidateCsv<CsvRow>(file);
 
-          Papa.parse<CsvRow>(content, {
-            header: true,
-            skipEmptyLines: true,
-            complete: (results) => {
-              if (results.errors.length > 0) {
-                throw new Error(
-                  `CSV parsing errors: ${results.errors
-                    .map((e) => e.message)
-                    .join(', ')}`,
-                );
-              }
-
-              const missingHeaders = REQUIRED_CSV_HEADERS.filter((h) =>
-                results.meta.fields ? !results.meta.fields.includes(h) : true,
-              );
-              if (missingHeaders.length > 0) {
-                throw new Error(
-                  `Missing required columns: ${missingHeaders.join(', ')}`,
-                );
-              }
-
-              const processedData = processCsvData(results.data);
-              if (type === 'seller') {
-                setData(processedData[0]);
-              } else {
-                setData(processedData);
-              }
-              toast({
-                title: 'Success',
-                description: `${type} data (${file.name}) processed successfully`,
-                variant: 'default',
-              });
-            },
-            error: (error) => {
-              throw new Error(`Error parsing CSV: ${error.message}`);
-            },
-            
-          });
-        } catch (error) {
-          toast({
-            title: 'Error',
-            description: `Failed to process ${type} CSV (${file.name}): ${
-              error instanceof Error ? error.message : 'Unknown error'
-            }`,
-            variant: 'destructive',
-          });
-        } finally {
-          setIsLoading(false);
+        if (error) {
+          throw new Error(error);
         }
-      };
-      reader.readAsText(file);
+
+        const processedData = processCsvData(data);
+        if (type === 'seller') {
+          setData(processedData[0]);
+        } else {
+          setData(processedData);
+        }
+        toast({
+          title: 'Success',
+          description: `${type} data (${file.name}) processed successfully`,
+          variant: 'default',
+        });
+      } catch (error) {
+        toast({
+          title: 'Error',
+          description: `Failed to process ${type} CSV (${file.name}): ${
+            error instanceof Error ? error.message : 'Unknown error'
+          }`,
+          variant: 'destructive',
+        });
+      } finally {
+        setIsLoading(false);
+      }
     },
     [toast],
   );
@@ -370,7 +313,7 @@ export default function CompetitorAnalyzer() {
                   <TooltipContent>
                     <p>
                       Upload a CSV with columns: asin, price, reviews, rating,
-                      conversion_rate, click_through_rate
+                      conversion_rate, click_through_rate, brands, keywords, niche
                     </p>
                   </TooltipContent>
                 </Tooltip>
@@ -398,7 +341,7 @@ export default function CompetitorAnalyzer() {
                   <TooltipContent>
                     <p>
                       Upload a CSV with columns: asin, price, reviews, rating,
-                      conversion_rate, click_through_rate
+                      conversion_rate, click_through_rate, brands, keywords, niche
                     </p>
                   </TooltipContent>
                 </Tooltip>

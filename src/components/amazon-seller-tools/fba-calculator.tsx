@@ -18,6 +18,7 @@ import { Progress } from '@/components/ui/progress';
 import { Upload, FileUp, AlertCircle, Download, Info } from 'lucide-react';
 import Papa from 'papaparse';
 import SampleCsvButton from './sample-csv-button';
+import { useToast } from '@/hooks/use-toast';
 
 type ProductData = {
   product: string;
@@ -30,6 +31,7 @@ type ProductData = {
 };
 
 export default function FbaCalculator() {
+  const { toast } = useToast();
   const [products, setProducts] = useState<ProductData[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [manualProduct, setManualProduct] = useState<ProductData>({
@@ -59,10 +61,28 @@ export default function FbaCalculator() {
           setError(
             `Error parsing CSV file: ${result.errors[0].message}. Please check the format.`,
           );
+          toast({
+            title: 'CSV Error',
+            description: `Error parsing CSV file: ${result.errors[0].message}. Please check the format.`,
+            variant: 'destructive',
+          });
+          setIsLoading(false);
           return;
         }
 
         try {
+          // Validate required columns
+          const requiredColumns = ['product', 'cost', 'price', 'fees'];
+          const missingColumns = requiredColumns.filter(
+            (col) => !result.meta.fields?.includes(col),
+          );
+
+          if (missingColumns.length > 0) {
+            throw new Error(
+              `Missing required columns: ${missingColumns.join(', ')}`,
+            );
+          }
+
           const validData = result.data
             .filter(
               (item: ProductData) =>
@@ -79,24 +99,40 @@ export default function FbaCalculator() {
             }));
 
           if (validData.length === 0) {
-            setError(
-              'No valid data found in CSV. Please ensure your CSV has columns: product, cost, price, fees',
-            );
-            return;
+            throw new Error('No valid data found in CSV');
           }
 
           setProducts(validData);
           calculateProfit(validData);
-        } catch {
+          toast({
+            title: 'CSV Processed',
+            description: `Loaded ${validData.length} product data`,
+            variant: 'default',
+          });
+        } catch (err) {
           setError(
-            'Failed to process CSV data. Please ensure your CSV has columns: product, cost, price, fees',
+            `Failed to process CSV data: ${
+              err instanceof Error ? err.message : String(err)
+            }. Please ensure your CSV has columns: product, cost, price, fees`,
           );
+          toast({
+            title: 'Processing Failed',
+            description: `Failed to process CSV data: ${
+              err instanceof Error ? err.message : String(err)
+            }. Please ensure your CSV has columns: product, cost, price, fees`,
+            variant: 'destructive',
+          });
+        } finally {
+          setIsLoading(false);
         }
       },
       error: (error) => {
         setError(`Error parsing CSV file: ${error.message}`);
-      },
-      finally: () => {
+        toast({
+          title: 'CSV Error',
+          description: `Error parsing CSV file: ${error.message}`,
+          variant: 'destructive',
+        });
         setIsLoading(false);
       },
     });
@@ -124,6 +160,11 @@ export default function FbaCalculator() {
       manualProduct.fees < 0
     ) {
       setError('Please fill in all fields with valid values');
+      toast({
+        title: 'Input Error',
+        description: 'Please fill in all fields with valid values',
+        variant: 'destructive',
+      });
       return;
     }
 
@@ -138,6 +179,11 @@ export default function FbaCalculator() {
       price: 0,
       fees: 0,
     });
+    toast({
+      title: 'Product Added',
+      description: 'Product added successfully',
+      variant: 'default',
+    });
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -151,6 +197,11 @@ export default function FbaCalculator() {
   const handleExport = () => {
     if (products.length === 0) {
       setError('No data to export');
+      toast({
+        title: 'Export Error',
+        description: 'No data to export',
+        variant: 'destructive',
+      });
       return;
     }
 
@@ -163,6 +214,11 @@ export default function FbaCalculator() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    toast({
+      title: 'Export Success',
+      description: 'FBA data exported successfully',
+      variant: 'default',
+    });
   };
 
   const clearData = () => {
@@ -171,6 +227,11 @@ export default function FbaCalculator() {
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
+    toast({
+      title: 'Data Cleared',
+      description: 'FBA data cleared',
+      variant: 'default',
+    });
   };
 
   return (
@@ -218,7 +279,10 @@ export default function FbaCalculator() {
                     Clear Data
                   </Button>
                 )}
-                <SampleCsvButton dataType="fba" fileName="sample-fba-calculator.csv" />
+                <SampleCsvButton
+                  dataType="fba"
+                  fileName="sample-fba-calculator.csv"
+                />
               </div>
             </div>
           </CardContent>

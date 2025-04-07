@@ -59,8 +59,8 @@ export default function FeaturedToolsSection() {
       description:
         'Analyze competitor listings, pricing strategies, and market positioning',
       icon: <Users className="h-5 w-5" />,
-      status: 'active',
-      version: '1.0.0',
+      status: 'beta', // Changed to "beta"
+      version: '0.9.0', // Updated version
       component: <CompetitorAnalyzer />,
       category: 'Market Analysis',
     },
