@@ -1,8 +1,7 @@
 'use client';
 
 import type React from 'react';
-
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
@@ -28,6 +27,8 @@ import {
 } from 'recharts';
 import Papa from 'papaparse';
 import SampleCsvButton from './sample-csv-button';
+import { useToast } from '@/hooks/use-toast';
+import { KeywordIntelligence } from '@/lib/keyword-intelligence';
 
 type KeywordData = {
   product: string;
@@ -35,14 +36,30 @@ type KeywordData = {
   searchVolume?: number;
   competition?: string;
   suggestions?: string[];
+  analysis?: { keyword: string; score: number }[];
 };
 
+const COMPETITION_LEVELS = ['Low', 'Medium', 'High'] as const;
+type CompetitionLevel = (typeof COMPETITION_LEVELS)[number];
+
+const DEFAULT_COMPETITION: CompetitionLevel = 'Medium';
+
+const MAX_SUGGESTIONS = 5;
+
 export default function KeywordAnalyzer() {
+  const { toast } = useToast();
   const [products, setProducts] = useState<KeywordData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Clear error when products change
+  useEffect(() => {
+    if (products.length > 0) {
+      setError(null);
+    }
+  }, [products]);
 
   const handleFileUpload = async (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -61,23 +78,26 @@ export default function KeywordAnalyzer() {
           setError(
             `Error parsing CSV file: ${result.errors[0].message}. Please check the format.`,
           );
+          toast({
+            title: 'CSV Error',
+            description: `Error parsing CSV file: ${result.errors[0].message}. Please check the format.`,
+            variant: 'destructive',
+          });
           setIsLoading(false);
           return;
         }
 
         try {
-          // Process the parsed data
           const processedData: KeywordData[] = await Promise.all(
             result.data
               .filter((item) => item.product && item.keywords)
               .map(async (item) => {
-                // Split keywords by comma if it's a string
                 interface KeywordItem {
                   product: string;
                   keywords?: string | string[];
                   searchVolume?: string | number;
                   competition?: string;
-                  [key: string]: unknown; // Allow additional properties
+                  [key: string]: unknown;
                 }
 
                 const keywordArray =
@@ -89,31 +109,31 @@ export default function KeywordAnalyzer() {
                       ? (item as KeywordItem).keywords
                       : [];
 
-                // Parse search volume if available
                 const searchVolume = (item as KeywordItem).searchVolume
                   ? Number.parseInt(String((item as KeywordItem).searchVolume))
                   : undefined;
 
-                // Get competition level if available
-                const competition = item.competition || undefined;
+                const competition = (item as KeywordItem).competition
+                  ? COMPETITION_LEVELS.includes(
+                      item.competition as CompetitionLevel,
+                    )
+                    ? (item as CompetitionLevel)
+                    : DEFAULT_COMPETITION
+                  : undefined;
 
                 const analysis = await KeywordIntelligence.analyzeBatch(
                   keywordArray || [],
                 );
+
                 return {
                   product: String(item.product),
                   keywords: keywordArray || [],
                   searchVolume,
                   competition,
                   analysis,
-                  suggestions: analysis.map((a) => a.keyword),
-                } as {
-                  product: string;
-                  keywords: string[];
-                  searchVolume?: number;
-                  competition?: string;
-                  analysis: { keyword: string; score: number }[];
-                  suggestions: string[];
+                  suggestions: analysis
+                    .map((a) => a.keyword)
+                    .slice(0, MAX_SUGGESTIONS),
                 };
               }),
           );
@@ -122,26 +142,48 @@ export default function KeywordAnalyzer() {
             setError(
               'No valid data found in CSV. Please ensure your CSV has columns: product, keywords',
             );
+            toast({
+              title: 'CSV Error',
+              description:
+                'No valid data found in CSV. Please ensure your CSV has columns: product, keywords',
+              variant: 'destructive',
+            });
             setIsLoading(false);
             return;
           }
 
           setProducts(processedData);
+          toast({
+            title: 'CSV Processed',
+            description: `Loaded ${processedData.length} product keywords`,
+            variant: 'default',
+          });
           setIsLoading(false);
-        } catch {
-          setError(
-            'Failed to process CSV data. Please ensure your CSV has columns: product, keywords',
-          );
+        } catch (err) {
+          const errorMessage =
+            err instanceof Error
+              ? err.message
+              : 'Failed to process CSV data. Please ensure your CSV has columns: product, keywords';
+          setError(errorMessage);
+          toast({
+            title: 'Processing Failed',
+            description: errorMessage,
+            variant: 'destructive',
+          });
           setIsLoading(false);
         }
       },
       error: (error) => {
         setError(`Error parsing CSV file: ${error.message}`);
+        toast({
+          title: 'CSV Error',
+          description: `Error parsing CSV file: ${error.message}`,
+          variant: 'destructive',
+        });
         setIsLoading(false);
       },
     });
 
-    // Reset the file input
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -150,16 +192,17 @@ export default function KeywordAnalyzer() {
   const handleSearch = () => {
     if (!searchTerm.trim()) {
       setError('Please enter a search term');
+      toast({
+        title: 'Input Error',
+        description: 'Please enter a search term',
+        variant: 'destructive',
+      });
       return;
     }
 
     setIsLoading(true);
     setError(null);
 
-    {
-      /* In a real implementation, this would call an API to get keyword data.
-        For now, we'll create a simulated response */
-    }
     setTimeout(() => {
       const newProduct: KeywordData = {
         product: searchTerm,
@@ -170,9 +213,10 @@ export default function KeywordAnalyzer() {
           `premium ${searchTerm}`,
           `affordable ${searchTerm}`,
           `${searchTerm} with free shipping`,
-        ],
+        ].slice(0, MAX_SUGGESTIONS),
         searchVolume: Math.floor(Math.random() * 100000),
-        competition: ['Low', 'Medium', 'High'][Math.floor(Math.random() * 3)],
+        competition:
+          COMPETITION_LEVELS[Math.floor(Math.random() * COMPETITION_LEVELS.length)],
       };
 
       setProducts([...products, newProduct]);
@@ -184,10 +228,14 @@ export default function KeywordAnalyzer() {
   const handleExport = () => {
     if (products.length === 0) {
       setError('No data to export');
+      toast({
+        title: 'Export Error',
+        description: 'No data to export',
+        variant: 'destructive',
+      });
       return;
     }
 
-    // Prepare data for CSV export
     const exportData = products.map((product) => ({
       product: product.product,
       keywords: product.keywords.join(', '),
@@ -196,10 +244,7 @@ export default function KeywordAnalyzer() {
       competition: product.competition || '',
     }));
 
-    // Create CSV content
     const csv = Papa.unparse(exportData);
-
-    // Create a blob and download link
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -208,6 +253,11 @@ export default function KeywordAnalyzer() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    toast({
+      title: 'Export Success',
+      description: 'Keyword analysis exported successfully',
+      variant: 'default',
+    });
   };
 
   const clearData = () => {
@@ -216,6 +266,11 @@ export default function KeywordAnalyzer() {
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
+    toast({
+      title: 'Data Cleared',
+      description: 'Keyword data cleared',
+      variant: 'default',
+    });
   };
 
   return (

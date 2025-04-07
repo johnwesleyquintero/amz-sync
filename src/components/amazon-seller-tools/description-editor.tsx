@@ -27,6 +27,7 @@ export default function DescriptionEditor() {
   const [products, setProducts] = useState<ProductDescription[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [targetKeywords, setTargetKeywords] = useState<string[]>([]);
   const [activeProduct, setActiveProduct] = useState<ProductDescription | null>(
     null,
   );
@@ -110,10 +111,10 @@ export default function DescriptionEditor() {
 
     const updatedProduct = {
       ...activeProduct,
-      description: value,
-      characterCount: value.length,
-      keywordCount: countKeywords(value),
-      score: calculateScore(value),
+        description: value,
+        characterCount: value.length,
+        keywordCount: countKeywords(value, targetKeywords),
+        score: calculateScore(value, targetKeywords),
     };
 
     setActiveProduct(updatedProduct);
@@ -137,8 +138,8 @@ export default function DescriptionEditor() {
       asin: newProduct.asin || undefined,
       description: newProduct.description,
       characterCount: newProduct.description.length,
-      keywordCount: countKeywords(newProduct.description),
-      score: calculateScore(newProduct.description),
+      keywordCount: countKeywords(newProduct.description, targetKeywords),
+      score: calculateScore(newProduct.description, targetKeywords),
     };
 
     setProducts([...products, productData]);
@@ -147,45 +148,167 @@ export default function DescriptionEditor() {
     setError(null);
   };
 
-  const countKeywords = (text: string): number => {
+  const countKeywords = (text: string, targetKeywords: string[]): number => {
     // This is a simplified keyword counter
     // In a real app, you'd have a more sophisticated algorithm
-    const commonKeywords = [
-      'premium',
-      'quality',
-      'durable',
-      'comfortable',
-      'advanced',
-      'innovative',
+    const stopWords = [
+      'the',
+      'a',
+      'is',
+      'are',
+      'was',
+      'were',
+      'be',
+      'been',
+      'being',
+      'have',
+      'has',
+      'had',
+      'do',
+      'does',
+      'did',
+      'an',
+      'and',
+      'but',
+      'if',
+      'or',
+      'because',
+      'as',
+      'until',
+      'while',
+      'of',
+      'at',
+      'by',
+      'for',
+      'with',
+      'about',
+      'against',
+      'between',
+      'into',
+      'through',
+      'during',
+      'before',
+      'after',
+      'above',
+      'below',
+      'to',
+      'from',
+      'up',
+      'down',
+      'in',
+      'out',
+      'on',
+      'off',
+      'over',
+      'under',
+      'again',
+      'further',
+      'then',
+      'once',
+      'here',
+      'there',
+      'when',
+      'where',
+      'why',
+      'how',
+      'all',
+      'any',
+      'both',
+      'each',
+      'few',
+      'more',
+      'most',
+      'other',
+      'some',
+      'such',
+      'no',
+      'nor',
+      'not',
+      'only',
+      'own',
+      'same',
+      'so',
+      'than',
+      'too',
+      'very',
+      'can',
+      'will',
+      'just',
     ];
-    return commonKeywords.filter((keyword) =>
-      text.toLowerCase().includes(keyword.toLowerCase()),
-    ).length;
+
+    const stemWord = (word: string) => {
+      word = word.replace(/ing$|ed$|s$/i, '');
+      return word;
+    };
+
+    const cleanedText = text
+      .toLowerCase()
+      .split(/\s+/)
+      .filter((word) => !stopWords.includes(word))
+      .join(' ');
+
+    const stemmedKeywords = targetKeywords.map((keyword) =>
+      stemWord(keyword.toLowerCase()),
+    );
+
+    let keywordCount = 0;
+    stemmedKeywords.forEach((keyword) => {
+      const regex = new RegExp(`\\b${keyword}\\b`, 'g');
+      const matches = cleanedText.match(regex);
+      keywordCount += matches ? matches.length : 0;
+    });
+
+    return keywordCount;
   };
 
-  const calculateScore = (text: string): number => {
-    // This is a simplified scoring algorithm
-    // In a real app, you'd have a more sophisticated algorithm
+  const calculateScore = (text: string, targetKeywords: string[]): number => {
+    // This is a more sophisticated scoring algorithm
     let score = 0;
 
-    // Length score (0-40 points)
-    if (text.length > 1000) score += 40;
-    else if (text.length > 500) score += 30;
-    else if (text.length > 250) score += 20;
-    else if (text.length > 100) score += 10;
+    // --- Keyword Density Score (0-30 points) ---
+    const wordCount = text.split(/\s+/).length;
+    const keywordCount = countKeywords(text, targetKeywords);
+    const keywordDensity = wordCount > 0 ? keywordCount / wordCount : 0;
 
-    // Keyword score (0-30 points)
-    const keywordCount = countKeywords(text);
-    score += keywordCount * 6;
+    if (keywordDensity >= 0.02 && keywordDensity <= 0.05) {
+      score += 30;
+    } else if (keywordDensity > 0.01 && keywordDensity < 0.06) {
+      score += 20;
+    } else {
+      score += 10;
+    }
 
-    // Readability score (0-30 points)
-    // This is a very simplified readability check
-    const sentences = text.split(/[.!?]+/).filter(Boolean);
-    const avgSentenceLength = text.length / (sentences.length || 1);
+    // --- Keyword Placement Score (0-20 points) ---
+    const firstSentence = text.split(/[.!?]+/).filter(Boolean)[0] || '';
+    let placementScore = 0;
+    targetKeywords.forEach((keyword) => {
+      if (firstSentence.toLowerCase().includes(keyword.toLowerCase())) {
+        placementScore += 5;
+      }
+    });
+    score += Math.min(placementScore, 20); // Cap at 20
 
-    if (avgSentenceLength < 25) score += 30;
-    else if (avgSentenceLength < 35) score += 20;
-    else if (avgSentenceLength < 45) score += 10;
+    // --- Flesch-Kincaid Readability Score (0-30 points) ---
+    const sentences = text.split(/[.!?]+/).filter(Boolean).length;
+    const syllables = text
+      .split(/\s+/)
+      .reduce(
+        (count, word) => count + (word.match(/[aeiouy]+/gi)?.length || 0),
+        0,
+      );
+
+    const fleschKincaid =
+      206.835 -
+      1.015 * (wordCount / sentences) -
+      84.6 * (syllables / wordCount);
+
+    if (fleschKincaid > 90) {
+      score += 30; // Very easy to read
+    } else if (fleschKincaid > 70) {
+      score += 20; // Easy to read
+    } else if (fleschKincaid > 50) {
+      score += 10; // Fairly easy to read
+    }
 
     return Math.min(100, score);
   };
@@ -347,6 +470,19 @@ export default function DescriptionEditor() {
                       Save
                     </Button>
                   </div>
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium">Target Keywords</label>
+                  <Input
+                    value={targetKeywords.join(', ')}
+                    onChange={(e) =>
+                      setTargetKeywords(
+                        e.target.value.split(',').map((keyword) => keyword.trim()),
+                      )
+                    }
+                    placeholder="Enter keywords separated by commas"
+                  />
                 </div>
 
                 <div className="mb-4 flex flex-wrap gap-3">

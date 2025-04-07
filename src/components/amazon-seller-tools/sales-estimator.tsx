@@ -1,21 +1,23 @@
 'use client';
 
 import type React from 'react';
-
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import {} from '@/lib/core-utils';
 import {
   Upload,
   FileText,
   AlertCircle,
   Download,
   TrendingUp,
+  Info,
 } from 'lucide-react';
+import Papa from 'papaparse';
+import SampleCsvButton from './sample-csv-button';
+import { useToast } from '@/hooks/use-toast';
 
 type ProductData = {
   product: string;
@@ -27,7 +29,13 @@ type ProductData = {
   confidence: 'Low' | 'Medium' | 'High';
 };
 
+const COMPETITION_LEVELS = ['Low', 'Medium', 'High'] as const;
+type CompetitionLevel = (typeof COMPETITION_LEVELS)[number];
+
+const DEFAULT_COMPETITION: CompetitionLevel = 'Medium';
+
 export default function SalesEstimator() {
+  const { toast } = useToast();
   const [products, setProducts] = useState<ProductData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -35,8 +43,34 @@ export default function SalesEstimator() {
     product: '',
     category: '',
     price: '',
-    competition: 'Medium' as 'Low' | 'Medium' | 'High',
+    competition: DEFAULT_COMPETITION,
   });
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const estimateSales = (
+    category: string,
+    price: number,
+    competition: CompetitionLevel,
+  ): { estimatedSales: number; estimatedRevenue: number; confidence: 'Low' | 'Medium' | 'High' } => {
+    let baseSales = 0;
+
+    if (category === 'Electronics') baseSales = 150;
+    else if (category === 'Phone Accessories') baseSales = 200;
+    else baseSales = 100;
+
+    const priceFactor = price < 20 ? 1.5 : price < 50 ? 1.0 : 0.7;
+    const competitionFactor =
+      competition === 'Low' ? 1.3 : competition === 'Medium' ? 1.0 : 0.7;
+
+    const estimatedSales = Math.round(baseSales * priceFactor * competitionFactor);
+    const estimatedRevenue = estimatedSales * price;
+
+    let confidence: 'Low' | 'Medium' | 'High' = 'Medium';
+    if (competition === 'Low' && price < 30) confidence = 'High';
+    else if (competition === 'High' && price > 50) confidence = 'Low';
+
+    return { estimatedSales, estimatedRevenue, confidence };
+  };
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -45,85 +79,89 @@ export default function SalesEstimator() {
     setIsLoading(true);
     setError(null);
 
-    // Simulate CSV parsing
-    setTimeout(() => {
-      try {
-        // This is a simulation - in a real app, you'd use Papa Parse or similar
-        const sampleData = [
-          {
-            product: 'Wireless Earbuds',
-            category: 'Electronics',
-            price: 39.99,
-            competition: 'High' as 'Low' | 'Medium' | 'High',
-          },
-          {
-            product: 'Phone Case',
-            category: 'Phone Accessories',
-            price: 19.99,
-            competition: 'Medium' as 'Low' | 'Medium' | 'High',
-          },
-          {
-            product: 'Charging Cable',
-            category: 'Electronics',
-            price: 12.99,
-            competition: 'Low' as 'Low' | 'Medium' | 'High',
-          },
-        ];
+    Papa.parse(file, {
+      header: true,
+      skipEmptyLines: true,
+      complete: (results) => {
+        try {
+          interface ProductDataCSV {
+            product: string;
+            category: string;
+            price: string;
+            competition: string;
+          }
 
-        const processedData = sampleData.map((item) => {
-          // This is a simplified sales estimation algorithm
-          // In a real app, you'd have a more sophisticated algorithm
-          let baseSales = 0;
-
-          // Category factor
-          if (item.category === 'Electronics') baseSales = 150;
-          else if (item.category === 'Phone Accessories') baseSales = 200;
-          else baseSales = 100;
-
-          // Price factor
-          const priceFactor =
-            item.price < 20 ? 1.5 : item.price < 50 ? 1.0 : 0.7;
-
-          // Competition factor
-          const competitionFactor =
-            item.competition === 'Low'
-              ? 1.3
-              : item.competition === 'Medium'
-                ? 1.0
-                : 0.7;
-
-          // Calculate estimated sales
-          const estimatedSales = Math.round(
-            baseSales * priceFactor * competitionFactor,
+          const requiredColumns = ['product', 'category', 'price', 'competition'];
+          const missingColumns = requiredColumns.filter((col) =>
+            results.meta.fields ? !results.meta.fields.includes(col) : true,
           );
-          const estimatedRevenue = estimatedSales * item.price;
+          if (missingColumns.length > 0) {
+            throw new Error(
+              `Missing required columns: ${missingColumns.join(', ')}`,
+            );
+          }
 
-          // Determine confidence level
-          let confidence: 'Low' | 'Medium' | 'High' = 'Medium';
-          if (item.competition === 'Low' && item.price < 30)
-            confidence = 'High';
-          else if (item.competition === 'High' && item.price > 50)
-            confidence = 'Low';
+          const processedData: ProductData[] = results.data
+            .filter((row: unknown) => {
+              const productRow = row as ProductDataCSV;
+              return (
+                productRow.product &&
+                productRow.category &&
+                !isNaN(Number(productRow.price)) &&
+                COMPETITION_LEVELS.includes(
+                  productRow.competition as CompetitionLevel,
+                )
+              );
+            })
+            .map((row: unknown) => {
+              const productRow = row as ProductDataCSV;
+              const price = Number(productRow.price);
+              const competition = productRow.competition as CompetitionLevel;
+              const { estimatedSales, estimatedRevenue, confidence } =
+                estimateSales(productRow.category, price, competition);
 
-          return {
-            ...item,
-            estimatedSales,
-            estimatedRevenue,
-            confidence,
-          };
-        });
+              return {
+                product: productRow.product,
+                category: productRow.category,
+                price,
+                competition,
+                estimatedSales,
+                estimatedRevenue,
+                confidence,
+              };
+            });
 
-        setProducts(processedData);
+          if (processedData.length === 0) {
+            throw new Error('No valid data found in CSV');
+          }
+
+          setProducts(processedData);
+          toast({
+            title: 'CSV Processed',
+            description: `Loaded ${processedData.length} product data`,
+            variant: 'default',
+          });
+        } catch (error) {
+          setError(
+            error instanceof Error ? error.message : 'An error occurred',
+          );
+          toast({
+            title: 'Processing Failed',
+            description: error.message,
+            variant: 'destructive',
+          });
+        }
         setIsLoading(false);
-      } catch (error) {
-        const errorMessage =
-          error instanceof Error
-            ? error.message
-            : 'Failed to parse CSV file. Please check the format and try again.';
-        setError(errorMessage);
+      },
+      error: (error) => {
+        setError(error.message);
         setIsLoading(false);
-      }
-    }, 1500);
+      },
+    });
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
   };
 
   const handleManualEstimate = () => {
@@ -133,6 +171,11 @@ export default function SalesEstimator() {
       !manualProduct.price
     ) {
       setError('Please fill in all fields');
+      toast({
+        title: 'Input Error',
+        description: 'Please fill in all fields',
+        variant: 'destructive',
+      });
       return;
     }
 
@@ -140,40 +183,19 @@ export default function SalesEstimator() {
 
     if (isNaN(price)) {
       setError('Please enter a valid price');
+      toast({
+        title: 'Input Error',
+        description: 'Please enter a valid price',
+        variant: 'destructive',
+      });
       return;
     }
 
-    // This is a simplified sales estimation algorithm
-    // In a real app, you'd have a more sophisticated algorithm
-    let baseSales = 0;
-
-    // Category factor
-    if (manualProduct.category === 'Electronics') baseSales = 150;
-    else if (manualProduct.category === 'Phone Accessories') baseSales = 200;
-    else baseSales = 100;
-
-    // Price factor
-    const priceFactor = price < 20 ? 1.5 : price < 50 ? 1.0 : 0.7;
-
-    // Competition factor
-    const competitionFactor =
-      manualProduct.competition === 'Low'
-        ? 1.3
-        : manualProduct.competition === 'Medium'
-          ? 1.0
-          : 0.7;
-
-    // Calculate estimated sales
-    const estimatedSales = Math.round(
-      baseSales * priceFactor * competitionFactor,
+    const { estimatedSales, estimatedRevenue, confidence } = estimateSales(
+      manualProduct.category,
+      price,
+      manualProduct.competition,
     );
-    const estimatedRevenue = estimatedSales * price;
-
-    // Determine confidence level
-    let confidence: 'Low' | 'Medium' | 'High' = 'Medium';
-    if (manualProduct.competition === 'Low' && price < 30) confidence = 'High';
-    else if (manualProduct.competition === 'High' && price > 50)
-      confidence = 'Low';
 
     const newProduct: ProductData = {
       product: manualProduct.product,
@@ -190,20 +212,84 @@ export default function SalesEstimator() {
       product: '',
       category: '',
       price: '',
-      competition: 'Medium',
+      competition: DEFAULT_COMPETITION,
     });
     setError(null);
+    toast({
+      title: 'Product Added',
+      description: 'Product added successfully',
+      variant: 'default',
+    });
   };
 
   const handleExport = () => {
-    // In a real app, this would generate and download a CSV file
-    alert(
-      'In a real implementation, this would download a CSV with all sales estimates.',
-    );
+    if (products.length === 0) {
+      setError('No data to export');
+      toast({
+        title: 'Export Error',
+        description: 'No data to export',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    const exportData = products.map((product) => ({
+      product: product.product,
+      category: product.category,
+      price: product.price.toFixed(2),
+      competition: product.competition,
+      estimatedSales: product.estimatedSales,
+      estimatedRevenue: product.estimatedRevenue.toFixed(2),
+      confidence: product.confidence,
+    }));
+
+    const csv = Papa.unparse(exportData);
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'sales_estimates.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    toast({
+      title: 'Export Success',
+      description: 'Sales estimates exported successfully',
+      variant: 'default',
+    });
+  };
+
+  const clearData = () => {
+    setProducts([]);
+    setError(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+    toast({
+      title: 'Data Cleared',
+      description: 'Sales estimates data cleared',
+      variant: 'default',
+    });
   };
 
   return (
     <div className="space-y-6">
+      <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg flex items-start gap-3">
+        <Info className="h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0" />
+        <div className="text-sm text-blue-700 dark:text-blue-300">
+          <p className="font-medium">CSV Format Requirements:</p>
+          <p>
+            Your CSV file should have the following columns:{' '}
+            <code>product</code>, <code>category</code>, <code>price</code>,{' '}
+            <code>competition</code> (Low, Medium, High)
+          </p>
+          <p className="mt-1">
+            Example: <code>product,category,price,competition</code>
+            <br />
+            <code>Wireless Earbuds,Electronics,39.99,High</code>
+          </p>
+        </div>
+      </div>
       <div className="flex flex-col gap-4 sm:flex-row">
         <Card className="flex-1">
           <CardContent className="p-4">
@@ -233,8 +319,18 @@ export default function SalesEstimator() {
                     className="hidden"
                     onChange={handleFileUpload}
                     disabled={isLoading}
+                    ref={fileInputRef}
                   />
                 </label>
+                {products.length > 0 && (
+                  <Button
+                    variant="outline"
+                    className="w-full mt-4"
+                    onClick={clearData}
+                  >
+                    Clear Data
+                  </Button>
+                )}
               </div>
             </div>
           </CardContent>
@@ -296,17 +392,16 @@ export default function SalesEstimator() {
                     onChange={(e) =>
                       setManualProduct({
                         ...manualProduct,
-                        competition: e.target.value as
-                          | 'Low'
-                          | 'Medium'
-                          | 'High',
+                        competition: e.target.value as CompetitionLevel,
                       })
                     }
                     className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                   >
-                    <option value="Low">Low</option>
-                    <option value="Medium">Medium</option>
-                    <option value="High">High</option>
+                    {COMPETITION_LEVELS.map((level) => (
+                      <option key={level} value={level}>
+                        {level}
+                      </option>
+                    ))}
                   </select>
                 </div>
                 <Button onClick={handleManualEstimate} className="w-full">

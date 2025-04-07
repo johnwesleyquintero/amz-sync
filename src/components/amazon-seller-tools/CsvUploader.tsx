@@ -1,53 +1,156 @@
 'use client';
 
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import Papa from 'papaparse';
 import { Button } from '@/components/ui/button';
-import { FileText, Info } from 'lucide-react';
+import { FileText, Info, AlertCircle } from 'lucide-react';
 import SampleCsvButton from './sample-csv-button';
+import { Progress } from '../ui/progress';
+import { useToast } from '@/hooks/use-toast';
 
-type UploaderProps = {
-  onUploadSuccess: (data: CsvRow[]) => void;
+type CsvUploaderProps<T> = {
+  onUploadSuccess: (data: T[]) => void;
   isLoading: boolean;
   onClear: () => void;
   hasData: boolean;
+  requiredColumns: string[];
+  dataType: 'fba' | 'keyword' | 'ppc' | 'keyword-dedup' | 'acos';
+  fileName: string;
 };
 
 interface CsvRow {
-  id: string;
-  impressions: number;
-  clicks: number;
+  date: string;
+  [keyword: string]: string;
+  id?: string;
+  impressions?: string;
+  clicks?: string;
 }
 
-export default function CsvUploader({
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+
+export default function CsvUploader<T extends CsvRow>({
   onUploadSuccess,
   isLoading,
   onClear,
   hasData,
-}: UploaderProps) {
-  const onDrop = useCallback(
-    (acceptedFiles: File[]) => {
-      acceptedFiles.forEach((file: File) => {
-        const reader = new FileReader();
+  requiredColumns,
+  dataType,
+  fileName,
+}: CsvUploaderProps<T>) {
+  const { toast } = useToast();
+  const [parsingError, setParsingError] = useState<string | null>(null);
+  const [isParsing, setIsParsing] = useState(false);
 
-        reader.onabort = () => console.log('file reading was aborted');
-        reader.onerror = () => console.log('file reading has failed');
+  const parseCsv = useCallback(
+    (file: File) => {
+      setIsParsing(true);
+      setParsingError(null);
 
-        reader.onload = () => {
-          Papa.parse(file, {
-            header: true,
-            skipEmptyLines: true,
-            complete: (results: Papa.ParseResult<CsvRow>) => {
-              onUploadSuccess(results.data);
-            },
+      Papa.parse<T>(file, {
+        header: true,
+        skipEmptyLines: true,
+        complete: (results) => {
+          setIsParsing(false);
+          if (results.errors.length > 0) {
+            setParsingError(
+              `CSV parsing errors: ${results.errors
+                .map((e) => e.message)
+                .join(', ')}`,
+            );
+            toast({
+              title: 'Error',
+              description: `CSV parsing errors: ${results.errors
+                .map((e) => e.message)
+                .join(', ')}`,
+              variant: 'destructive',
+            });
+            return;
+          }
+
+          const missingColumns = requiredColumns.filter(
+            (col) => !results.meta.fields.includes(col),
+          );
+          if (missingColumns.length > 0) {
+            setParsingError(
+              `Missing required columns: ${missingColumns.join(', ')}`,
+            );
+            toast({
+              title: 'Error',
+              description: `Missing required columns: ${missingColumns.join(
+                ', ',
+              )}`,
+              variant: 'destructive',
+            });
+            return;
+          }
+
+          onUploadSuccess(results.data);
+          toast({
+            title: 'Success',
+            description: `${file.name} processed successfully`,
+            variant: 'default',
           });
-        };
-
-        reader.readAsText(file);
+        },
+        error: (error) => {
+          setIsParsing(false);
+          setParsingError(`Error parsing CSV: ${error.message}`);
+          toast({
+            title: 'Error',
+            description: `Error parsing CSV: ${error.message}`,
+            variant: 'destructive',
+          });
+        },
       });
     },
-    [onUploadSuccess],
+    [onUploadSuccess, requiredColumns, toast],
+  );
+
+  const onDrop = useCallback(
+    (acceptedFiles: File[]) => {
+      if (acceptedFiles.length === 0) {
+        toast({
+          title: 'Error',
+          description: 'No file selected',
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      const file = acceptedFiles[0];
+
+      if (!file.name.endsWith('.csv')) {
+        toast({
+          title: 'Error',
+          description: 'Only CSV files are supported',
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      if (file.size > MAX_FILE_SIZE) {
+        toast({
+          title: 'Error',
+          description: `File size exceeds the maximum limit of ${
+            MAX_FILE_SIZE / (1024 * 1024)
+          }MB`,
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      if (file.size === 0) {
+        toast({
+          title: 'Error',
+          description: 'The file is empty',
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      parseCsv(file);
+    },
+    [parseCsv, toast],
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
@@ -59,8 +162,10 @@ export default function CsvUploader({
         <div className="text-sm text-blue-700 dark:text-blue-300">
           <p className="font-medium">CSV Format Requirements:</p>
           <p>
-            Required columns: <code>id</code>, <code>impressions</code>,
-            <code>clicks</code>
+            Required columns:{' '}
+            {requiredColumns.map((col, index) => (
+              <code key={index}>{col}</code>
+            ))}
           </p>
         </div>
       </div>
@@ -71,7 +176,7 @@ export default function CsvUploader({
       >
         <FileText className="mb-2 h-8 w-8 text-primary/60" />
         <span className="text-sm font-medium">Click to upload CSV</span>
-        <input {...getInputProps()} disabled={isLoading} />
+        <input {...getInputProps()} disabled={isLoading || isParsing} />
         {isDragActive ? (
           <p>Drop the files here ...</p>
         ) : (
@@ -79,9 +184,20 @@ export default function CsvUploader({
             Drag &apos;n&apos; drop some files here, or click to select files
           </p>
         )}
+        {(isLoading || isParsing) && (
+          <div className="w-full mt-4">
+            <Progress value={50} className="h-2" />
+          </div>
+        )}
+        {parsingError && (
+          <div className="flex items-center gap-2 rounded-lg bg-red-100 p-3 text-red-800 dark:bg-red-900/30 dark:text-red-400 mt-4">
+            <AlertCircle className="h-5 w-5" />
+            <span>{parsingError}</span>
+          </div>
+        )}
         <SampleCsvButton
-          dataType="ppc"
-          fileName="sample-ppc-campaign.csv"
+          dataType={dataType}
+          fileName={fileName}
           className="mt-4"
         />
       </div>

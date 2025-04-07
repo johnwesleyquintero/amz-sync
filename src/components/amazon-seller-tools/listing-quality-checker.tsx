@@ -1,8 +1,7 @@
 'use client';
 
 import type React from 'react';
-
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
@@ -14,11 +13,12 @@ import {
   AlertCircle,
   CheckCircle,
   XCircle,
+  Info,
 } from 'lucide-react';
 import Papa from 'papaparse';
 import { KeywordIntelligence } from '@/lib/keyword-intelligence';
-
 import { useToast } from '@/hooks/use-toast';
+import { cn } from '@/lib/utils';
 
 type ListingData = {
   product: string;
@@ -40,12 +40,77 @@ type ListingData = {
   suggestions?: string[];
 };
 
+const MAX_BULLET_POINTS = 5;
+const MAX_IMAGES = 7;
+const MIN_KEYWORDS = 5;
+
+const DEFAULT_LISTING_SCORE = 100;
+
+const calculateListingScore = (listing: ListingData): number => {
+  let score = DEFAULT_LISTING_SCORE;
+
+  if (!listing.title) score -= 15;
+  if (!listing.description) score -= 15;
+  if (!listing.bulletPoints || listing.bulletPoints.length < MAX_BULLET_POINTS) {
+    score -= 10;
+  }
+  if (!listing.images || listing.images < MAX_IMAGES) score -= 10;
+  if (!listing.keywords || listing.keywords.length < MIN_KEYWORDS)
+    score -= 10;
+
+  if (listing.issues) {
+    score -= listing.issues.length * 5;
+  }
+
+  return Math.max(0, score);
+};
+
+const getListingQualityBadgeVariant = (score: number): BadgeProps['variant'] => {
+  if (score >= 80) return 'default';
+  if (score >= 50) return 'secondary';
+  return 'destructive';
+};
+
+interface BadgeProps {
+  variant?: 'default' | 'destructive' | 'outline' | 'secondary';
+  className?: string;
+}
+
+const ListingDetailCheck = ({
+  isPresent,
+  label,
+}: {
+  isPresent: boolean;
+  label: string;
+}) => {
+  return (
+    <div className="flex justify-between">
+      <span className="text-sm text-muted-foreground">{label}:</span>
+      <span className="flex items-center text-sm">
+        {isPresent ? (
+          <CheckCircle className="mr-1 h-4 w-4 text-green-500" />
+        ) : (
+          <XCircle className="mr-1 h-4 w-4 text-red-500" />
+        )}
+        {isPresent ? 'Present' : 'Missing'}
+      </span>
+    </div>
+  );
+};
+
 export default function ListingQualityChecker() {
   const { toast } = useToast();
   const [listings, setListings] = useState<ListingData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [asin, setAsin] = useState('');
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (listings.length > 0) {
+      setError(null);
+    }
+  }, [listings]);
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -54,98 +119,111 @@ export default function ListingQualityChecker() {
     setIsLoading(true);
     setError(null);
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      try {
-        const content = e.target?.result;
-        if (typeof content !== 'string') {
-          throw new Error('Invalid file content');
+    Papa.parse(file, {
+      header: true,
+      skipEmptyLines: true,
+      complete: async (results) => {
+        try {
+          if (results.errors.length > 0) {
+            throw new Error(
+              `CSV errors: ${results.errors.map((e) => e.message).join(', ')}`,
+            );
+          }
+
+          const requiredColumns = [
+            'product',
+            'title',
+            'description',
+            'bullet_points',
+            'images',
+            'keywords',
+          ];
+          const missingColumns = requiredColumns.filter(
+            (col) => !results.meta.fields.includes(col),
+          );
+          if (missingColumns.length > 0) {
+            throw new Error(
+              `Missing required columns: ${missingColumns.join(', ')}`,
+            );
+          }
+
+          interface CSVRow {
+            product: string;
+            title: string;
+            description: string;
+            bullet_points: string;
+            images: string;
+            keywords: string;
+          }
+
+          const processedData = await Promise.all(
+            results.data.map(async (row: CSVRow) => {
+              const keywords =
+                row.keywords
+                  ?.split(',')
+                  .map((k) => k.trim())
+                  .filter(Boolean) || [];
+
+              const keywordAnalysis =
+                await KeywordIntelligence.analyzeBatch(keywords);
+
+              const listing: ListingData = {
+                product: row.product,
+                title: row.title,
+                description: row.description,
+                bulletPoints: row.bullet_points?.split(';').filter(Boolean),
+                images: Number(row.images) || 0,
+                keywords,
+                keywordAnalysis,
+              };
+
+              return {
+                ...listing,
+                score: calculateListingScore(listing),
+              };
+            }),
+          );
+
+          setListings(processedData);
+          toast({
+            title: 'Success',
+            description: `${file.name} processed successfully`,
+            variant: 'default',
+          });
+        } catch (error) {
+          setError(error instanceof Error ? error.message : 'An error occurred');
+          toast({
+            title: 'Error',
+            description: error.message,
+            variant: 'destructive',
+          });
+        } finally {
+          setIsLoading(false);
+          if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+          }
         }
-
-        Papa.parse(content, {
-          header: true,
-          skipEmptyLines: true,
-          complete: async (results) => {
-            if (results.errors.length > 0) {
-              throw new Error(
-                `CSV errors: ${results.errors.map((e) => e.message).join(', ')}`,
-              );
-            }
-
-            const requiredColumns = [
-              'product',
-              'title',
-              'description',
-              'bullet_points',
-              'images',
-              'keywords',
-            ];
-            const missingColumns = requiredColumns.filter(
-              (col) => !results.meta.fields.includes(col),
-            );
-            if (missingColumns.length > 0) {
-              throw new Error(
-                `Missing required columns: ${missingColumns.join(', ')}`,
-              );
-            }
-
-            interface CSVRow {
-              product: string;
-              title: string;
-              description: string;
-              bullet_points: string;
-              images: string;
-              keywords: string;
-            }
-
-            const processedData = await Promise.all(
-              results.data.map(async (row: CSVRow) => {
-                const keywords =
-                  row.keywords
-                    ?.split(',')
-                    .map((k) => k.trim())
-                    .filter(Boolean) || [];
-
-                const keywordAnalysis =
-                  await KeywordIntelligence.analyzeBatch(keywords);
-
-                return {
-                  product: row.product,
-                  title: row.title,
-                  description: row.description,
-                  bulletPoints: row.bullet_points?.split(';').filter(Boolean),
-                  images: Number(row.images) || 0,
-                  keywords,
-                  keywordAnalysis,
-                };
-              }),
-            );
-
-            setListings(processedData);
-            setError(null);
-            toast({
-              title: 'Success',
-              description: `${file.name} processed successfully`,
-              variant: 'default',
-            });
-          },
-        });
-      } catch (error) {
-        setError(error instanceof Error ? error.message : 'An error occurred');
+      },
+      error: (error) => {
+        setError(`Error parsing CSV file: ${error.message}`);
         toast({
-          title: 'Error',
-          description: error.message,
+          title: 'CSV Error',
+          description: `Error parsing CSV file: ${error.message}`,
           variant: 'destructive',
         });
-      }
-      setIsLoading(false);
-    };
-    reader.readAsText(file);
+        setIsLoading(false);
+      },
+    });
   };
 
   const handleAsinCheck = () => {
     if (!asin.trim()) {
       setError('Please enter an ASIN');
+      toast({
+        title: 'Input Error',
+        description: 'Please enter an ASIN',
+        variant: 'destructive',
+      });
       return;
     }
 
@@ -191,10 +269,14 @@ export default function ListingQualityChecker() {
         suggestions: selectedSuggestions.length
           ? selectedSuggestions
           : ['Listing looks good!'],
-        score: Math.max(0, 100 - selectedIssues.length * 15),
       };
 
-      setListings([...listings, newListing]);
+      const listingWithScore = {
+        ...newListing,
+        score: calculateListingScore(newListing),
+      };
+
+      setListings([...listings, listingWithScore]);
       setAsin('');
       setIsLoading(false);
     }, 1500);
@@ -202,6 +284,25 @@ export default function ListingQualityChecker() {
 
   return (
     <div className="space-y-6">
+      <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg flex items-start gap-3">
+        <Info className="h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0" />
+        <div className="text-sm text-blue-700 dark:text-blue-300">
+          <p className="font-medium">CSV Format Requirements:</p>
+          <p>
+            Your CSV file should have the following columns:{' '}
+            <code>product</code>, <code>title</code>, <code>description</code>,{' '}
+            <code>bullet_points</code> (semicolon-separated),{' '}
+            <code>images</code>, <code>keywords</code> (comma-separated)
+          </p>
+          <p className="mt-1">
+            Example: <code>product,title,description,bullet_points,images,keywords</code>
+            <br />
+            <code>
+              Wireless Earbuds,&quot;Premium Wireless Earbuds&quot;,&quot;Experience superior sound quality...&quot;,&quot;Crystal Clear Audio;Long Battery Life;Comfortable Fit&quot;,7,&quot;wireless earbuds, bluetooth earbuds, noise cancelling earbuds&quot;
+            </code>
+          </p>
+        </div>
+      </div>
       <div className="flex flex-col gap-4 sm:flex-row">
         <Card className="flex-1">
           <CardContent className="p-4">
@@ -230,6 +331,7 @@ export default function ListingQualityChecker() {
                     className="hidden"
                     onChange={handleFileUpload}
                     disabled={isLoading}
+                    ref={fileInputRef}
                   />
                 </label>
               </div>
@@ -287,13 +389,9 @@ export default function ListingQualityChecker() {
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-medium">Quality Score:</span>
                     <Badge
-                      variant={
-                        (listing.score || 0) >= 80
-                          ? 'default'
-                          : (listing.score || 0) >= 50
-                            ? 'secondary'
-                            : 'destructive'
-                      }
+                      variant={getListingQualityBadgeVariant(
+                        listing.score || 0,
+                      )}
                     >
                       {listing.score || 0}/100
                     </Badge>
@@ -306,78 +404,29 @@ export default function ListingQualityChecker() {
                       Listing Details
                     </h4>
                     <div className="space-y-2 rounded-lg border p-3">
-                      <div className="flex justify-between">
-                        <span className="text-sm text-muted-foreground">
-                          Title:
-                        </span>
-                        <span className="flex items-center text-sm">
-                          {listing.title ? (
-                            <CheckCircle className="mr-1 h-4 w-4 text-green-500" />
-                          ) : (
-                            <XCircle className="mr-1 h-4 w-4 text-red-500" />
-                          )}
-                          {listing.title ? 'Present' : 'Missing'}
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-sm text-muted-foreground">
-                          Description:
-                        </span>
-                        <span className="flex items-center text-sm">
-                          {listing.description ? (
-                            <CheckCircle className="mr-1 h-4 w-4 text-green-500" />
-                          ) : (
-                            <XCircle className="mr-1 h-4 w-4 text-red-500" />
-                          )}
-                          {listing.description ? 'Present' : 'Missing'}
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-sm text-muted-foreground">
-                          Bullet Points:
-                        </span>
-                        <span className="flex items-center text-sm">
-                          {listing.bulletPoints &&
-                          listing.bulletPoints.length >= 5 ? (
-                            <CheckCircle className="mr-1 h-4 w-4 text-green-500" />
-                          ) : (
-                            <XCircle className="mr-1 h-4 w-4 text-red-500" />
-                          )}
-                          {listing.bulletPoints
-                            ? `${listing.bulletPoints.length}/5 recommended`
-                            : 'Missing'}
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-sm text-muted-foreground">
-                          Images:
-                        </span>
-                        <span className="flex items-center text-sm">
-                          {listing.images && listing.images >= 7 ? (
-                            <CheckCircle className="mr-1 h-4 w-4 text-green-500" />
-                          ) : (
-                            <XCircle className="mr-1 h-4 w-4 text-red-500" />
-                          )}
-                          {listing.images
-                            ? `${listing.images}/7 recommended`
-                            : 'Missing'}
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-sm text-muted-foreground">
-                          Keywords:
-                        </span>
-                        <span className="flex items-center text-sm">
-                          {listing.keywords && listing.keywords.length >= 5 ? (
-                            <CheckCircle className="mr-1 h-4 w-4 text-green-500" />
-                          ) : (
-                            <XCircle className="mr-1 h-4 w-4 text-red-500" />
-                          )}
-                          {listing.keywords
-                            ? `${listing.keywords.length} keywords`
-                            : 'Missing'}
-                        </span>
-                      </div>
+                      <ListingDetailCheck
+                        isPresent={!!listing.title}
+                        label="Title"
+                      />
+                      <ListingDetailCheck
+                        isPresent={!!listing.description}
+                        label="Description"
+                      />
+                      <ListingDetailCheck
+                        isPresent={
+                          !!listing.bulletPoints &&
+                          listing.bulletPoints.length >= MAX_BULLET_POINTS
+                        }
+                        label={`Bullet Points (${MAX_BULLET_POINTS} recommended)`}
+                      />
+                      <ListingDetailCheck
+                        isPresent={!!listing.images && listing.images >= MAX_IMAGES}
+                        label={`Images (${MAX_IMAGES} recommended)`}
+                      />
+                      <ListingDetailCheck
+                        isPresent={!!listing.keywords && listing.keywords.length >= MIN_KEYWORDS}
+                        label={`Keywords (${MIN_KEYWORDS} minimum)`}
+                      />
                     </div>
                   </div>
 

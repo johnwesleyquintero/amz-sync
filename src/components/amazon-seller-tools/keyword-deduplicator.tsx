@@ -1,7 +1,6 @@
 'use client';
 
 import type React from 'react';
-
 import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -17,8 +16,8 @@ import {
   Info,
 } from 'lucide-react';
 import Papa from 'papaparse';
-// Add import for SampleCsvButton
 import SampleCsvButton from './sample-csv-button';
+import { useToast } from '@/hooks/use-toast';
 
 type KeywordData = {
   product: string;
@@ -28,6 +27,7 @@ type KeywordData = {
 };
 
 export default function KeywordDeduplicator() {
+  const { toast } = useToast();
   const [products, setProducts] = useState<KeywordData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -50,24 +50,26 @@ export default function KeywordDeduplicator() {
           setError(
             `Error parsing CSV file: ${result.errors[0].message}. Please check the format.`,
           );
+          toast({
+            title: 'CSV Error',
+            description: `Error parsing CSV file: ${result.errors[0].message}. Please check the format.`,
+            variant: 'destructive',
+          });
           setIsLoading(false);
           return;
         }
 
         try {
-          // Process the parsed data
           const processedData: KeywordData[] = result.data
-            .filter((item) => item.product && item.keywords)
-            .map((item) => {
-              // Split keywords by comma if it's a string
+            .filter((item: any) => item.product && item.keywords)
+            .map((item: any) => {
               const originalKeywords =
                 typeof item.keywords === 'string'
-                  ? item.keywords.split(',').map((k) => k.trim())
+                  ? item.keywords.split(',').map((k: string) => k.trim())
                   : Array.isArray(item.keywords)
-                    ? item.keywords
+                    ? item.keywords.map((k: string) => k.trim())
                     : [];
 
-              // Remove duplicates
               const cleanedKeywords = [...new Set(originalKeywords)];
 
               return {
@@ -83,26 +85,48 @@ export default function KeywordDeduplicator() {
             setError(
               'No valid data found in CSV. Please ensure your CSV has columns: product, keywords',
             );
+            toast({
+              title: 'CSV Error',
+              description:
+                'No valid data found in CSV. Please ensure your CSV has columns: product, keywords',
+              variant: 'destructive',
+            });
             setIsLoading(false);
             return;
           }
 
           setProducts(processedData);
+          toast({
+            title: 'CSV Processed',
+            description: `Loaded ${processedData.length} product keywords`,
+            variant: 'default',
+          });
           setIsLoading(false);
-        } catch {
-          setError(
-            'Failed to process CSV data. Please ensure your CSV has columns: product, keywords',
-          );
+        } catch (err) {
+          const errorMessage =
+            err instanceof Error
+              ? err.message
+              : 'Failed to process CSV data. Please ensure your CSV has columns: product, keywords';
+          setError(errorMessage);
+          toast({
+            title: 'Processing Failed',
+            description: errorMessage,
+            variant: 'destructive',
+          });
           setIsLoading(false);
         }
       },
       error: (error) => {
         setError(`Error parsing CSV file: ${error.message}`);
+        toast({
+          title: 'CSV Error',
+          description: `Error parsing CSV file: ${error.message}`,
+          variant: 'destructive',
+        });
         setIsLoading(false);
       },
     });
 
-    // Reset the file input
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -111,6 +135,11 @@ export default function KeywordDeduplicator() {
   const handleManualProcess = () => {
     if (!manualKeywords.trim()) {
       setError('Please enter keywords to process');
+      toast({
+        title: 'Input Error',
+        description: 'Please enter keywords to process',
+        variant: 'destructive',
+      });
       return;
     }
 
@@ -128,15 +157,24 @@ export default function KeywordDeduplicator() {
     setManualKeywords('');
     setManualProduct('');
     setError(null);
+    toast({
+      title: 'Keywords Processed',
+      description: 'Keywords deduplicated successfully',
+      variant: 'default',
+    });
   };
 
   const handleExport = () => {
     if (products.length === 0) {
       setError('No data to export');
+      toast({
+        title: 'Export Error',
+        description: 'No data to export',
+        variant: 'destructive',
+      });
       return;
     }
 
-    // Prepare data for CSV export
     const exportData = products.map((product) => ({
       product: product.product,
       originalKeywords: product.originalKeywords.join(', '),
@@ -144,10 +182,7 @@ export default function KeywordDeduplicator() {
       duplicatesRemoved: product.duplicatesRemoved,
     }));
 
-    // Create CSV content
     const csv = Papa.unparse(exportData);
-
-    // Create a blob and download link
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -156,6 +191,11 @@ export default function KeywordDeduplicator() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    toast({
+      title: 'Export Success',
+      description: 'Keywords exported successfully',
+      variant: 'default',
+    });
   };
 
   const clearData = () => {
@@ -164,6 +204,11 @@ export default function KeywordDeduplicator() {
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
+    toast({
+      title: 'Data Cleared',
+      description: 'Keyword data cleared',
+      variant: 'default',
+    });
   };
 
   return (

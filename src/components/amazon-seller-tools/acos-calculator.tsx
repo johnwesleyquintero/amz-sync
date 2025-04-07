@@ -35,23 +35,63 @@ import {
   Tooltip,
   XAxis,
   YAxis,
+  ResponsiveContainer,
 } from 'recharts';
 import SampleCsvButton from './sample-csv-button';
+import { useToast } from '@/hooks/use-toast';
+
+// Constants for ACoS ratings
+const ACOS_EXCELLENT_THRESHOLD = 25;
+const ACOS_GOOD_THRESHOLD = 35;
+
+// Interface for manual campaign input
+interface ManualCampaignInput {
+  campaign: string;
+  adSpend: string;
+  sales: string;
+}
 
 export default function AcosCalculator() {
+  const { toast } = useToast();
   const [campaigns, setCampaigns] = useState<CampaignData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedMetric, setSelectedMetric] = useState<
     'acos' | 'roas' | 'ctr' | 'cpc'
   >('acos');
-  const [manualCampaignData, setManualCampaignData] = useState({
-    campaignName: '',
+  const [manualCampaign, setManualCampaign] = useState<ManualCampaignInput>({
+    campaign: '',
     adSpend: '',
     sales: '',
   });
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Helper function to validate CSV data
+  const isValidCsvRow = (item: any): boolean => {
+    return (
+      item.campaign &&
+      !isNaN(Number(item.adSpend)) &&
+      !isNaN(Number(item.sales))
+    );
+  };
+
+  // Helper function to process a single CSV row
+  const processCsvRow = (item: any): CampaignData => {
+    const adSpend = Number(item.adSpend);
+    const sales = Number(item.sales);
+    const impressions = item.impressions ? Number(item.impressions) : undefined;
+    const clicks = item.clicks ? Number(item.clicks) : undefined;
+
+    return {
+      campaign: String(item.campaign),
+      adSpend,
+      sales,
+      impressions,
+      clicks,
+      ...calculateMetrics({ adSpend, sales, impressions, clicks }),
+    };
+  };
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -69,55 +109,64 @@ export default function AcosCalculator() {
           setError(
             `Error parsing CSV file: ${result.errors[0].message}. Please check the format.`,
           );
+          toast({
+            title: 'CSV Error',
+            description: `Error parsing CSV file: ${result.errors[0].message}. Please check the format.`,
+            variant: 'destructive',
+          });
           setIsLoading(false);
           return;
         }
 
         try {
           const processedData: CampaignData[] = result.data
-            .filter(
-              (item) =>
-                item.campaign &&
-                !isNaN(Number(item.adSpend)) &&
-                !isNaN(Number(item.sales)),
-            )
-            .map((item) => ({
-              campaign: String(item.campaign),
-              adSpend: Number(item.adSpend),
-              sales: Number(item.sales),
-              impressions: item.impressions
-                ? Number(item.impressions)
-                : undefined,
-              clicks: item.clicks ? Number(item.clicks) : undefined,
-              ...calculateMetrics({
-                adSpend: Number(item.adSpend),
-                sales: Number(item.sales),
-                impressions: item.impressions
-                  ? Number(item.impressions)
-                  : undefined,
-                clicks: item.clicks ? Number(item.clicks) : undefined,
-              }),
-            }));
+            .filter(isValidCsvRow)
+            .map(processCsvRow);
 
           if (processedData.length === 0) {
             setError(
               'No valid data found in CSV. Please ensure your CSV has columns: campaign, adSpend, sales',
             );
+            toast({
+              title: 'CSV Error',
+              description:
+                'No valid data found in CSV. Please ensure your CSV has columns: campaign, adSpend, sales',
+              variant: 'destructive',
+            });
             setIsLoading(false);
             return;
           }
 
           setCampaigns(processedData);
+          toast({
+            title: 'CSV Processed',
+            description: `Loaded ${processedData.length} campaign data`,
+            variant: 'default',
+          });
         } catch (err) {
           setError(
-            `Failed to process CSV data: ${err instanceof Error ? err.message : String(err)}. Please ensure your CSV has the correct format`,
+            `Failed to process CSV data: ${
+              err instanceof Error ? err.message : String(err)
+            }. Please ensure your CSV has the correct format`,
           );
+          toast({
+            title: 'Processing Failed',
+            description: `Failed to process CSV data: ${
+              err instanceof Error ? err.message : String(err)
+            }. Please ensure your CSV has the correct format`,
+            variant: 'destructive',
+          });
         } finally {
           setIsLoading(false);
         }
       },
       error: (error) => {
         setError(`Error parsing CSV file: ${error.message}`);
+        toast({
+          title: 'CSV Error',
+          description: `Error parsing CSV file: ${error.message}`,
+          variant: 'destructive',
+        });
         setIsLoading(false);
       },
     });
@@ -128,16 +177,14 @@ export default function AcosCalculator() {
   };
 
   const handleManualCalculate = () => {
+    // Validate input
     if (!manualCampaign.campaign.trim()) {
       setError('Please enter a campaign name');
-      return;
-    }
-    if (!manualCampaign.adSpend) {
-      setError('Please enter ad spend amount');
-      return;
-    }
-    if (!manualCampaign.sales) {
-      setError('Please enter sales amount');
+      toast({
+        title: 'Input Error',
+        description: 'Please enter a campaign name',
+        variant: 'destructive',
+      });
       return;
     }
 
@@ -146,90 +193,112 @@ export default function AcosCalculator() {
 
     if (isNaN(adSpend) || adSpend < 0) {
       setError('Ad Spend must be a valid positive number');
+      toast({
+        title: 'Input Error',
+        description: 'Ad Spend must be a valid positive number',
+        variant: 'destructive',
+      });
       return;
     }
 
-    const manualACOSCampaign = {
-      campaign: manualCampaignData.campaign,
-      adSpend,
-      sales,
-      ...calculateMetrics({ adSpend, sales }),
-    };
-
-    setCampaigns([...campaigns, newACOSCampaign]);
-    setManualCampaignData({
-      campaignName: '',
-      adSpend: '',
-      sales: '',
-    });
-    setError(null);
-
-    const manualCampaignData = {
-      campaign: manualCampaign.campaign,
-      adSpend,
-      sales,
-      ...calculateMetrics({ adSpend, sales }),
-    };
-
-    setCampaigns([...campaigns, newACOSCampaign]);
-    setManualCampaignData({
-      campaignName: '',
-      adSpend: '',
-      sales: '',
-    });
-    setError(null);
     if (isNaN(sales) || sales < 0) {
       setError('Sales amount must be a valid positive number');
+      toast({
+        title: 'Input Error',
+        description: 'Sales amount must be a valid positive number',
+        variant: 'destructive',
+      });
       return;
     }
+
     if (sales === 0) {
       setError(
         'Sales amount cannot be zero as it would result in invalid ACOS calculation',
       );
+      toast({
+        title: 'Input Error',
+        description:
+          'Sales amount cannot be zero as it would result in invalid ACOS calculation',
+        variant: 'destructive',
+      });
       return;
     }
 
+    // Calculate metrics
     const metrics = calculateMetrics({ adSpend, sales });
-    const newACOSCampaign: CampaignData = {
-      campaign: manualCampaignData.campaign,
+
+    // Create new campaign data
+    const newCampaign: CampaignData = {
+      campaign: manualCampaign.campaign,
       adSpend,
       sales,
       ...metrics,
     };
 
+    // Update state
     setCampaigns([...campaigns, newCampaign]);
     setManualCampaign({ campaign: '', adSpend: '', sales: '' });
     setError(null);
+    toast({
+      title: 'Campaign Added',
+      description: 'Campaign data added successfully',
+      variant: 'default',
+    });
   };
 
   const handleExport = () => {
     if (campaigns.length === 0) {
       setError('No data to export');
+      toast({
+        title: 'Export Error',
+        description: 'No data to export',
+        variant: 'destructive',
+      });
       return;
     }
 
-    const exportData = campaigns.map((campaign) => ({
-      campaign: campaign.campaign,
-      adSpend: campaign.adSpend.toFixed(2),
-      sales: campaign.sales.toFixed(2),
-      acos: campaign.acos?.toFixed(2),
-      roas: campaign.roas?.toFixed(2),
-      impressions: campaign.impressions || '',
-      clicks: campaign.clicks || '',
-      ctr: campaign.ctr?.toFixed(2) || '',
-      cpc: campaign.cpc?.toFixed(2) || '',
-      conversionRate: campaign.conversionRate?.toFixed(2) || '',
-    }));
+    try {
+      const exportData = campaigns.map((campaign) => ({
+        campaign: campaign.campaign,
+        adSpend: campaign.adSpend.toFixed(2),
+        sales: campaign.sales.toFixed(2),
+        acos: campaign.acos?.toFixed(2),
+        roas: campaign.roas?.toFixed(2),
+        impressions: campaign.impressions || '',
+        clicks: campaign.clicks || '',
+        ctr: campaign.ctr?.toFixed(2) || '',
+        cpc: campaign.cpc?.toFixed(2) || '',
+        conversionRate: campaign.conversionRate?.toFixed(2) || '',
+      }));
 
-    const csv = Papa.unparse(exportData);
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', 'acos_calculations.csv');
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+      const csv = Papa.unparse(exportData);
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'acos_calculations.csv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      toast({
+        title: 'Export Success',
+        description: 'Campaign data exported successfully',
+        variant: 'default',
+      });
+    } catch (error) {
+      setError(
+        `Error exporting data: ${
+          error instanceof Error ? error.message : 'Unknown error'
+        }`,
+      );
+      toast({
+        title: 'Export Error',
+        description: `Error exporting data: ${
+          error instanceof Error ? error.message : 'Unknown error'
+        }`,
+        variant: 'destructive',
+      });
+    }
   };
 
   const clearData = () => {
@@ -238,108 +307,15 @@ export default function AcosCalculator() {
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
+    toast({
+      title: 'Data Cleared',
+      description: 'Campaign data cleared',
+      variant: 'default',
+    });
   };
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center mb-6">
-        <Button
-          variant="outline"
-          onClick={() => fileInputRef.current?.click()}
-          className="w-full sm:w-auto"
-        >
-          <Upload className="mr-2 h-4 w-4" />
-          Upload CSV
-        </Button>
-        <input
-          type="file"
-          accept=".csv"
-          onChange={handleFileUpload}
-          ref={fileInputRef}
-          className="hidden"
-        />
-        <SampleCsvButton
-          dataType="acos"
-          fileName="sample-acos-calculator.csv"
-        />
-        <Button
-          variant="outline"
-          onClick={handleExport}
-          className="w-full sm:w-auto"
-          disabled={campaigns.length === 0}
-        >
-          <Download className="mr-2 h-4 w-4" />
-          Export Data
-        </Button>
-        <div className="flex gap-2">
-          {Object.entries(chartConfig).map(([key, config]) => (
-            <Button
-              key={key}
-              variant={selectedMetric === key ? 'default' : 'outline'}
-              onClick={() => setSelectedMetric(key as typeof selectedMetric)}
-              className="w-full sm:w-auto"
-            >
-              {config.label}
-            </Button>
-          ))}
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-        <ChartContainer config={chartConfig} className="h-[400px]">
-          {(width: number, height: number): React.ReactElement => (
-            <BarChart width={width} height={height} data={campaigns}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="campaign" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Bar
-                dataKey={selectedMetric}
-                name={chartConfig[selectedMetric].label}
-                fill={chartConfig[selectedMetric].theme.light}
-              />
-            </BarChart>
-          )}
-        </ChartContainer>
-
-        <ChartContainer
-          config={{
-            acos: {
-              label: 'ACOS Trend',
-              theme: { light: '#ef4444', dark: '#ef4444' },
-            },
-            roas: {
-              label: 'ROAS Trend',
-              theme: { light: '#10b981', dark: '#10b981' },
-            },
-          }}
-          className="h-[400px]"
-        >
-          {(width: number, height: number): React.ReactElement => (
-            <LineChart width={width} height={height} data={campaigns}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="campaign" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Line
-                type="monotone"
-                dataKey="acos"
-                name="ACoS (%)"
-                stroke="#ef4444"
-              />
-              <Line
-                type="monotone"
-                dataKey="roas"
-                name="ROAS"
-                stroke="#10b981"
-              />
-            </LineChart>
-          )}
-        </ChartContainer>
-      </div>
-
       <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg flex items-start gap-3">
         <Info className="h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0" />
         <div className="text-sm text-blue-700 dark:text-blue-300">
@@ -360,8 +336,8 @@ export default function AcosCalculator() {
           </p>
         </div>
       </div>
-
       <div className="flex flex-col gap-4 sm:flex-row">
+        {/* CSV upload card */}
         <Card className="flex-1">
           <CardContent className="p-4">
             <div className="flex flex-col items-center justify-center gap-4 p-6 text-center">
@@ -412,6 +388,7 @@ export default function AcosCalculator() {
           </CardContent>
         </Card>
 
+        {/* Manual input card */}
         <Card className="flex-1">
           <CardContent className="p-4">
             <div className="space-y-4 p-2">
@@ -483,95 +460,88 @@ export default function AcosCalculator() {
         <div className="space-y-2 py-4 text-center">
           <Progress value={45} className="h-2" />
           <p className="text-sm text-muted-foreground">
-            Processing your data...
+            Analyzing campaign performance...
           </p>
         </div>
       )}
 
       {campaigns.length > 0 && (
-        <div className="rounded-lg border">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b bg-muted/50">
-                  <th className="px-4 py-3 text-left text-sm font-medium">
-                    Campaign
-                  </th>
-                  <th className="px-4 py-3 text-right text-sm font-medium">
-                    Ad Spend
-                  </th>
-                  <th className="px-4 py-3 text-right text-sm font-medium">
-                    Sales
-                  </th>
-                  <th className="px-4 py-3 text-right text-sm font-medium">
-                    ACoS
-                  </th>
-                  <th className="px-4 py-3 text-right text-sm font-medium">
-                    ROAS
-                  </th>
-                  <th className="px-4 py-3 text-center text-sm font-medium">
-                    Rating
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {campaigns.map((campaign, index) => (
-                  <tr key={index} className="border-b">
-                    <td className="px-4 py-3 text-sm">{campaign.campaign}</td>
-                    <td className="px-4 py-3 text-right text-sm">
-                      ${campaign.adSpend.toFixed(2)}
-                    </td>
-                    <td className="px-4 py-3 text-right text-sm">
-                      ${campaign.sales.toFixed(2)}
-                    </td>
-                    <td
-                      className={`px-4 py-3 text-right text-sm font-medium ${getAcosColor(campaign.acos || 0)}`}
-                    >
-                      {campaign.acos?.toFixed(2)}%
-                    </td>
-                    <td className="px-4 py-3 text-right text-sm font-medium">
-                      {campaign.roas?.toFixed(2)}x
-                    </td>
-                    <td className="px-4 py-3 text-center">
-                      <Badge
-                        variant={
-                          campaign.acos && campaign.acos < 25
-                            ? 'default'
-                            : campaign.acos && campaign.acos < 35
-                              ? 'secondary'
-                              : 'destructive'
-                        }
-                      >
-                        {getAcosRating(campaign.acos || 0)}
-                      </Badge>
-                    </td>
+        <>
+          <div className="flex justify-end">
+            <Button variant="outline" size="sm" onClick={handleExport}>
+              <Download className="mr-2 h-4 w-4" />
+              Export Data
+            </Button>
+          </div>
+          <div className="rounded-lg border">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b bg-muted/50">
+                    <th className="px-4 py-3 text-left text-sm font-medium">
+                      Campaign
+                    </th>
+                    <th className="px-4 py-3 text-right text-sm font-medium">
+                      Ad Spend
+                    </th>
+                    <th className="px-4 py-3 text-right text-sm font-medium">
+                      Sales
+                    </th>
+                    <th className="px-4 py-3 text-right text-sm font-medium">
+                      ACoS
+                    </th>
+                    <th className="px-4 py-3 text-right text-sm font-medium">
+                      ROAS
+                    </th>
+                    <th className="px-4 py-3 text-center text-sm font-medium">
+                      Rating
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {campaigns.map((campaign, index) => (
+                    <tr key={index} className="border-b">
+                      <td className="px-4 py-3 text-sm">
+                        {campaign.campaign}
+                      </td>
+                      <td className="px-4 py-3 text-right text-sm">
+                        ${campaign.adSpend.toFixed(2)}
+                      </td>
+                      <td className="px-4 py-3 text-right text-sm">
+                        ${campaign.sales.toFixed(2)}
+                      </td>
+                      <td
+                        className={`px-4 py-3 text-right text-sm font-medium ${getAcosColor(
+                          campaign.acos || 0,
+                        )}`}
+                      >
+                        {campaign.acos?.toFixed(2)}%
+                      </td>
+                      <td className="px-4 py-3 text-right text-sm font-medium">
+                        {campaign.roas?.toFixed(2)}x
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        <Badge
+                          variant={
+                            campaign.acos &&
+                            campaign.acos < ACOS_EXCELLENT_THRESHOLD
+                              ? 'default'
+                              : campaign.acos &&
+                                campaign.acos < ACOS_GOOD_THRESHOLD
+                                ? 'secondary'
+                                : 'destructive'
+                          }
+                        >
+                          {getAcosRating(campaign.acos || 0)}
+                        </Badge>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
-      )}
-
-      {campaigns.length > 0 && (
-        <div className="rounded-lg border bg-muted/20 p-4">
-          <h3 className="mb-2 text-sm font-medium">
-            ACoS Interpretation Guide
-          </h3>
-          <div className="grid gap-2 sm:grid-cols-2 md:grid-cols-5">
-            {acosRatingGuide.map((rating) => (
-              <div
-                key={rating.label}
-                className="rounded-lg border bg-background p-2 text-center"
-              >
-                <div className="text-xs font-medium text-muted-foreground">
-                  {rating.label}
-                </div>
-                <div className={rating.color}>{rating.range}</div>
-              </div>
-            ))}
-          </div>
-        </div>
+        </>
       )}
     </div>
   );

@@ -1,11 +1,10 @@
 'use client';
 
 import type React from 'react';
-
 import { useState, useRef } from 'react';
-import { Button } from '@/components/ui/button'; // Reusable Button component
-import { Input } from '@/components/ui/input'; // Reusable Input component
-import { Label } from '@/components/ui/label'; // Reusable Label component
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Table,
   TableBody,
@@ -13,11 +12,12 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'; // Reusable Table components
-import { Card, CardContent } from '@/components/ui/card'; // Reusable Card components
-import { Progress } from '@/components/ui/progress'; // Reusable Progress component
+} from '@/components/ui/table';
+import { Card, CardContent } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
 import { Upload, FileUp, AlertCircle, Download, Info } from 'lucide-react';
 import Papa from 'papaparse';
+import SampleCsvButton from './sample-csv-button';
 
 type ProductData = {
   product: string;
@@ -30,8 +30,7 @@ type ProductData = {
 };
 
 export default function FbaCalculator() {
-  const [csvData, setCsvData] = useState<ProductData[]>([]);
-  const [results, setResults] = useState<ProductData[]>([]);
+  const [products, setProducts] = useState<ProductData[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [manualProduct, setManualProduct] = useState<ProductData>({
     product: '',
@@ -51,7 +50,7 @@ export default function FbaCalculator() {
       return;
     }
 
-    Papa.parse<FBAData>(file, {
+    Papa.parse<ProductData>(file, {
       header: true,
       dynamicTyping: true,
       skipEmptyLines: true,
@@ -60,21 +59,19 @@ export default function FbaCalculator() {
           setError(
             `Error parsing CSV file: ${result.errors[0].message}. Please check the format.`,
           );
-          setIsLoading(false);
           return;
         }
 
         try {
           const validData = result.data
-            .filter((item: FBAData) => {
-              return (
+            .filter(
+              (item: ProductData) =>
                 item.product &&
                 !isNaN(Number(item.cost)) &&
                 !isNaN(Number(item.price)) &&
-                !isNaN(Number(item.fees))
-              );
-            })
-            .map((item: FBAData) => ({
+                !isNaN(Number(item.fees)),
+            )
+            .map((item: ProductData) => ({
               product: String(item.product),
               cost: Number(item.cost),
               price: Number(item.price),
@@ -85,27 +82,25 @@ export default function FbaCalculator() {
             setError(
               'No valid data found in CSV. Please ensure your CSV has columns: product, cost, price, fees',
             );
-            setIsLoading(false);
             return;
           }
 
-          setCsvData(validData);
+          setProducts(validData);
           calculateProfit(validData);
-          setIsLoading(false);
         } catch {
           setError(
             'Failed to process CSV data. Please ensure your CSV has columns: product, cost, price, fees',
           );
-          setIsLoading(false);
         }
       },
       error: (error) => {
         setError(`Error parsing CSV file: ${error.message}`);
+      },
+      finally: () => {
         setIsLoading(false);
       },
     });
 
-    // Reset the file input
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -118,25 +113,25 @@ export default function FbaCalculator() {
       const margin = (profit / item.price) * 100;
       return { ...item, profit, roi, margin };
     });
-    setResults(calculatedResults);
+    setProducts(calculatedResults);
   };
 
   const handleManualCalculation = () => {
     if (
       !manualProduct.product ||
       manualProduct.cost <= 0 ||
-      manualProduct.price <= 0
+      manualProduct.price <= 0 ||
+      manualProduct.fees < 0
     ) {
       setError('Please fill in all fields with valid values');
       return;
     }
 
     setError(null);
-    const newData = [...csvData, manualProduct];
-    setCsvData(newData);
+    const newData = [...products, manualProduct];
+    setProducts(newData);
     calculateProfit(newData);
 
-    // Reset form
     setManualProduct({
       product: '',
       cost: 0,
@@ -146,23 +141,20 @@ export default function FbaCalculator() {
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setManualProduct({
-      ...manualProduct,
-      [name]: name === 'product' ? value : Number.parseFloat(value) || 0,
-    });
+    const { name, value, type } = e.target;
+    setManualProduct((prev) => ({
+      ...prev,
+      [name]: type === 'number' ? Number(value) : value,
+    }));
   };
 
   const handleExport = () => {
-    if (results.length === 0) {
+    if (products.length === 0) {
       setError('No data to export');
       return;
     }
 
-    // Create CSV content
-    const csv = Papa.unparse(results);
-
-    // Create a blob and download link
+    const csv = Papa.unparse(products);
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -174,8 +166,7 @@ export default function FbaCalculator() {
   };
 
   const clearData = () => {
-    setCsvData([]);
-    setResults([]);
+    setProducts([]);
     setError(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
@@ -222,11 +213,12 @@ export default function FbaCalculator() {
                   <FileUp className="mr-2 h-4 w-4" />
                   Choose File
                 </Button>
-                {results.length > 0 && (
+                {products.length > 0 && (
                   <Button variant="outline" onClick={clearData}>
                     Clear Data
                   </Button>
                 )}
+                <SampleCsvButton dataType="fba" fileName="sample-fba-calculator.csv" />
               </div>
             </div>
           </CardContent>
@@ -307,7 +299,7 @@ export default function FbaCalculator() {
         </div>
       )}
 
-      {results.length > 0 && (
+      {products.length > 0 && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold">Results</h3>
@@ -331,7 +323,7 @@ export default function FbaCalculator() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {results.map((item, index) => (
+                {products.map((item, index) => (
                   <TableRow key={index}>
                     <TableCell className="font-medium">
                       {item.product}
@@ -346,17 +338,29 @@ export default function FbaCalculator() {
                       {item.fees.toFixed(2)}
                     </TableCell>
                     <TableCell
-                      className={`text-right font-semibold ${item.profit && item.profit < 0 ? 'text-red-500' : 'text-green-500'}`}
+                      className={`text-right font-semibold ${
+                        item.profit && item.profit < 0
+                          ? 'text-red-500'
+                          : 'text-green-500'
+                      }`}
                     >
                       {item.profit?.toFixed(2)}
                     </TableCell>
                     <TableCell
-                      className={`text-right ${item.roi && item.roi < 0 ? 'text-red-500' : 'text-green-500'}`}
+                      className={`text-right ${
+                        item.roi && item.roi < 0
+                          ? 'text-red-500'
+                          : 'text-green-500'
+                      }`}
                     >
                       {item.roi?.toFixed(2)}%
                     </TableCell>
                     <TableCell
-                      className={`text-right ${item.margin && item.margin < 0 ? 'text-red-500' : 'text-green-500'}`}
+                      className={`text-right ${
+                        item.margin && item.margin < 0
+                          ? 'text-red-500'
+                          : 'text-green-500'
+                      }`}
                     >
                       {item.margin?.toFixed(2)}%
                     </TableCell>
@@ -368,7 +372,13 @@ export default function FbaCalculator() {
                               ? Math.min(item.margin, 100)
                               : 0
                           }
-                          className={`h-2 ${item.margin && item.margin < 15 ? 'bg-red-200' : item.margin && item.margin < 30 ? 'bg-yellow-200' : 'bg-green-200'}`}
+                          className={`h-2 ${
+                            item.margin && item.margin < 15
+                              ? 'bg-red-200'
+                              : item.margin && item.margin < 30
+                              ? 'bg-yellow-200'
+                              : 'bg-green-200'
+                          }`}
                         />
                       </div>
                     </TableCell>

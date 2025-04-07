@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { Card } from '../ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
 import {
   ResponsiveContainer,
   LineChart,
@@ -8,21 +8,47 @@ import {
   YAxis,
   CartesianGrid,
   Legend,
+  Tooltip as RechartsTooltip,
 } from 'recharts';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
-import { toast } from '../ui/use-toast';
+import { useToast } from '../ui/use-toast';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from '../ui/tooltip';
-import { Info } from 'lucide-react';
+import { Info, FileText } from 'lucide-react';
 import { useIsMobile } from '../../hooks/use-mobile';
 import Papa from 'papaparse';
-import { ProcessedRow, MetricType, ChartDataPoint } from '@/lib/amazon-types';
+import { ProcessedRow, ChartDataPoint } from '@/lib/amazon-types';
+import { Progress } from '../ui/progress';
+import { cn } from '@/lib/utils';
+
+// Constants
+const COMPETITOR_ANALYSIS_ENDPOINT = '/api/amazon/competitor-analysis';
+const COMPETITOR_ANALYSES_KEY = 'competitorAnalyses';
+const REQUIRED_CSV_HEADERS = [
+  'asin',
+  'price',
+  'reviews',
+  'rating',
+  'conversion_rate',
+  'click_through_rate',
+];
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const MAX_SAVED_ANALYSES = 10;
+
+type MetricType =
+  | 'price'
+  | 'reviews'
+  | 'rating'
+  | 'sales_velocity'
+  | 'inventory_levels'
+  | 'conversion_rate'
+  | 'click_through_rate';
 
 interface CsvRow {
   asin: string;
@@ -34,7 +60,34 @@ interface CsvRow {
   niche?: string;
 }
 
+const getChartColor = (metric: MetricType): string => {
+  switch (metric) {
+    case 'price':
+      return '#8884d8';
+    case 'reviews':
+      return '#82ca9d';
+    case 'rating':
+      return '#ffc658';
+    case 'sales_velocity':
+      return '#a4de6c';
+    case 'inventory_levels':
+      return '#d0ed57';
+    case 'conversion_rate':
+      return '#cc79cd';
+    case 'click_through_rate':
+      return '#7ac5d8';
+    default:
+      return '#000000';
+  }
+};
+
+interface ApiResponse {
+  competitors: string[];
+  metrics: Record<MetricType, number[]>;
+}
+
 export default function CompetitorAnalyzer() {
+  const { toast } = useToast();
   const [asin, setAsin] = useState('');
   const [metrics, setMetrics] = useState<MetricType[]>([
     'price',
@@ -45,6 +98,8 @@ export default function CompetitorAnalyzer() {
   const [sellerData, setSellerData] = useState<ProcessedRow | null>(null);
   const [competitorData, setCompetitorData] = useState<ProcessedRow[]>([]);
   const [selectedMetrics, setSelectedMetrics] = useState<MetricType[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   const processCsvData = (csvData: CsvRow[]): ProcessedRow[] => {
     return csvData.map((row) => ({
@@ -88,6 +143,27 @@ export default function CompetitorAnalyzer() {
         return;
       }
 
+      if (file.size > MAX_FILE_SIZE) {
+        toast({
+          title: 'Error',
+          description: `File size exceeds the maximum limit of ${
+            MAX_FILE_SIZE / (1024 * 1024)
+          }MB`,
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      if (file.size === 0) {
+        toast({
+          title: 'Error',
+          description: 'The file is empty',
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      setIsLoading(true);
       const reader = new FileReader();
       reader.onload = (e: ProgressEvent<FileReader>) => {
         try {
@@ -102,19 +178,13 @@ export default function CompetitorAnalyzer() {
             complete: (results) => {
               if (results.errors.length > 0) {
                 throw new Error(
-                  `CSV parsing errors: ${results.errors.map((e) => e.message).join(', ')}`,
+                  `CSV parsing errors: ${results.errors
+                    .map((e) => e.message)
+                    .join(', ')}`,
                 );
               }
 
-              const requiredHeaders = [
-                'asin',
-                'price',
-                'reviews',
-                'rating',
-                'conversion_rate',
-                'click_through_rate',
-              ];
-              const missingHeaders = requiredHeaders.filter((h) =>
+              const missingHeaders = REQUIRED_CSV_HEADERS.filter((h) =>
                 results.meta.fields ? !results.meta.fields.includes(h) : true,
               );
               if (missingHeaders.length > 0) {
@@ -135,21 +205,27 @@ export default function CompetitorAnalyzer() {
                 variant: 'default',
               });
             },
+            error: (error) => {
+              throw new Error(`Error parsing CSV: ${error.message}`);
+            },
+            
           });
         } catch (error) {
           toast({
             title: 'Error',
-            description: `Failed to process ${type} CSV (${file.name}): ${error instanceof Error ? error.message : 'Unknown error'}`,
+            description: `Failed to process ${type} CSV (${file.name}): ${
+              error instanceof Error ? error.message : 'Unknown error'
+            }`,
             variant: 'destructive',
           });
+        } finally {
+          setIsLoading(false);
         }
       };
       reader.readAsText(file);
     },
-    [],
+    [toast],
   );
-
-  const [isLoading, setIsLoading] = useState(false);
 
   const analyzeCompetitor = async () => {
     if (!sellerData && !competitorData && !asin) {
@@ -161,7 +237,7 @@ export default function CompetitorAnalyzer() {
       return;
     }
 
-    setIsLoading(true);
+    setIsAnalyzing(true);
     try {
       // Process CSV data if uploaded
       let processedSellerData = sellerData;
@@ -197,7 +273,7 @@ export default function CompetitorAnalyzer() {
 
         if (formattedData.length > 0) {
           setChartData(formattedData);
-          setIsLoading(false);
+          setIsAnalyzing(false);
           return;
         }
       }
@@ -257,7 +333,7 @@ export default function CompetitorAnalyzer() {
         throw new Error('No data available to render');
       }
 
-      setIsLoading(false);
+      setIsAnalyzing(false);
     } catch (error) {
       toast({
         title: 'Error',
@@ -265,7 +341,7 @@ export default function CompetitorAnalyzer() {
         variant: 'destructive',
       });
       setChartData(null);
-      setIsLoading(false);
+      setIsAnalyzing(false);
     }
   };
 
@@ -273,7 +349,13 @@ export default function CompetitorAnalyzer() {
 
   return (
     <Card className="p-6">
-      <div className="space-y-4">
+      <CardHeader>
+        <CardTitle>Competitor Analyzer</CardTitle>
+        <CardDescription>
+          Upload your data or enter an ASIN to analyze competitors.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
         <div
           className={`grid ${isMobile ? 'grid-cols-1' : 'grid-cols-2'} gap-4`}
         >
@@ -294,13 +376,16 @@ export default function CompetitorAnalyzer() {
                 </Tooltip>
               </TooltipProvider>
             </div>
-            <Input
-              id="seller-csv"
-              type="file"
-              accept=".csv"
-              onChange={(e) => handleFileUpload(e, setSellerData, 'seller')}
-              className="cursor-pointer"
-            />
+            <div className="relative">
+              <Input
+                id="seller-csv"
+                type="file"
+                accept=".csv"
+                onChange={(e) => handleFileUpload(e, setSellerData, 'seller')}
+                className="cursor-pointer"
+              />
+              <FileText className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+            </div>
           </div>
           <div>
             <div className="flex items-center gap-2">
@@ -319,15 +404,18 @@ export default function CompetitorAnalyzer() {
                 </Tooltip>
               </TooltipProvider>
             </div>
-            <Input
-              id="competitor-csv"
-              type="file"
-              accept=".csv"
-              onChange={(e) =>
-                handleFileUpload(e, setCompetitorData, 'competitor')
-              }
-              className="cursor-pointer"
-            />
+            <div className="relative">
+              <Input
+                id="competitor-csv"
+                type="file"
+                accept=".csv"
+                onChange={(e) =>
+                  handleFileUpload(e, setCompetitorData, 'competitor')
+                }
+                className="cursor-pointer"
+              />
+              <FileText className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+            </div>
           </div>
         </div>
 
@@ -379,8 +467,15 @@ export default function CompetitorAnalyzer() {
         </div>
 
         <div className="flex gap-4">
-          <Button onClick={analyzeCompetitor} disabled={isLoading}>
-            {isLoading ? 'Analyzing...' : 'Analyze Competitor'}
+          <Button onClick={analyzeCompetitor} disabled={isAnalyzing}>
+            {isAnalyzing ? (
+              <div className="flex items-center gap-2">
+                <Progress value={50} className="h-4 w-16" />
+                Analyzing...
+              </div>
+            ) : (
+              'Analyze Competitor'
+            )}
           </Button>
           <Button
             variant="outline"
@@ -433,6 +528,7 @@ export default function CompetitorAnalyzer() {
                   tick={{ fontSize: isMobile ? 10 : 14 }}
                 />
                 <YAxis />
+                <RechartsTooltip />
                 <Legend wrapperStyle={{ paddingTop: 20 }} />
                 {selectedMetrics.map((metric) => (
                   <Line
@@ -448,7 +544,7 @@ export default function CompetitorAnalyzer() {
             </ResponsiveContainer>
           </div>
         ) : null}
-      </div>
+      </CardContent>
     </Card>
   );
 }
