@@ -26,10 +26,11 @@ const searchTerms = [
   { term: "laptop stand", clicks: 1298, impressions: 19876, ctr: 6.5, rank: 3.4 },
 ];
 
+// Fixed campaign data with properly typed status values
 const campaigns = [
-  { id: '1', name: 'Holiday Special', status: 'active', budget: 5000, spent: 3200 },
-  { id: '2', name: 'New Product Launch', status: 'warning', budget: 10000, spent: 9800 },
-  { id: '3', name: 'Clearance Sale', status: 'paused', budget: 3000, spent: 1500 },
+  { id: '1', name: 'Holiday Special', status: 'active' as const, budget: 5000, spent: 3200 },
+  { id: '2', name: 'New Product Launch', status: 'warning' as const, budget: 10000, spent: 9800 },
+  { id: '3', name: 'Clearance Sale', status: 'paused' as const, budget: 3000, spent: 1500 },
 ];
 
 const Index = () => {
