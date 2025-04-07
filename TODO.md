@@ -1,239 +1,160 @@
-# Roadmap
+# My Amazon Analytics - Development Roadmap
+
+This document outlines the development roadmap for My Amazon Analytics, an enterprise-grade Amazon advertising analytics platform. It's structured into phases, each with specific objectives and tasks, prioritized for efficient development.
+
+## Project Overview
+
+**Goal:** To build a comprehensive analytics platform that empowers Amazon sellers with data-driven insights, automation, and powerful tools to optimize their advertising strategies.
+
+**Key Features:**
+
+*   **Comprehensive Analytics:** Real-time campaign performance tracking, advanced search term analysis, competitor benchmarking.
+*   **Seamless Integrations:** Amazon Seller Central API, Google Workspace (Sheets, Drive), Chrome Extension, Webhooks.
+*   **Powerful Tools:** AI-powered bid optimization, automated rule engine, custom report builder, multi-account management.
+*   **User-Friendly Interface:** Intuitive design for both web app and Chrome extension.
 
 ## Development Phases
 
-### Phase 1: Core Functionality (Q3 2023 - Q4 2023)
+### Phase 1: Core Amazon Seller Tools (Highest Priority)
 
--   [x] Implement Amazon Seller Tools Suite core components:
-    -   [x] Create a reusable component to hold the tools and their functionalities.
-    -   [x] Integrate the tools into the main component.
-    -   [x] Develop a user interface for the tools.
-    -   [x] Implement data fetching and processing for the tools.
-    -   [x] Ensure the tools are secure and compliant with Amazon's API guidelines.
-    -   [x] Test the tools thoroughly.
-    -   [x] Document the tools and provide support.
-    -   [ ] FBA Calculator
-    -   [ ] Keyword Analyzer
-    -   [ ] Listing Quality Checker
-    -   [ ] PPC Campaign Auditor
-    -   [ ] Description Editor
--   [ ] **Implement Basic Dashboard:**
-    -   [ ] Design and develop the main dashboard layout.
-    -   [ ] Display key performance indicators (KPIs).
-    -   [ ] Implement data visualization for campaign performance.
--   [ ] **Implement User Authentication:**
-    -   [ ] Set up OAuth for Google and Amazon Seller Central.
-    -   [ ] Implement secure sign-in for web app and extension.
-    -   [ ] Implement role-based access control (Admin, User, Viewer).
--   [ ] **Amazon Seller Central API Integration:**
-    -   [ ] Fetch campaign data.
-    -   [ ] Fetch Search Query Performance (SQP) data.
-    -   [ ] Fetch other key metrics.
--   [ ] **Google Sheets Integration:**
-    -   [ ] Implement data synchronization with Google Sheets.
-    -   [ ] Allow users to link their Google Sheets account.
-    -   [ ] Implement drag-and-drop bulk upload from Amazon Seller Central to Google Sheets.
--   [ ] **Chrome Extension Foundation:**
-    -   [ ] Develop basic extension structure.
-    -   [ ] Implement data fetching from Amazon Seller Central.
-    -   [ ] Implement drag-and-drop file upload to Google Sheets.
-    -   [ ] Implement real-time data sync with the web app.
--   [ ] **Database Integration:**
-    -   [ ] Set up MongoDB database.
-    -   [ ] Design database schema for storing Amazon data.
-    -   [ ] Implement data storage and retrieval.
--   [ ] **Reporting and Automation:**
-    -   [ ] Implement basic automation for scheduled report generation.
-    -   [ ] Implement email/in-app notifications for report delivery.
-    -   [ ] Implement weekly/monthly performance reports.
+**Objective:** Develop and refine the core Amazon Seller Tools to ensure they function correctly and provide immediate value to users.
 
-### Phase 2: Advanced Features (Q1 2024)
+**I. Tool Development & Refinement**
 
--   [ ] Implement AI-powered optimization suggestions for Amazon Seller Tools
--   [ ] Add multi-account support for agencies
--   [ ] Develop notification system for alerts and updates
--   [ ] Complete Amazon Seller Tools Suite implementation:
-    -   [ ] Keyword Deduplicator
-    -   [ ] ACoS Calculator
-    -   [ ] Sales Estimator
-    -   [ ] Competitor Analyzer
-    -   [ ] Keyword Trend Analyzer
-    -   [ ] Profit Margin Calculator
--   [ ] **Implement Advanced Reporting:**
-    -   [ ] Develop custom report builder.
-    -   [ ] Implement advanced search term analysis.
-    -   [ ] Implement competitor benchmarking.
--   [ ] **Implement Automated Rule Engine:**
-    -   [ ] Allow users to create custom rules for campaign management.
-    -   [ ] Implement automated bid optimization.
--   [ ] **Enhance Chrome Extension:**
-    -   [ ] Implement compact dashboard for quick overview.
-    -   [ ] Implement one-click report generation from Amazon Seller Central.
-    -   [ ] Implement live data sync with the web app.
--   [ ] **Implement Notifications and Alerts:**
-    -   [ ] Set up alerts for performance changes.
-    -   [ ] Set up notifications for new uploads and sync status.
+*   **Goal:** Implement the core components and functionalities for the Amazon Seller Tools.
+*   **Priority:** High
 
-### Phase 3: Expansion (Q2 2024)
+    *   [ ] **Reusable Tool Component:** Create a reusable component to hold the tools and their functionalities.
+    *   [ ] **Tool Integration:** Integrate the tools into the main component.
+    *   [ ] **Tool UI:** Develop a user interface for the tools.
+    *   [ ] **Data Handling:** Implement data fetching and processing for the tools.
+    *   [ ] **Security & Compliance:** Ensure the tools are secure and compliant with Amazon's API guidelines.
+    *   [ ] **Testing:** Test the tools thoroughly.
+    *   [ ] **Documentation & Support:** Document the tools and provide support.
+    *   [ ] **Individual Tools:**
+        *   [ ] FBA Calculator
+        *   [ ] Keyword Analyzer
+        *   [ ] Listing Quality Checker
+        *   [ ] PPC Campaign Auditor
+        *   [ ] Description Editor
+        *   [ ] Keyword Deduplicator
+        *   [ ] ACoS Calculator
+        *   [ ] Sales Estimator
+        *   [ ] Competitor Analyzer
+        *   [ ] Keyword Trend Analyzer
+        *   [ ] Profit Margin Calculator
+    *   [ ] **Tool Data Organization:**
+        *   [ ] Move tools to a separate file (e.g., `toolsData.ts`).
+        *   [ ] Add a `category` property to each tool object.
+        *   [ ] Create separate arrays for each tool category (e.g., `marketAnalysisTools`, `listingOptimizationTools`).
+        *   [ ] Define a `Tool` interface or type for consistency.
+    *   [ ] **Dynamic Tab Rendering:** Create a function to render tab rows dynamically based on the tools array and the desired number of tools per row.
+    *   [ ] **Lazy Loading:** Implement lazy loading for tool components using `React.lazy` and `Suspense`.
+    *   [ ] **UX Enhancements:**
+        *   [ ] **All Tools Tab:** Add an "All Tools" tab to display all tools.
+        *   [ ] **Category Tabs:** Implement category tabs in the UI.
+        *   [ ] **Search Bar:** Add a search bar to allow users to find tools by name.
+        *   [ ] **Tool Descriptions:** Add more detail and examples to tool descriptions.
+        *   [ ] **New Badge:** Add a "New" badge for recently added tools.
+        *   [ ] **Empty State:** Display a message when there are no tools in a category (empty state).
+        *   [ ] **Loading Indicator:** Add a loading indicator for tool components.
+        *   [ ] **Error Handling:** Display an error message if a tool component fails to load.
+    *   [ ] **Maintainability & Code Quality:**
+        *   [ ] **Component Decomposition:** Break down the `FeaturedToolsSection` component into smaller, more focused components (e.g., `ToolCard`, `ToolTabs`).
+        *   [ ] **Consistent Styling:** Use consistent styling across all tool components.
+        *   [ ] **Version Management:** Make the version number a variable or pull it from a configuration file.
+    *   [ ] **Accessibility:**
+        *   [ ] **ARIA Attributes:** Ensure all interactive elements have appropriate ARIA attributes.
+        *   [ ] **Keyboard Navigation:** Verify keyboard navigation for tab navigation and tool interactions.
 
--   [ ] Build mobile app version
--   [ ] Add advanced reporting capabilities
--   [ ] Implement competitor benchmarking tools
--   [ ] **Develop Mobile App:**
-    -   [ ] Design and develop a mobile app version.
-    -   [ ] Implement core features from the web app.
--   [ ] **Implement Advanced Integrations:**
-    -   [ ] Add webhooks for custom integrations.
-    -   [ ] Explore integrations with other marketing platforms.
+### Phase 2: Basic Infrastructure & Integrations (Medium Priority)
 
-## Technical Milestones
+**Objective:** Set up the basic infrastructure needed to support the tools and integrate with external services.
 
-### Backend
+**II. Basic Infrastructure**
 
--   [ ] Set up API endpoints for data retrieval
--   [ ] Implement scheduled data sync jobs
--   [ ] Create caching layer for performance
--   [ ] **Implement Data Fetching:**
-    -   [ ] Develop API endpoints for fetching data from Amazon Seller Central.
-    -   [ ] Develop API endpoints for fetching data from Google Sheets.
--   [ ] **Implement Data Processing:**
-    -   [ ] Develop data processing logic for campaign data.
-    -   [ ] Develop data processing logic for SQP data.
--   [ ] **Implement Automation:**
-    -   [ ] Develop scheduled tasks for data synchronization.
-    -   [ ] Develop scheduled tasks for report generation.
--   [ ] **Implement Security:**
-    -   [ ] Secure API endpoints.
-    -   [ ] Implement data encryption.
--   [ ] **Implement Error Handling:**
-    -   [ ] Implement robust error handling for API calls.
-    -   [ ] Implement error logging.
+*   **Goal:** Establish the foundational elements for the platform.
+*   **Priority:** Medium
 
-### Frontend
+    *   [ ] **Basic Dashboard:**
+        *   [ ] Design and develop the main dashboard layout.
+        *   [ ] Display key performance indicators (KPIs).
+        *   [ ] Implement data visualization for campaign performance (basic charts).
+    *   [ ] **Google Sheets Integration (Basic):**
+        *   [ ] Allow users to link their Google Sheets account.
+        *   [ ] Implement basic data synchronization with Google Sheets (e.g., export tool results).
+    *   [ ] **Chrome Extension Foundation (Basic):**
+        *   [ ] Develop basic extension structure.
+        *   [ ] Implement data fetching from Amazon Seller Central (basic).
+        *   [ ] Implement drag-and-drop file upload to Google Sheets (basic).
+        *   [ ] Implement basic real-time data sync with the web app.
+    *   [ ] **Reporting and Automation (Basic):**
+        *   [ ] Implement basic automation for scheduled report generation.
 
--   [ ] Design responsive dashboard UI
--   [ ] Implement data visualization components
--   [ ] Build settings and configuration panels
--   [ ] **Implement Dashboard UI:**
-    -   [ ] Design and develop the main dashboard layout.
-    -   [ ] Implement data visualization components (charts, graphs).
-    -   [ ] Implement responsive design for different screen sizes.
--   [ ] **Implement Amazon Seller Tools UI:**
-    -   [ ] Design and develop the UI for each tool.
-    -   [ ] Implement user interactions for each tool.
--   [ ] **Implement Chrome Extension UI:**
-    -   [ ] Design and develop the extension UI.
-    -   [ ] Implement data display in the extension.
--   [ ] **Implement Settings and Configuration:**
-    -   [ ] Develop settings panels for user preferences.
-    -   [ ] Develop configuration panels for API credentials.
--   [ ] **Implement User Authentication UI:**
-    -   [ ] Design and develop the login/signup pages.
-    -   [ ] Implement OAuth integration.
--   [ ] **Implement Reporting UI:**
-    -   [ ] Design and develop the UI for report generation.
-    -   [ ] Implement custom report builder UI.
+### Phase 3: Advanced Features & Refinements (Lower Priority)
 
-### Infrastructure
+**Objective:** Focus on more advanced features and refinements, building on the foundation laid in the previous phases.
 
--   [ ] Set up CI/CD pipeline
--   [ ] Configure monitoring and alerting
--   [ ] Implement backup and recovery procedures
--   [ ] **Set up CI/CD:**
-    -   [ ] Configure CI/CD pipeline for automated testing and deployment.
-    -   [ ] Set up automated testing for frontend and backend.
--   [ ] **Set up Monitoring and Alerting:**
-    -   [ ] Configure monitoring for application performance.
-    -   [ ] Set up alerting for errors and performance issues.
--   [ ] **Implement Backup and Recovery:**
-    -   [ ] Set up regular backups for the database.
-    -   [ ] Implement procedures for data recovery.
--   [ ] **Configure Hosting:**
-    -   [ ] Choose a hosting provider for the web app.
-    -   [ ] Configure hosting for the database.
--   [ ] **Implement Security:**
-    -   [ ] Set up security measures for the infrastructure.
-    -   [ ] Implement regular security audits.
+**III. Advanced Features**
 
-## Feedback from Amazon Seller Tools Section Improvements
+*   **Goal:** Enhance the platform with advanced functionalities.
+*   **Priority:** Low
 
--   [ ] Incorporate feedback from the Amazon Seller Tools section improvements into the development roadmap.
-    -   [ ] Data Organization: Move tools to a separate file, use categories, and define a Tool interface.
-    -   [ ] Dynamic Tab Rendering: Create a function to render tab rows dynamically.
-    -   [ ] Lazy Loading: Implement lazy loading for tool components.
-    -   [ ] UX Enhancements: Consider adding an "All Tools" tab, category tabs, and a search bar.
-    -   [ ] Maintainability: Break down the component into smaller parts and use consistent styling.
-    -   [ ] Hardcoded Version: Make the version a variable.
-    -   [ ] **Implement Tool Categories:**
-        -   [ ] Add a `category` property to each tool object.
-        -   [ ] Create separate arrays for each tool category.
-        -   [ ] Implement category tabs in the UI.
-    -   [ ] **Implement All Tools Tab:**
-        -   [ ] Add an "All Tools" tab to display all tools.
-    -   [ ] **Implement Search Bar:**
-        -   [ ] Add a search bar to allow users to find tools by name.
-    -   [ ] **Improve Tool Descriptions:**
-        -   [ ] Add more detail and examples to tool descriptions.
-    -   [ ] **Implement Tool Status Badges:**
-        -   [ ] Add a "New" badge for recently added tools.
-    -   [ ] **Implement Empty State:**
-        -   [ ] Display a message when there are no tools in a category.
-    -   [ ] **Implement Loading State:**
-        -   [ ] Add a loading indicator for tool components.
-    -   [ ] **Implement Error State:**
-        -   [ ] Display an error message if a tool component fails to load.
-    -   [ ] **Improve Accessibility:**
-        -   [ ] Ensure all interactive elements have appropriate ARIA attributes.
-        -   [ ] Verify keyboard navigation for tab navigation and tool interactions.
-    -   [ ] **Improve Maintainability:**
-        -   [ ] Break down the `FeaturedToolsSection` component into smaller components.
-        -   [ ] Use consistent styling across all tool components.
-    -   [ ] **Implement Dynamic Tab Rendering:**
-        -   [ ] Create a function to render tab rows dynamically.
-    -   [ ] **Implement Lazy Loading:**
-        -   [ ] Implement lazy loading for tool components.
-    -   [ ] **Make Version a Variable:**
-        -   [ ] Make the version number a variable or pull it from a configuration file.
+    *   [ ] **User Authentication:**
+        *   [ ] Set up OAuth for Google and Amazon Seller Central.
+        *   [ ] Implement secure sign-in for web app and extension.
+        *   [ ] Implement role-based access control (Admin, User, Viewer).
+    *   [ ] **Amazon Seller Central API Integration (Advanced):**
+        *   [ ] Fetch campaign data.
+        *   [ ] Fetch Search Query Performance (SQP) data.
+        *   [ ] Fetch other key metrics.
+    *   [ ] **Database Integration:**
+        *   [ ] Set up MongoDB database.
+        *   [ ] Design database schema for storing Amazon data.
+        *   [ ] Implement data storage and retrieval.
+    *   [ ] **Advanced Reporting:**
+        *   [ ] Develop custom report builder.
+        *   [ ] Implement advanced search term analysis.
+        *   [ ] Implement competitor benchmarking.
+    *   [ ] **Automated Rule Engine:**
+        *   [ ] Allow users to create custom rules for campaign management.
+        *   [ ] Implement automated bid optimization.
+    *   [ ] **Enhance Chrome Extension:**
+        *   [ ] Implement compact dashboard for quick overview.
+        *   [ ] Implement one-click report generation from Amazon Seller Central.
+        *   [ ] Implement live data sync with the web app.
+    *   [ ] **Notifications and Alerts:**
+        *   [ ] Set up alerts for performance changes.
+        *   [ ] Set up notifications for new uploads and sync status.
+    *   [ ] **Mobile App:**
+        *   [ ] Design and develop a mobile app version.
+        *   [ ] Implement core features from the web app.
+    *   [ ] **Advanced Integrations:**
+        *   [ ] Add webhooks for custom integrations.
+        *   [ ] Explore integrations with other marketing platforms.
 
-## Architecture
+### IV. Technical Milestones (To be addressed later)
 
--   [ ] **Implement Core Components:**
-    -   [ ] Develop the main dashboard for the web application.
-    -   [ ] Develop the Google Sheets integration.
-    -   [ ] Develop the role-based access control.
-    -   [ ] Develop the reporting and automation features.
-    -   [ ] Develop the Amazon Seller Central integration for the browser extension.
-    -   [ ] Develop the drag-and-drop bulk upload for the browser extension.
-    -   [ ] Develop the real-time sync for the browser extension.
-    -   [ ] Develop the simplified user interface for the browser extension.
--   [ ] **Implement Data Flow:**
-    -   [ ] Implement user authentication via OAuth.
-    -   [ ] Implement data fetching from Amazon Seller Central.
-    -   [ ] Implement drag-and-drop file upload via the extension.
-    -   [ ] Implement real-time data sync between the extension, web app, and Google Sheets.
-    -   [ ] Implement notifications and alerts.
--   [ ] **Implement Simplified Features:**
-    -   [ ] Develop the dashboard overview for the web app.
-    -   [ ] Develop the simple reporting for the web app.
-    -   [ ] Develop the basic automation for the web app.
-    -   [ ] Develop the Google Sheets sync for the web app.
-    -   [ ] Develop the role-based permissions for the web app.
-    -   [ ] Develop the quick data fetch for the extension.
-    -   [ ] Develop the drag-and-drop file upload for the extension.
-    -   [ ] Develop the live sync for the extension.
-    -   [ ] Develop the compact dashboard for the extension.
--   [ ] **Implement User Flow:**
-    -   [ ] Implement user sign-in via OAuth.
-    -   [ ] Implement the extension's data fetching and file export.
-    -   [ ] Implement the drag-and-drop file upload into Google Sheets.
-    -   [ ] Implement data synchronization between the extension and web app.
-    -   [ ] Implement the web app's KPI and report viewing.
-    -   [ ] Implement automated tasks for data updates.
-    -   [ ] Implement notifications in the extension and web app.
--   [ ] **Implement Suggestions for Simplicity:**
-    -   [ ] Focus on lightweight features.
-    -   [ ] Develop a user-friendly UI for both the web app and extension.
-    -   [ ] Implement quick access to reports.
-    -   [ ] Focus on simple automation.
-    -   [ ] Ensure seamless integration between the web app and extension.
+*   **Backend**
+*   **Frontend**
+*   **Infrastructure**
+
+---
+
+**Legend:**
+
+*   [ ] - Task to be completed
+*   [x] - Task completed
+*   **High** - Highest Priority
+*   **Medium** - Medium Priority
+*   **Low** - Low Priority
+*   **Goal:** - The objective of the section
+*   **Objective:** - The objective of the phase
+*   **Priority:** - The priority of the section
+
+---
+
+**Contact:**
+
+*   John Wesley Quintero - @wescode - info.wescode@gmail.com
 
