@@ -8,7 +8,7 @@ const Sidebar = () => {
   const location = useLocation();
   
   const navigation = [
-    { name: "Dashboard", href: "/", icon: LayoutDashboard },
+    { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
     { name: "Search Analytics", href: "/search-analytics", icon: Search },
     { name: "Campaign Manager", href: "/campaign-manager", icon: BarChart3 },
     { name: "Products", href: "/products", icon: ShoppingBag },
