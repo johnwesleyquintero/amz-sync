@@ -13,7 +13,7 @@
 
 **Transform Your Amazon Advertising Strategy with Data-Driven Insights**
 
-[🚀 Live Demo](https://myamazonanalytics.vercel.app/) • [📚 Documentation/Roadmap](https://github.com/johnwesleyquintero/my-amazon-analytics/blob/b1486428f4d3703abf16d45219c864fa66ee549a/TODO.md) • [🐞 Report Issue](https://github.com/johnwesleyquintero/my-amazon-analytics/issues)
+[🚀 Live Demo](https://myamazonanalytics.vercel.app/) • [📚 Documentation/Roadmap](https://github.com/johnwesleyquintero/my-amazon-analytics/TODO.md) • [🐞 Report Issue](https://github.com/johnwesleyquintero/my-amazon-analytics/issues)
 </div>
 
 ---
