@@ -411,7 +411,7 @@
                 {
                   "id": "p1-s1-t14-sub1",
                   "text": "UI Consistency Audit:",
-                  "completed": false,
+                  "completed": true,
                   "owner": null,
                   "subTasks": [
                     {
@@ -424,7 +424,7 @@
                     {
                       "id": "p1-s1-t14-sub1-sub2",
                       "text": "Standardize ToolLabel component usage across all tools",
-                      "completed": false,
+                      "completed": true,
                       "owner": null,
                       "subTasks": []
                     },
