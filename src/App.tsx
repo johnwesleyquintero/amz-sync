@@ -11,6 +11,13 @@ import Index from './pages/Index'; // Main dashboard page
 import Landing from './pages/Landing'; // Landing/Home page
 import NotFound from './pages/NotFound'; // 404 Error page
 import Tools from './pages/Tools'; // Amazon Seller Tools page
+import Legal from './pages/Legal';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsOfService from './pages/TermsOfService';
+import Security from './pages/Security';
+import Resources from './pages/Resources';
+import AboutUs from './pages/AboutUs';
+import Documentation from './pages/Documentation';
 
 // Initialize React Query client
 const queryClient = new QueryClient();
@@ -33,6 +40,14 @@ const App = () => (
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<Landing />} />
+          <Route path="/legal" element={<Legal />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms-of-service" element={<TermsOfService />} />
+          <Route path="/security" element={<Security />} />
+          <Route path="/resources" element={<Resources />} />
+          <Route path="/about" element={<AboutUs />} />
+          <Route path="/documentation" element={<Documentation />} />
+          <Route path="/blog" element={<Blog />} />
 
           {/* Main Application Routes */}
           <Route path="/dashboard" element={<Index />} />
