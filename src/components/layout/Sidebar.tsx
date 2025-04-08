@@ -20,6 +20,7 @@ const Sidebar = () => {
   // Navigation items remain the same
   const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+    { name: 'TODO Dashboard', href: '/TODO-dashboard', icon: LayoutDashboard },
     { name: 'Search Analytics', href: '/search-analytics', icon: Search },
     { name: 'Campaign Manager', href: '/campaign-manager', icon: BarChart3 },
     { name: 'Products', href: '/products', icon: ShoppingBag },
@@ -77,14 +78,14 @@ const Sidebar = () => {
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center flex-shrink-0">
               {/* Placeholder Initials - Replace with dynamic data if available */}
-              <span className="font-medium text-sm">JD</span>
+              <span className="font-medium text-sm">WQ</span>
             </div>
             <div className="flex-1 min-w-0">
               {/* Placeholder Name/Email - Replace with dynamic data */}
               <p className="text-sm font-medium truncate text-foreground dark:text-gray-200">
-                John Doe
+                Wesley Q
               </p>
-              <p className="text-xs text-muted-foreground truncate">john@example.com</p>
+              <p className="text-xs text-muted-foreground truncate">info.wescode@gmail.com</p>
             </div>
             {/* Optional: Add a settings/logout icon button here */}
           </div>

@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import React from 'react'; // Import React for lazy loading if used
 
 // UI Providers and Components
 import { TooltipProvider } from '@/components/ui/tooltip';
@@ -20,6 +21,12 @@ import AboutUs from './pages/AboutUs';
 import Documentation from './pages/Documentation';
 import Blog from './pages/Blog';
 
+// --- Import the TODO Dashboard ---
+import TODODashboard from './pages/TODO-dashboard.tsx'; // Adjust path if you saved it elsewhere
+
+// --- OR: Lazy Load the TODO Dashboard (Optional, for better performance) ---
+// const TODODashboard = React.lazy(() => import('./pages/TODO-dashboard'));
+
 // Initialize React Query client
 const queryClient = new QueryClient();
 
@@ -38,6 +45,8 @@ const App = () => (
       <Sonner />
       {/* Set up client-side routing */}
       <BrowserRouter>
+        {/* --- Optional: Add Suspense for Lazy Loading --- */}
+        {/* <React.Suspense fallback={<div>Loading Page...</div>}> */}
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<Landing />} />
@@ -54,6 +63,11 @@ const App = () => (
           <Route path="/dashboard" element={<Index />} />
           <Route path="/tools" element={<Tools />} />
 
+          {/* --- Add the Route for the TODO Dashboard --- */}
+          <Route path="/todo-dashboard" element={<TODODashboard />} />
+          {/* --- End TODO Dashboard Route --- */}
+
+
           {/* Placeholder Routes - Currently point to the main dashboard (Index) */}
           {/* These can be updated later to point to specific components or pages */}
           <Route path="/search-analytics" element={<Index />} />
@@ -67,6 +81,7 @@ const App = () => (
           {/* IMPORTANT: This must be the last route defined */}
           <Route path="*" element={<NotFound />} />
         </Routes>
+        {/* </React.Suspense> */}
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

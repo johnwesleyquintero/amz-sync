@@ -14,6 +14,7 @@ This document outlines the development roadmap for My Amazon Analytics, an enter
 - **User-Friendly Interface:** Intuitive design for both web app and Chrome extension.
 
 ## Recent Updates
+
 - Completed Vitest migration for testing infrastructure
 - Achieved 85% test coverage across core utilities
 - Implemented performance monitoring for key algorithms
@@ -34,11 +35,10 @@ This document outlines the development roadmap for My Amazon Analytics, an enter
   - [ ] **Tool UI:** Develop a user interface for the tools.
   - [ ] **Data Handling:** Implement data fetching and processing for the tools.
   - [ ] **Security & Compliance:** Ensure the tools are secure and compliant with Amazon's API guidelines.
-  - [ ] **Testing:** 
+  - [ ] **Testing:**
     - [ ] Implement comprehensive test suites for core algorithms (acos-utils, validation-utils)
     - [ ] Add integration tests for CSV data validation workflows
     - [x] Achieve 85% test coverage for all utility libraries
-
   - [ ] **Technical Debt**:
     - [ ] Enhance CSV validation with schema-based parsing (owner: @dev/backend)
     - [ ] Implement React error boundary components (owner: @dev/frontend)
@@ -61,6 +61,14 @@ This document outlines the development roadmap for My Amazon Analytics, an enter
     - [ ] Competitor Analyzer
     - [ ] Keyword Trend Analyzer
     - [ ] Profit Margin Calculator
+    - [ ] **Product Niche Analyzer** <!-- Added -->
+    - [ ] **Competitor Product Tracker** <!-- Added -->
+    - [ ] **Seasonal Product Finder** <!-- Added -->
+    - [ ] **Listing Split Tester (A/B Tester)** <!-- Added -->
+    - [ ] **Image Optimization Analyzer** <!-- Added -->
+    - [ ] **PPC Keyword Bid Optimizer** <!-- Added -->
+    - [ ] **Negative Keyword Miner** <!-- Added -->
+    - [ ] **Profitability Dashboard** <!-- Added -->
   - [ ] **Tool Data Organization:**
     - [ ] Move tools to a separate file (e.g., `toolsData.ts`).
     - [ ] Add a `category` property to each tool object.
