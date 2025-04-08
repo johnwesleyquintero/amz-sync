@@ -37,27 +37,27 @@ This suite is organized into three main categories to help you quickly find the 
 
 These tools provide deep insights into market trends, competitor activities, and campaign performance.
 
--   **Competitor Analyzer**
--   **Keyword Analyzer**
--   **Keyword Trend Analyzer**
--   **PPC Campaign Auditor**
--   **Sales Estimator**
+- **Competitor Analyzer**
+- **Keyword Analyzer**
+- **Keyword Trend Analyzer**
+- **PPC Campaign Auditor**
+- **Sales Estimator**
 
 ### 💰 Financial Calculators
 
 These tools help you manage your finances, calculate profitability, and optimize your advertising spend.
 
--   **ACoS Calculator**
--   **FBA Calculator**
--   **Profit Margin Calculator**
+- **ACoS Calculator**
+- **FBA Calculator**
+- **Profit Margin Calculator**
 
 ### ✍️ Content Tools
 
 These tools help you create and optimize your product listings and manage your keywords.
 
--   **Description Editor**
--   **Keyword Deduplicator**
--   **Listing Quality Checker**
+- **Description Editor**
+- **Keyword Deduplicator**
+- **Listing Quality Checker**
 
 ### Tool Details
 
@@ -70,16 +70,16 @@ These tools help you create and optimize your product listings and manage your k
 
 **Features**:
 
--   CSV upload for bulk product analysis (Papa Parse)
--   Real-time profit and ROI calculations
--   Interactive data visualization with Recharts
--   Manual entry option for single products
--   Detailed fee breakdown with historical tracking
--   Advanced error handling and data validation
--   Market trend analysis integration
--   Uses shadcn/ui components
--   Comprehensive data export (CSV, Excel, PDF, JSON)
--   Responsive design and accessibility compliance
+- CSV upload for bulk product analysis (Papa Parse)
+- Real-time profit and ROI calculations
+- Interactive data visualization with Recharts
+- Manual entry option for single products
+- Detailed fee breakdown with historical tracking
+- Advanced error handling and data validation
+- Market trend analysis integration
+- Uses shadcn/ui components
+- Comprehensive data export (CSV, Excel, PDF, JSON)
+- Responsive design and accessibility compliance
 
 #### Keyword Analyzer
 
@@ -97,25 +97,25 @@ product,keywords,searchVolume,competition
 
 **Features**:
 
--   CSV Processing:
-    -   Required columns: product (string), keywords (comma-separated)
-    -   Optional columns: searchVolume (number), competition (Low/Medium/High)
-    -   Auto-trimming and validation of keyword lists
-    -   Support for both manual entry and file upload
--   Analysis Engine:
-    -   Async processing via KeywordIntelligence utilities
-    -   Search volume visualization using Recharts
-    -   Competition level analysis with color-coded badges
-    -   AI-powered keyword suggestions
--   Data Management:
-    -   Bulk export (CSV/JSON)
-    -   Temporary browser storage
-    -   Data validation with error highlighting
--   Visualization:
-    -   Interactive bar charts for search volume
-    -   Keyword distribution graphs
-    -   Historical performance tracking
-    -   Mobile-responsive layouts
+- CSV Processing:
+  - Required columns: product (string), keywords (comma-separated)
+  - Optional columns: searchVolume (number), competition (Low/Medium/High)
+  - Auto-trimming and validation of keyword lists
+  - Support for both manual entry and file upload
+- Analysis Engine:
+  - Async processing via KeywordIntelligence utilities
+  - Search volume visualization using Recharts
+  - Competition level analysis with color-coded badges
+  - AI-powered keyword suggestions
+- Data Management:
+  - Bulk export (CSV/JSON)
+  - Temporary browser storage
+  - Data validation with error highlighting
+- Visualization:
+  - Interactive bar charts for search volume
+  - Keyword distribution graphs
+  - Historical performance tracking
+  - Mobile-responsive layouts
 
 #### Listing Quality Checker
 
@@ -126,16 +126,16 @@ product,keywords,searchVolume,competition
 
 **Features**:
 
--   AI-enhanced title optimization
--   Smart description analysis
--   Bullet point optimization
--   Image requirement validation
--   Advanced SEO recommendations
--   ASIN-based competitive analysis
--   Quality scoring system with benchmarks
--   Mobile optimization checker
--   Comprehensive data export (CSV, Excel, PDF, JSON)
--   Intuitive navigation and information architecture
+- AI-enhanced title optimization
+- Smart description analysis
+- Bullet point optimization
+- Image requirement validation
+- Advanced SEO recommendations
+- ASIN-based competitive analysis
+- Quality scoring system with benchmarks
+- Mobile optimization checker
+- Comprehensive data export (CSV, Excel, PDF, JSON)
+- Intuitive navigation and information architecture
 
 #### PPC Campaign Auditor
 
@@ -146,16 +146,16 @@ product,keywords,searchVolume,competition
 
 **Features**:
 
--   Real-time campaign performance metrics
--   AI-powered bid optimization
--   Advanced keyword performance analysis
--   Dynamic ROI tracking
--   Interactive trend visualization
--   Automated CSV import/export
--   Smart performance indicators
--   Budget optimization suggestions
--   Interactive charts and graphs for data analysis
--   Responsive design and accessibility compliance
+- Real-time campaign performance metrics
+- AI-powered bid optimization
+- Advanced keyword performance analysis
+- Dynamic ROI tracking
+- Interactive trend visualization
+- Automated CSV import/export
+- Smart performance indicators
+- Budget optimization suggestions
+- Interactive charts and graphs for data analysis
+- Responsive design and accessibility compliance
 
 #### Description Editor
 
@@ -166,16 +166,16 @@ product,keywords,searchVolume,competition
 
 **Features**:
 
--   Advanced HTML formatting
--   Smart keyword integration
--   Real-time character counter
--   AI-powered SEO optimization
--   Live preview mode
--   Enhanced CSV export
--   Automated score calculation
--   Mobile preview mode
--   Intuitive navigation and information architecture
--   Comprehensive data export (CSV, Excel, PDF, JSON)
+- Advanced HTML formatting
+- Smart keyword integration
+- Real-time character counter
+- AI-powered SEO optimization
+- Live preview mode
+- Enhanced CSV export
+- Automated score calculation
+- Mobile preview mode
+- Intuitive navigation and information architecture
+- Comprehensive data export (CSV, Excel, PDF, JSON)
 
 #### Keyword Deduplicator
 
@@ -186,15 +186,15 @@ product,keywords,searchVolume,competition
 
 **Features**:
 
--   Advanced bulk processing
--   AI-powered duplicate detection
--   Smart alternative suggestions
--   Enhanced export options
--   Real-time metrics analysis
--   Performance benchmarking
--   Trend analysis integration
--   Interactive charts and graphs for data analysis
--   Responsive design and accessibility compliance
+- Advanced bulk processing
+- AI-powered duplicate detection
+- Smart alternative suggestions
+- Enhanced export options
+- Real-time metrics analysis
+- Performance benchmarking
+- Trend analysis integration
+- Interactive charts and graphs for data analysis
+- Responsive design and accessibility compliance
 
 #### ACoS Calculator
 
@@ -205,16 +205,16 @@ product,keywords,searchVolume,competition
 
 **Features**:
 
--   Advanced campaign tracking
--   Predictive revenue analysis
--   Real-time performance metrics
--   Interactive trend visualization
--   Automated comparisons
--   Custom benchmark data
--   AI-powered recommendations
--   Budget optimization tools
--   Comprehensive data export (CSV, Excel, PDF, JSON)
--   Intuitive navigation and information architecture
+- Advanced campaign tracking
+- Predictive revenue analysis
+- Real-time performance metrics
+- Interactive trend visualization
+- Automated comparisons
+- Custom benchmark data
+- AI-powered recommendations
+- Budget optimization tools
+- Comprehensive data export (CSV, Excel, PDF, JSON)
+- Intuitive navigation and information architecture
 
 #### Sales Estimator
 
@@ -225,15 +225,15 @@ product,keywords,searchVolume,competition
 
 **Features**:
 
--   AI-enhanced category analysis
--   Advanced competition assessment
--   Smart revenue projections
--   Real-time market data integration
--   Confidence scoring system
--   Automated CSV processing
--   Market trend integration
--   Interactive charts and graphs for data analysis
--   Responsive design and accessibility compliance
+- AI-enhanced category analysis
+- Advanced competition assessment
+- Smart revenue projections
+- Real-time market data integration
+- Confidence scoring system
+- Automated CSV processing
+- Market trend integration
+- Interactive charts and graphs for data analysis
+- Responsive design and accessibility compliance
 
 #### Competitor Analyzer
 
@@ -244,15 +244,15 @@ product,keywords,searchVolume,competition
 
 **Features**:
 
--   Real-time competitor tracking
--   Price monitoring system
--   Listing optimization comparison
--   Market share analysis
--   Review sentiment analysis
--   Performance benchmarking
--   Strategy recommendations
--   Comprehensive data export (CSV, Excel, PDF, JSON)
--   Intuitive navigation and information architecture
+- Real-time competitor tracking
+- Price monitoring system
+- Listing optimization comparison
+- Market share analysis
+- Review sentiment analysis
+- Performance benchmarking
+- Strategy recommendations
+- Comprehensive data export (CSV, Excel, PDF, JSON)
+- Intuitive navigation and information architecture
 
 #### Keyword Trend Analyzer
 
@@ -263,15 +263,15 @@ product,keywords,searchVolume,competition
 
 **Features**:
 
--   Historical trend analysis
--   Seasonal pattern detection
--   Market demand forecasting
--   Competition intensity metrics
--   Opportunity scoring system
--   Custom alert system
--   Trend visualization
--   Interactive charts and graphs for data analysis
--   Responsive design and accessibility compliance
+- Historical trend analysis
+- Seasonal pattern detection
+- Market demand forecasting
+- Competition intensity metrics
+- Opportunity scoring system
+- Custom alert system
+- Trend visualization
+- Interactive charts and graphs for data analysis
+- Responsive design and accessibility compliance
 
 #### Profit Margin Calculator
 
@@ -282,31 +282,31 @@ product,keywords,searchVolume,competition
 
 **Features**:
 
--   Dynamic cost calculation
--   Revenue optimization suggestions
--   Margin trend analysis
--   Cost breakdown visualization
--   Scenario comparison tools
--   ROI forecasting
--   Bulk analysis support
--   Comprehensive data export (CSV, Excel, PDF, JSON)
--   Intuitive navigation and information architecture
+- Dynamic cost calculation
+- Revenue optimization suggestions
+- Margin trend analysis
+- Cost breakdown visualization
+- Scenario comparison tools
+- ROI forecasting
+- Bulk analysis support
+- Comprehensive data export (CSV, Excel, PDF, JSON)
+- Intuitive navigation and information architecture
 
 ## 📦 Component Features Overview
 
-| Tool                   | Status   | Version |
-| ---------------------- | -------- | ------- |
-| FBA Calculator         | ✅ Active | 2.0.0   |
-| Keyword Analyzer       | ✅ Active | 2.1.0   |
-| Listing Quality Checker| ✅ Active | 1.5.0   |
-| PPC Campaign Auditor   | ✅ Active | 2.0.0   |
-| Description Editor     | ✅ Active | 1.5.0   |
-| Keyword Deduplicator   | ✅ Active | 1.5.0   |
-| ACoS Calculator        | ✅ Active | 1.5.0   |
-| Sales Estimator        | ✅ Active | 1.0.0   |
-| Competitor Analyzer    | ✅ Active | 1.0.0   |
-| Keyword Trend Analyzer | ✅ Active | 1.0.0   |
-| Profit Margin Calculator| ✅ Active | 1.0.0   |
+| Tool                     | Status    | Version |
+| ------------------------ | --------- | ------- |
+| FBA Calculator           | ✅ Active | 2.0.0   |
+| Keyword Analyzer         | ✅ Active | 2.1.0   |
+| Listing Quality Checker  | ✅ Active | 1.5.0   |
+| PPC Campaign Auditor     | ✅ Active | 2.0.0   |
+| Description Editor       | ✅ Active | 1.5.0   |
+| Keyword Deduplicator     | ✅ Active | 1.5.0   |
+| ACoS Calculator          | ✅ Active | 1.5.0   |
+| Sales Estimator          | ✅ Active | 1.0.0   |
+| Competitor Analyzer      | ✅ Active | 1.0.0   |
+| Keyword Trend Analyzer   | ✅ Active | 1.0.0   |
+| Profit Margin Calculator | ✅ Active | 1.0.0   |
 
 ## 🛠️ Implementation Details
 
@@ -321,38 +321,38 @@ product,keywords,searchVolume,competition
 
 All components follow modern React patterns and best practices:
 
--   Strong TypeScript typing
--   Error boundary implementation
--   Accessibility compliance
--   Responsive design
--   Performance optimization
--   Real-time data processing
--   AI-powered features
+- Strong TypeScript typing
+- Error boundary implementation
+- Accessibility compliance
+- Responsive design
+- Performance optimization
+- Real-time data processing
+- AI-powered features
 
 ## 🎮 Usage Examples
 
 **CSV Format Requirements**:
 
--   Headers must match expected fields
--   Data types must be consistent
--   UTF-8 encoding required
--   Support for multiple data formats
+- Headers must match expected fields
+- Data types must be consistent
+- UTF-8 encoding required
+- Support for multiple data formats
 
 **Common Operations**:
 
--   Upload CSV files
--   View real-time analysis
--   Export processed data
--   Save custom configurations
--   Access historical data
+- Upload CSV files
+- View real-time analysis
+- Export processed data
+- Save custom configurations
+- Access historical data
 
 **Best Practices**:
 
--   Regular data updates
--   Backup before bulk operations
--   Monitor performance metrics
--   Review AI recommendations
--   Utilize trend analysis
+- Regular data updates
+- Backup before bulk operations
+- Monitor performance metrics
+- Review AI recommendations
+- Utilize trend analysis
 
 ## 🚀 Tool Features Update
 

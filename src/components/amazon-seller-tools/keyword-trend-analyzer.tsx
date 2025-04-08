@@ -32,56 +32,56 @@ const KeywordTrendAnalyzer: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [hasData, setHasData] = useState<boolean>(false);
 
-  const handleFileUpload = useCallback(async (data: CsvRow[]) => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      // Validate the data structure
-      if (!Array.isArray(data) || data.length === 0) {
-        throw new Error('Invalid CSV data: Empty or not an array.');
+  const handleFileUpload = useCallback(
+    async (data: CsvRow[]) => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        // Validate the data structure
+        if (!Array.isArray(data) || data.length === 0) {
+          throw new Error('Invalid CSV data: Empty or not an array.');
+        }
+
+        // Check if each row has at least a date
+        if (!data.every(row => row.date)) {
+          throw new Error('Invalid CSV data: Each row must contain a date.');
+        }
+
+        const response = await fetch('/api/amazon/keyword-trends', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ csvData: data }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const trendData: ChartDataPoint[] = await response.json();
+        setChartData(trendData);
+        setHasData(true);
+        toast({
+          title: 'Success',
+          description: 'Keyword trend data processed successfully.',
+          variant: 'default',
+        });
+      } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : 'Failed to process CSV data.';
+        setError(errorMessage);
+        toast({
+          title: 'Error',
+          description: errorMessage,
+          variant: 'destructive',
+        });
+        console.error('Failed to process CSV data:', error);
+      } finally {
+        setIsLoading(false);
       }
-
-      // Check if each row has at least a date
-      if (!data.every(row => row.date)) {
-        throw new Error('Invalid CSV data: Each row must contain a date.');
-      }
-
-      const response = await fetch('/api/amazon/keyword-trends', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ csvData: data }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const trendData: ChartDataPoint[] = await response.json();
-      setChartData(trendData);
-      setHasData(true);
-      toast({
-        title: 'Success',
-        description: 'Keyword trend data processed successfully.',
-        variant: 'default',
-      });
-    } catch (error: unknown) {
-      const errorMessage =
-        error instanceof Error
-          ? error.message
-          : 'Failed to process CSV data.';
-      setError(errorMessage);
-      toast({
-        title: 'Error',
-        description: errorMessage,
-        variant: 'destructive',
-      });
-      console.error('Failed to process CSV data:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [toast]);
+    },
+    [toast]
+  );
 
   const handleClearData = useCallback(() => {
     setChartData([]);
@@ -122,9 +122,7 @@ const KeywordTrendAnalyzer: React.FC = () => {
       {isLoading && (
         <div className="space-y-2 py-4 text-center">
           <Progress value={45} className="h-2" />
-          <p className="text-sm text-muted-foreground">
-            Analyzing keyword trends...
-          </p>
+          <p className="text-sm text-muted-foreground">Analyzing keyword trends...</p>
         </div>
       )}
 
@@ -139,15 +137,13 @@ const KeywordTrendAnalyzer: React.FC = () => {
                 <Tooltip />
                 <Legend />
                 {Object.keys(chartData[0])
-                  .filter((key) => key !== 'name')
-                  .map((key) => (
+                  .filter(key => key !== 'name')
+                  .map(key => (
                     <Line
                       key={key}
                       type="monotone"
                       dataKey={key}
-                      stroke={`#${Math.floor(Math.random() * 16777215).toString(
-                        16,
-                      )}`}
+                      stroke={`#${Math.floor(Math.random() * 16777215).toString(16)}`}
                     />
                   ))}
               </LineChart>

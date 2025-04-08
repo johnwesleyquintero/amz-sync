@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
 - Initial project setup
 - Basic dashboard structure
 - Authentication system
@@ -22,17 +23,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Multi-account management capabilities
 
 ### Changed
+
 - Enhanced security measures
 - Improved error handling
 - Optimized database queries
 - Updated UI/UX design
 
 ### Fixed
+
 - Initial bug fixes and performance improvements
 
 ## [1.0.0] - TBD
 
 ### Added
+
 - First stable release
 - Core features implementation
 - Complete documentation

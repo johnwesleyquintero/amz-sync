@@ -14,14 +14,7 @@ import {
   getAcosRating,
   type CampaignData,
 } from '@/lib/acos-utils';
-import {
-  AlertCircle,
-  Calculator,
-  Download,
-  FileText,
-  Info,
-  Upload,
-} from 'lucide-react';
+import { AlertCircle, Calculator, Download, FileText, Info, Upload } from 'lucide-react';
 import Papa from 'papaparse';
 import type React from 'react';
 import { useRef, useState } from 'react';
@@ -56,9 +49,7 @@ export default function AcosCalculator() {
   const [campaigns, setCampaigns] = useState<CampaignData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [selectedMetric, setSelectedMetric] = useState<
-    'acos' | 'roas' | 'ctr' | 'cpc'
-  >('acos');
+  const [selectedMetric, setSelectedMetric] = useState<'acos' | 'roas' | 'ctr' | 'cpc'>('acos');
   const [manualCampaign, setManualCampaign] = useState<ManualCampaignInput>({
     campaign: '',
     adSpend: '',
@@ -69,11 +60,7 @@ export default function AcosCalculator() {
 
   // Helper function to validate CSV data
   const isValidCsvRow = (item: any): boolean => {
-    return (
-      item.campaign &&
-      !isNaN(Number(item.adSpend)) &&
-      !isNaN(Number(item.sales))
-    );
+    return item.campaign && !isNaN(Number(item.adSpend)) && !isNaN(Number(item.sales));
   };
 
   // Helper function to process a single CSV row
@@ -104,11 +91,9 @@ export default function AcosCalculator() {
       header: true,
       dynamicTyping: true,
       skipEmptyLines: true,
-      complete: (result) => {
+      complete: result => {
         if (result.errors.length > 0) {
-          setError(
-            `Error parsing CSV file: ${result.errors[0].message}. Please check the format.`,
-          );
+          setError(`Error parsing CSV file: ${result.errors[0].message}. Please check the format.`);
           toast({
             title: 'CSV Error',
             description: `Error parsing CSV file: ${result.errors[0].message}. Please check the format.`,
@@ -125,7 +110,7 @@ export default function AcosCalculator() {
 
           if (processedData.length === 0) {
             setError(
-              'No valid data found in CSV. Please ensure your CSV has columns: campaign, adSpend, sales',
+              'No valid data found in CSV. Please ensure your CSV has columns: campaign, adSpend, sales'
             );
             toast({
               title: 'CSV Error',
@@ -147,7 +132,7 @@ export default function AcosCalculator() {
           setError(
             `Failed to process CSV data: ${
               err instanceof Error ? err.message : String(err)
-            }. Please ensure your CSV has the correct format`,
+            }. Please ensure your CSV has the correct format`
           );
           toast({
             title: 'Processing Failed',
@@ -160,7 +145,7 @@ export default function AcosCalculator() {
           setIsLoading(false);
         }
       },
-      error: (error) => {
+      error: error => {
         setError(`Error parsing CSV file: ${error.message}`);
         toast({
           title: 'CSV Error',
@@ -212,13 +197,10 @@ export default function AcosCalculator() {
     }
 
     if (sales === 0) {
-      setError(
-        'Sales amount cannot be zero as it would result in invalid ACOS calculation',
-      );
+      setError('Sales amount cannot be zero as it would result in invalid ACOS calculation');
       toast({
         title: 'Input Error',
-        description:
-          'Sales amount cannot be zero as it would result in invalid ACOS calculation',
+        description: 'Sales amount cannot be zero as it would result in invalid ACOS calculation',
         variant: 'destructive',
       });
       return;
@@ -258,7 +240,7 @@ export default function AcosCalculator() {
     }
 
     try {
-      const exportData = campaigns.map((campaign) => ({
+      const exportData = campaigns.map(campaign => ({
         campaign: campaign.campaign,
         adSpend: campaign.adSpend.toFixed(2),
         sales: campaign.sales.toFixed(2),
@@ -286,11 +268,7 @@ export default function AcosCalculator() {
         variant: 'default',
       });
     } catch (error) {
-      setError(
-        `Error exporting data: ${
-          error instanceof Error ? error.message : 'Unknown error'
-        }`,
-      );
+      setError(`Error exporting data: ${error instanceof Error ? error.message : 'Unknown error'}`);
       toast({
         title: 'Export Error',
         description: `Error exporting data: ${
@@ -321,8 +299,8 @@ export default function AcosCalculator() {
         <div className="text-sm text-blue-700 dark:text-blue-300">
           <p className="font-medium">CSV Format Requirements:</p>
           <p>
-            Your CSV file should have the following columns:{' '}
-            <code>campaign</code>, <code>adSpend</code>, <code>sales</code>
+            Your CSV file should have the following columns: <code>campaign</code>,{' '}
+            <code>adSpend</code>, <code>sales</code>
           </p>
           <p>
             Optional columns: <code>impressions</code>, <code>clicks</code>
@@ -330,9 +308,7 @@ export default function AcosCalculator() {
           <p className="mt-1">
             Example: <code>campaign,adSpend,sales,impressions,clicks</code>
             <br />
-            <code>
-              Auto Campaign - Wireless Earbuds,245.67,1245.89,12450,320
-            </code>
+            <code>Auto Campaign - Wireless Earbuds,245.67,1245.89,12450,320</code>
           </p>
         </div>
       </div>
@@ -353,9 +329,7 @@ export default function AcosCalculator() {
               <div className="w-full">
                 <label className="relative flex w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-primary/40 bg-background p-6 text-center hover:bg-primary/5">
                   <FileText className="mb-2 h-8 w-8 text-primary/60" />
-                  <span className="text-sm font-medium">
-                    Click to upload CSV
-                  </span>
+                  <span className="text-sm font-medium">Click to upload CSV</span>
                   <span className="text-xs text-muted-foreground">
                     (CSV with campaign name, ad spend, and sales)
                   </span>
@@ -369,17 +343,10 @@ export default function AcosCalculator() {
                   />
                 </label>
                 <div className="flex justify-center mt-4">
-                  <SampleCsvButton
-                    dataType="acos"
-                    fileName="sample-acos-calculator.csv"
-                  />
+                  <SampleCsvButton dataType="acos" fileName="sample-acos-calculator.csv" />
                 </div>
                 {campaigns.length > 0 && (
-                  <Button
-                    variant="outline"
-                    className="w-full mt-4"
-                    onClick={clearData}
-                  >
+                  <Button variant="outline" className="w-full mt-4" onClick={clearData}>
                     Clear Data
                   </Button>
                 )}
@@ -398,7 +365,7 @@ export default function AcosCalculator() {
                   <label className="text-sm font-medium">Campaign Name</label>
                   <Input
                     value={manualCampaign.campaign}
-                    onChange={(e) =>
+                    onChange={e =>
                       setManualCampaign({
                         ...manualCampaign,
                         campaign: e.target.value,
@@ -414,7 +381,7 @@ export default function AcosCalculator() {
                     min="0"
                     step="0.01"
                     value={manualCampaign.adSpend}
-                    onChange={(e) =>
+                    onChange={e =>
                       setManualCampaign({
                         ...manualCampaign,
                         adSpend: e.target.value,
@@ -430,7 +397,7 @@ export default function AcosCalculator() {
                     min="0"
                     step="0.01"
                     value={manualCampaign.sales}
-                    onChange={(e) =>
+                    onChange={e =>
                       setManualCampaign({
                         ...manualCampaign,
                         sales: e.target.value,
@@ -459,9 +426,7 @@ export default function AcosCalculator() {
       {isLoading && (
         <div className="space-y-2 py-4 text-center">
           <Progress value={45} className="h-2" />
-          <p className="text-sm text-muted-foreground">
-            Analyzing campaign performance...
-          </p>
+          <p className="text-sm text-muted-foreground">Analyzing campaign performance...</p>
         </div>
       )}
 
@@ -478,41 +443,25 @@ export default function AcosCalculator() {
               <table className="w-full">
                 <thead>
                   <tr className="border-b bg-muted/50">
-                    <th className="px-4 py-3 text-left text-sm font-medium">
-                      Campaign
-                    </th>
-                    <th className="px-4 py-3 text-right text-sm font-medium">
-                      Ad Spend
-                    </th>
-                    <th className="px-4 py-3 text-right text-sm font-medium">
-                      Sales
-                    </th>
-                    <th className="px-4 py-3 text-right text-sm font-medium">
-                      ACoS
-                    </th>
-                    <th className="px-4 py-3 text-right text-sm font-medium">
-                      ROAS
-                    </th>
-                    <th className="px-4 py-3 text-center text-sm font-medium">
-                      Rating
-                    </th>
+                    <th className="px-4 py-3 text-left text-sm font-medium">Campaign</th>
+                    <th className="px-4 py-3 text-right text-sm font-medium">Ad Spend</th>
+                    <th className="px-4 py-3 text-right text-sm font-medium">Sales</th>
+                    <th className="px-4 py-3 text-right text-sm font-medium">ACoS</th>
+                    <th className="px-4 py-3 text-right text-sm font-medium">ROAS</th>
+                    <th className="px-4 py-3 text-center text-sm font-medium">Rating</th>
                   </tr>
                 </thead>
                 <tbody>
                   {campaigns.map((campaign, index) => (
                     <tr key={index} className="border-b">
-                      <td className="px-4 py-3 text-sm">
-                        {campaign.campaign}
-                      </td>
+                      <td className="px-4 py-3 text-sm">{campaign.campaign}</td>
                       <td className="px-4 py-3 text-right text-sm">
                         ${campaign.adSpend.toFixed(2)}
                       </td>
-                      <td className="px-4 py-3 text-right text-sm">
-                        ${campaign.sales.toFixed(2)}
-                      </td>
+                      <td className="px-4 py-3 text-right text-sm">${campaign.sales.toFixed(2)}</td>
                       <td
                         className={`px-4 py-3 text-right text-sm font-medium ${getAcosColor(
-                          campaign.acos || 0,
+                          campaign.acos || 0
                         )}`}
                       >
                         {campaign.acos?.toFixed(2)}%
@@ -523,11 +472,9 @@ export default function AcosCalculator() {
                       <td className="px-4 py-3 text-center">
                         <Badge
                           variant={
-                            campaign.acos &&
-                            campaign.acos < ACOS_EXCELLENT_THRESHOLD
+                            campaign.acos && campaign.acos < ACOS_EXCELLENT_THRESHOLD
                               ? 'default'
-                              : campaign.acos &&
-                                campaign.acos < ACOS_GOOD_THRESHOLD
+                              : campaign.acos && campaign.acos < ACOS_GOOD_THRESHOLD
                                 ? 'secondary'
                                 : 'destructive'
                           }

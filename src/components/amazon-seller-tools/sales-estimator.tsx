@@ -7,14 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import {
-  Upload,
-  FileText,
-  AlertCircle,
-  Download,
-  TrendingUp,
-  Info,
-} from 'lucide-react';
+import { Upload, FileText, AlertCircle, Download, TrendingUp, Info } from 'lucide-react';
 import Papa from 'papaparse';
 import SampleCsvButton from './sample-csv-button';
 import { useToast } from '@/hooks/use-toast';
@@ -50,8 +43,12 @@ export default function SalesEstimator() {
   const estimateSales = (
     category: string,
     price: number,
-    competition: CompetitionLevel,
-  ): { estimatedSales: number; estimatedRevenue: number; confidence: 'Low' | 'Medium' | 'High' } => {
+    competition: CompetitionLevel
+  ): {
+    estimatedSales: number;
+    estimatedRevenue: number;
+    confidence: 'Low' | 'Medium' | 'High';
+  } => {
     let baseSales = 0;
 
     if (category === 'Electronics') baseSales = 150;
@@ -59,8 +56,7 @@ export default function SalesEstimator() {
     else baseSales = 100;
 
     const priceFactor = price < 20 ? 1.5 : price < 50 ? 1.0 : 0.7;
-    const competitionFactor =
-      competition === 'Low' ? 1.3 : competition === 'Medium' ? 1.0 : 0.7;
+    const competitionFactor = competition === 'Low' ? 1.3 : competition === 'Medium' ? 1.0 : 0.7;
 
     const estimatedSales = Math.round(baseSales * priceFactor * competitionFactor);
     const estimatedRevenue = estimatedSales * price;
@@ -82,7 +78,7 @@ export default function SalesEstimator() {
     Papa.parse(file, {
       header: true,
       skipEmptyLines: true,
-      complete: (results) => {
+      complete: results => {
         try {
           interface ProductDataCSV {
             product: string;
@@ -92,13 +88,11 @@ export default function SalesEstimator() {
           }
 
           const requiredColumns = ['product', 'category', 'price', 'competition'];
-          const missingColumns = requiredColumns.filter((col) =>
-            results.meta.fields ? !results.meta.fields.includes(col) : true,
+          const missingColumns = requiredColumns.filter(col =>
+            results.meta.fields ? !results.meta.fields.includes(col) : true
           );
           if (missingColumns.length > 0) {
-            throw new Error(
-              `Missing required columns: ${missingColumns.join(', ')}`,
-            );
+            throw new Error(`Missing required columns: ${missingColumns.join(', ')}`);
           }
 
           const processedData: ProductData[] = results.data
@@ -108,17 +102,18 @@ export default function SalesEstimator() {
                 productRow.product &&
                 productRow.category &&
                 !isNaN(Number(productRow.price)) &&
-                COMPETITION_LEVELS.includes(
-                  productRow.competition as CompetitionLevel,
-                )
+                COMPETITION_LEVELS.includes(productRow.competition as CompetitionLevel)
               );
             })
             .map((row: unknown) => {
               const productRow = row as ProductDataCSV;
               const price = Number(productRow.price);
               const competition = productRow.competition as CompetitionLevel;
-              const { estimatedSales, estimatedRevenue, confidence } =
-                estimateSales(productRow.category, price, competition);
+              const { estimatedSales, estimatedRevenue, confidence } = estimateSales(
+                productRow.category,
+                price,
+                competition
+              );
 
               return {
                 product: productRow.product,
@@ -142,9 +137,7 @@ export default function SalesEstimator() {
             variant: 'default',
           });
         } catch (error) {
-          setError(
-            error instanceof Error ? error.message : 'An error occurred',
-          );
+          setError(error instanceof Error ? error.message : 'An error occurred');
           toast({
             title: 'Processing Failed',
             description: error.message,
@@ -153,7 +146,7 @@ export default function SalesEstimator() {
         }
         setIsLoading(false);
       },
-      error: (error) => {
+      error: error => {
         setError(error.message);
         setIsLoading(false);
       },
@@ -165,11 +158,7 @@ export default function SalesEstimator() {
   };
 
   const handleManualEstimate = () => {
-    if (
-      !manualProduct.product ||
-      !manualProduct.category ||
-      !manualProduct.price
-    ) {
+    if (!manualProduct.product || !manualProduct.category || !manualProduct.price) {
       setError('Please fill in all fields');
       toast({
         title: 'Input Error',
@@ -194,7 +183,7 @@ export default function SalesEstimator() {
     const { estimatedSales, estimatedRevenue, confidence } = estimateSales(
       manualProduct.category,
       price,
-      manualProduct.competition,
+      manualProduct.competition
     );
 
     const newProduct: ProductData = {
@@ -233,7 +222,7 @@ export default function SalesEstimator() {
       return;
     }
 
-    const exportData = products.map((product) => ({
+    const exportData = products.map(product => ({
       product: product.product,
       category: product.category,
       price: product.price.toFixed(2),
@@ -279,9 +268,8 @@ export default function SalesEstimator() {
         <div className="text-sm text-blue-700 dark:text-blue-300">
           <p className="font-medium">CSV Format Requirements:</p>
           <p>
-            Your CSV file should have the following columns:{' '}
-            <code>product</code>, <code>category</code>, <code>price</code>,{' '}
-            <code>competition</code> (Low, Medium, High)
+            Your CSV file should have the following columns: <code>product</code>,{' '}
+            <code>category</code>, <code>price</code>, <code>competition</code> (Low, Medium, High)
           </p>
           <p className="mt-1">
             Example: <code>product,category,price,competition</code>
@@ -306,12 +294,9 @@ export default function SalesEstimator() {
               <div className="w-full">
                 <label className="relative flex w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-primary/40 bg-background p-6 text-center hover:bg-primary/5">
                   <FileText className="mb-2 h-8 w-8 text-primary/60" />
-                  <span className="text-sm font-medium">
-                    Click to upload CSV
-                  </span>
+                  <span className="text-sm font-medium">Click to upload CSV</span>
                   <span className="text-xs text-muted-foreground">
-                    (CSV with product name, category, price, and competition
-                    level)
+                    (CSV with product name, category, price, and competition level)
                   </span>
                   <input
                     type="file"
@@ -323,11 +308,7 @@ export default function SalesEstimator() {
                   />
                 </label>
                 {products.length > 0 && (
-                  <Button
-                    variant="outline"
-                    className="w-full mt-4"
-                    onClick={clearData}
-                  >
+                  <Button variant="outline" className="w-full mt-4" onClick={clearData}>
                     Clear Data
                   </Button>
                 )}
@@ -345,7 +326,7 @@ export default function SalesEstimator() {
                   <label className="text-sm font-medium">Product Name</label>
                   <Input
                     value={manualProduct.product}
-                    onChange={(e) =>
+                    onChange={e =>
                       setManualProduct({
                         ...manualProduct,
                         product: e.target.value,
@@ -358,7 +339,7 @@ export default function SalesEstimator() {
                   <label className="text-sm font-medium">Category</label>
                   <Input
                     value={manualProduct.category}
-                    onChange={(e) =>
+                    onChange={e =>
                       setManualProduct({
                         ...manualProduct,
                         category: e.target.value,
@@ -374,7 +355,7 @@ export default function SalesEstimator() {
                     min="0"
                     step="0.01"
                     value={manualProduct.price}
-                    onChange={(e) =>
+                    onChange={e =>
                       setManualProduct({
                         ...manualProduct,
                         price: e.target.value,
@@ -384,12 +365,10 @@ export default function SalesEstimator() {
                   />
                 </div>
                 <div>
-                  <label className="text-sm font-medium">
-                    Competition Level
-                  </label>
+                  <label className="text-sm font-medium">Competition Level</label>
                   <select
                     value={manualProduct.competition}
-                    onChange={(e) =>
+                    onChange={e =>
                       setManualProduct({
                         ...manualProduct,
                         competition: e.target.value as CompetitionLevel,
@@ -397,7 +376,7 @@ export default function SalesEstimator() {
                     }
                     className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                   >
-                    {COMPETITION_LEVELS.map((level) => (
+                    {COMPETITION_LEVELS.map(level => (
                       <option key={level} value={level}>
                         {level}
                       </option>
@@ -424,9 +403,7 @@ export default function SalesEstimator() {
       {isLoading && (
         <div className="space-y-2 py-4 text-center">
           <Progress value={45} className="h-2" />
-          <p className="text-sm text-muted-foreground">
-            Estimating sales potential...
-          </p>
+          <p className="text-sm text-muted-foreground">Estimating sales potential...</p>
         </div>
       )}
 
@@ -444,27 +421,15 @@ export default function SalesEstimator() {
               <table className="w-full">
                 <thead>
                   <tr className="border-b bg-muted/50">
-                    <th className="px-4 py-3 text-left text-sm font-medium">
-                      Product
-                    </th>
-                    <th className="px-4 py-3 text-left text-sm font-medium">
-                      Category
-                    </th>
-                    <th className="px-4 py-3 text-right text-sm font-medium">
-                      Price
-                    </th>
-                    <th className="px-4 py-3 text-center text-sm font-medium">
-                      Competition
-                    </th>
-                    <th className="px-4 py-3 text-right text-sm font-medium">
-                      Est. Monthly Sales
-                    </th>
+                    <th className="px-4 py-3 text-left text-sm font-medium">Product</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium">Category</th>
+                    <th className="px-4 py-3 text-right text-sm font-medium">Price</th>
+                    <th className="px-4 py-3 text-center text-sm font-medium">Competition</th>
+                    <th className="px-4 py-3 text-right text-sm font-medium">Est. Monthly Sales</th>
                     <th className="px-4 py-3 text-right text-sm font-medium">
                       Est. Monthly Revenue
                     </th>
-                    <th className="px-4 py-3 text-center text-sm font-medium">
-                      Confidence
-                    </th>
+                    <th className="px-4 py-3 text-center text-sm font-medium">Confidence</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -472,9 +437,7 @@ export default function SalesEstimator() {
                     <tr key={index} className="border-b">
                       <td className="px-4 py-3 text-sm">{product.product}</td>
                       <td className="px-4 py-3 text-sm">{product.category}</td>
-                      <td className="px-4 py-3 text-right text-sm">
-                        ${product.price.toFixed(2)}
-                      </td>
+                      <td className="px-4 py-3 text-right text-sm">${product.price.toFixed(2)}</td>
                       <td className="px-4 py-3 text-center">
                         <Badge
                           variant={
@@ -517,10 +480,9 @@ export default function SalesEstimator() {
           <div className="rounded-lg border bg-muted/20 p-4">
             <h3 className="mb-2 text-sm font-medium">Estimation Methodology</h3>
             <p className="text-sm text-muted-foreground">
-              These estimates are based on category averages, price points, and
-              competition levels. Actual sales may vary based on additional
-              factors such as listing quality, reviews, advertising, and
-              seasonality. High confidence estimates are more likely to be
+              These estimates are based on category averages, price points, and competition levels.
+              Actual sales may vary based on additional factors such as listing quality, reviews,
+              advertising, and seasonality. High confidence estimates are more likely to be
               accurate.
             </p>
           </div>

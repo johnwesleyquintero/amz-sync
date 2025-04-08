@@ -7,16 +7,16 @@ interface ProductPricingData {
   marketStrategy?: MarketStrategy;
 }
 
+import { validateProductPricingData, validateCompetitorPrices } from './validation-utils';
+
 export function calculateOptimalPrice(
   productData: ProductPricingData,
-  competitorPrices: number[],
+  competitorPrices: number[]
 ): number {
-  const {
-    cost,
-    targetMargin,
-    seasonalityFactor = 1,
-    marketStrategy = 'competitive',
-  } = productData;
+  // Validate input data
+  const validatedData = validateProductPricingData(productData);
+  const validatedPrices = validateCompetitorPrices(competitorPrices);
+  const { cost, targetMargin, seasonalityFactor = 1, marketStrategy = 'competitive' } = productData;
 
   // Filter out outliers from competitor prices
   const sortedPrices = [...competitorPrices].sort((a, b) => a - b);
@@ -24,8 +24,7 @@ export function calculateOptimalPrice(
   const q3Index = Math.floor(sortedPrices.length * 0.75);
   const filteredPrices = sortedPrices.slice(q1Index, q3Index + 1);
 
-  const averageCompetitorPrice =
-    filteredPrices.reduce((a, b) => a + b, 0) / filteredPrices.length;
+  const averageCompetitorPrice = filteredPrices.reduce((a, b) => a + b, 0) / filteredPrices.length;
 
   // Calculate base price considering cost and target margin
   const basePrice = cost * (1 + targetMargin);

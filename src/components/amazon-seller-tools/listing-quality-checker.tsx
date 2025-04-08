@@ -7,14 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import {
-  Upload,
-  FileText,
-  AlertCircle,
-  CheckCircle,
-  XCircle,
-  Info,
-} from 'lucide-react';
+import { Upload, FileText, AlertCircle, CheckCircle, XCircle, Info } from 'lucide-react';
 import Papa from 'papaparse';
 import { KeywordIntelligence } from '@/lib/keyword-intelligence';
 import { useToast } from '@/hooks/use-toast';
@@ -55,8 +48,7 @@ const calculateListingScore = (listing: ListingData): number => {
     score -= 10;
   }
   if (!listing.images || listing.images < MAX_IMAGES) score -= 10;
-  if (!listing.keywords || listing.keywords.length < MIN_KEYWORDS)
-    score -= 10;
+  if (!listing.keywords || listing.keywords.length < MIN_KEYWORDS) score -= 10;
 
   if (listing.issues) {
     score -= listing.issues.length * 5;
@@ -76,13 +68,7 @@ interface BadgeProps {
   className?: string;
 }
 
-const ListingDetailCheck = ({
-  isPresent,
-  label,
-}: {
-  isPresent: boolean;
-  label: string;
-}) => {
+const ListingDetailCheck = ({ isPresent, label }: { isPresent: boolean; label: string }) => {
   return (
     <div className="flex justify-between">
       <span className="text-sm text-muted-foreground">{label}:</span>
@@ -122,12 +108,10 @@ export default function ListingQualityChecker() {
     Papa.parse(file, {
       header: true,
       skipEmptyLines: true,
-      complete: async (results) => {
+      complete: async results => {
         try {
           if (results.errors.length > 0) {
-            throw new Error(
-              `CSV errors: ${results.errors.map((e) => e.message).join(', ')}`,
-            );
+            throw new Error(`CSV errors: ${results.errors.map(e => e.message).join(', ')}`);
           }
 
           const requiredColumns = [
@@ -138,13 +122,9 @@ export default function ListingQualityChecker() {
             'images',
             'keywords',
           ];
-          const missingColumns = requiredColumns.filter(
-            (col) => !results.meta.fields.includes(col),
-          );
+          const missingColumns = requiredColumns.filter(col => !results.meta.fields.includes(col));
           if (missingColumns.length > 0) {
-            throw new Error(
-              `Missing required columns: ${missingColumns.join(', ')}`,
-            );
+            throw new Error(`Missing required columns: ${missingColumns.join(', ')}`);
           }
 
           interface CSVRow {
@@ -161,11 +141,10 @@ export default function ListingQualityChecker() {
               const keywords =
                 row.keywords
                   ?.split(',')
-                  .map((k) => k.trim())
+                  .map(k => k.trim())
                   .filter(Boolean) || [];
 
-              const keywordAnalysis =
-                await KeywordIntelligence.analyzeBatch(keywords);
+              const keywordAnalysis = await KeywordIntelligence.analyzeBatch(keywords);
 
               const listing: ListingData = {
                 product: row.product,
@@ -181,7 +160,7 @@ export default function ListingQualityChecker() {
                 ...listing,
                 score: calculateListingScore(listing),
               };
-            }),
+            })
           );
 
           setListings(processedData);
@@ -204,7 +183,7 @@ export default function ListingQualityChecker() {
           }
         }
       },
-      error: (error) => {
+      error: error => {
         setError(`Error parsing CSV file: ${error.message}`);
         toast({
           title: 'CSV Error',
@@ -252,23 +231,18 @@ export default function ListingQualityChecker() {
       ];
 
       const selectedSuggestions = suggestions.filter((_, i) =>
-        selectedIssues.length > i ? true : false,
+        selectedIssues.length > i ? true : false
       );
 
       const newListing: ListingData = {
         product: `Product (ASIN: ${asin})`,
         title: Math.random() > 0.3 ? 'Product Title Example' : '',
-        description:
-          Math.random() > 0.3 ? 'Product description example...' : '',
+        description: Math.random() > 0.3 ? 'Product description example...' : '',
         bulletPoints: Math.random() > 0.5 ? ['Bullet 1', 'Bullet 2'] : [],
         images: Math.floor(Math.random() * 7),
         keywords: Math.random() > 0.4 ? ['keyword1', 'keyword2'] : [],
-        issues: selectedIssues.length
-          ? selectedIssues
-          : ['No major issues found'],
-        suggestions: selectedSuggestions.length
-          ? selectedSuggestions
-          : ['Listing looks good!'],
+        issues: selectedIssues.length ? selectedIssues : ['No major issues found'],
+        suggestions: selectedSuggestions.length ? selectedSuggestions : ['Listing looks good!'],
       };
 
       const listingWithScore = {
@@ -289,16 +263,17 @@ export default function ListingQualityChecker() {
         <div className="text-sm text-blue-700 dark:text-blue-300">
           <p className="font-medium">CSV Format Requirements:</p>
           <p>
-            Your CSV file should have the following columns:{' '}
-            <code>product</code>, <code>title</code>, <code>description</code>,{' '}
-            <code>bullet_points</code> (semicolon-separated),{' '}
-            <code>images</code>, <code>keywords</code> (comma-separated)
+            Your CSV file should have the following columns: <code>product</code>,{' '}
+            <code>title</code>, <code>description</code>, <code>bullet_points</code>{' '}
+            (semicolon-separated), <code>images</code>, <code>keywords</code> (comma-separated)
           </p>
           <p className="mt-1">
             Example: <code>product,title,description,bullet_points,images,keywords</code>
             <br />
             <code>
-              Wireless Earbuds,&quot;Premium Wireless Earbuds&quot;,&quot;Experience superior sound quality...&quot;,&quot;Crystal Clear Audio;Long Battery Life;Comfortable Fit&quot;,7,&quot;wireless earbuds, bluetooth earbuds, noise cancelling earbuds&quot;
+              Wireless Earbuds,&quot;Premium Wireless Earbuds&quot;,&quot;Experience superior sound
+              quality...&quot;,&quot;Crystal Clear Audio;Long Battery Life;Comfortable
+              Fit&quot;,7,&quot;wireless earbuds, bluetooth earbuds, noise cancelling earbuds&quot;
             </code>
           </p>
         </div>
@@ -319,12 +294,8 @@ export default function ListingQualityChecker() {
               <div className="w-full">
                 <label className="relative flex w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-primary/40 bg-background p-6 text-center hover:bg-primary/5">
                   <FileText className="mb-2 h-8 w-8 text-primary/60" />
-                  <span className="text-sm font-medium">
-                    Click to upload CSV
-                  </span>
-                  <span className="text-xs text-muted-foreground">
-                    (CSV with listing details)
-                  </span>
+                  <span className="text-sm font-medium">Click to upload CSV</span>
+                  <span className="text-xs text-muted-foreground">(CSV with listing details)</span>
                   <input
                     type="file"
                     accept=".csv"
@@ -349,7 +320,7 @@ export default function ListingQualityChecker() {
                   <div className="flex gap-2">
                     <Input
                       value={asin}
-                      onChange={(e) => setAsin(e.target.value)}
+                      onChange={e => setAsin(e.target.value)}
                       placeholder="Enter ASIN (e.g., B08N5KWB9H)"
                     />
                     <Button onClick={handleAsinCheck} disabled={isLoading}>
@@ -373,9 +344,7 @@ export default function ListingQualityChecker() {
       {isLoading && (
         <div className="space-y-2 py-4 text-center">
           <Progress value={45} className="h-2" />
-          <p className="text-sm text-muted-foreground">
-            Analyzing listing quality...
-          </p>
+          <p className="text-sm text-muted-foreground">Analyzing listing quality...</p>
         </div>
       )}
 
@@ -388,11 +357,7 @@ export default function ListingQualityChecker() {
                   <h3 className="text-lg font-medium">{listing.product}</h3>
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-medium">Quality Score:</span>
-                    <Badge
-                      variant={getListingQualityBadgeVariant(
-                        listing.score || 0,
-                      )}
-                    >
+                    <Badge variant={getListingQualityBadgeVariant(listing.score || 0)}>
                       {listing.score || 0}/100
                     </Badge>
                   </div>
@@ -400,22 +365,13 @@ export default function ListingQualityChecker() {
 
                 <div className="mb-4 grid gap-4 md:grid-cols-2">
                   <div>
-                    <h4 className="mb-2 text-sm font-medium">
-                      Listing Details
-                    </h4>
+                    <h4 className="mb-2 text-sm font-medium">Listing Details</h4>
                     <div className="space-y-2 rounded-lg border p-3">
-                      <ListingDetailCheck
-                        isPresent={!!listing.title}
-                        label="Title"
-                      />
-                      <ListingDetailCheck
-                        isPresent={!!listing.description}
-                        label="Description"
-                      />
+                      <ListingDetailCheck isPresent={!!listing.title} label="Title" />
+                      <ListingDetailCheck isPresent={!!listing.description} label="Description" />
                       <ListingDetailCheck
                         isPresent={
-                          !!listing.bulletPoints &&
-                          listing.bulletPoints.length >= MAX_BULLET_POINTS
+                          !!listing.bulletPoints && listing.bulletPoints.length >= MAX_BULLET_POINTS
                         }
                         label={`Bullet Points (${MAX_BULLET_POINTS} recommended)`}
                       />
@@ -431,9 +387,7 @@ export default function ListingQualityChecker() {
                   </div>
 
                   <div>
-                    <h4 className="mb-2 text-sm font-medium">
-                      Issues & Suggestions
-                    </h4>
+                    <h4 className="mb-2 text-sm font-medium">Issues & Suggestions</h4>
                     <div className="space-y-3">
                       {listing.issues && listing.issues.length > 0 && (
                         <div className="space-y-1">
@@ -448,19 +402,18 @@ export default function ListingQualityChecker() {
                         </div>
                       )}
 
-                      {listing.suggestions &&
-                        listing.suggestions.length > 0 && (
-                          <div className="space-y-1">
-                            <h5 className="text-xs font-medium text-blue-600 dark:text-blue-400">
-                              Suggestions:
-                            </h5>
-                            <ul className="list-inside list-disc space-y-1 text-sm">
-                              {listing.suggestions.map((suggestion, i) => (
-                                <li key={i}>{suggestion}</li>
-                              ))}
-                            </ul>
-                          </div>
-                        )}
+                      {listing.suggestions && listing.suggestions.length > 0 && (
+                        <div className="space-y-1">
+                          <h5 className="text-xs font-medium text-blue-600 dark:text-blue-400">
+                            Suggestions:
+                          </h5>
+                          <ul className="list-inside list-disc space-y-1 text-sm">
+                            {listing.suggestions.map((suggestion, i) => (
+                              <li key={i}>{suggestion}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

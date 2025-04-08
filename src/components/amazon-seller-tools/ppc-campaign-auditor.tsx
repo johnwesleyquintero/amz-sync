@@ -72,9 +72,7 @@ const analyzeCampaign = (campaign: CampaignData): CampaignData => {
 
   if (conversionRate < MIN_CONVERSION_RATE_THRESHOLD) {
     issues.push('Low conversion rate');
-    recommendations.push(
-      'Optimize product listing and target more relevant keywords',
-    );
+    recommendations.push('Optimize product listing and target more relevant keywords');
   }
 
   if (clicks < MIN_CLICKS_FOR_ANALYSIS) {
@@ -83,9 +81,7 @@ const analyzeCampaign = (campaign: CampaignData): CampaignData => {
   }
 
   if (type === 'Auto' && acos < 20) {
-    recommendations.push(
-      'Extract converting search terms and create manual campaigns',
-    );
+    recommendations.push('Extract converting search terms and create manual campaigns');
   }
 
   return {
@@ -122,11 +118,9 @@ export default function PpcCampaignAuditor() {
       header: true,
       dynamicTyping: true,
       skipEmptyLines: true,
-      complete: (result) => {
+      complete: result => {
         if (result.errors.length > 0) {
-          setError(
-            `Error parsing CSV file: ${result.errors[0].message}. Please check the format.`,
-          );
+          setError(`Error parsing CSV file: ${result.errors[0].message}. Please check the format.`);
           toast({
             title: 'CSV Error',
             description: `Error parsing CSV file: ${result.errors[0].message}. Please check the format.`,
@@ -139,15 +133,15 @@ export default function PpcCampaignAuditor() {
         try {
           const processedData: CampaignData[] = result.data
             .filter(
-              (item) =>
+              item =>
                 item.name &&
                 item.type &&
                 !isNaN(Number(item.spend)) &&
                 !isNaN(Number(item.sales)) &&
                 !isNaN(Number(item.impressions)) &&
-                !isNaN(Number(item.clicks)),
+                !isNaN(Number(item.clicks))
             )
-            .map((item) => ({
+            .map(item => ({
               ...DEFAULT_CAMPAIGN_DATA,
               name: String(item.name),
               type: String(item.type),
@@ -161,7 +155,7 @@ export default function PpcCampaignAuditor() {
 
           if (processedData.length === 0) {
             setError(
-              'No valid data found in CSV. Please ensure your CSV has columns: name, type, spend, sales, impressions, clicks',
+              'No valid data found in CSV. Please ensure your CSV has columns: name, type, spend, sales, impressions, clicks'
             );
             toast({
               title: 'CSV Error',
@@ -194,7 +188,7 @@ export default function PpcCampaignAuditor() {
           setIsLoading(false);
         }
       },
-      error: (error) => {
+      error: error => {
         setError(`Error parsing CSV file: ${error.message}`);
         toast({
           title: 'CSV Error',
@@ -221,7 +215,7 @@ export default function PpcCampaignAuditor() {
       return;
     }
 
-    const exportData = campaigns.map((campaign) => ({
+    const exportData = campaigns.map(campaign => ({
       name: campaign.name,
       type: campaign.type,
       spend: campaign.spend,
@@ -271,16 +265,13 @@ export default function PpcCampaignAuditor() {
         <div className="text-sm text-blue-700 dark:text-blue-300">
           <p className="font-medium">CSV Format Requirements:</p>
           <p>
-            Your CSV file should have the following columns: <code>name</code>,{' '}
-            <code>type</code>, <code>spend</code>, <code>sales</code>,{' '}
-            <code>impressions</code>, <code>clicks</code>
+            Your CSV file should have the following columns: <code>name</code>, <code>type</code>,{' '}
+            <code>spend</code>, <code>sales</code>, <code>impressions</code>, <code>clicks</code>
           </p>
           <p className="mt-1">
             Example: <code>name,type,spend,sales,impressions,clicks</code>
             <br />
-            <code>
-              Auto Campaign - Wireless Earbuds,Auto,245.67,1245.89,12450,320
-            </code>
+            <code>Auto Campaign - Wireless Earbuds,Auto,245.67,1245.89,12450,320</code>
           </p>
         </div>
       </div>
@@ -301,9 +292,7 @@ export default function PpcCampaignAuditor() {
               <div className="w-full">
                 <label className="relative flex w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-primary/40 bg-background p-6 text-center hover:bg-primary/5">
                   <FileText className="mb-2 h-8 w-8 text-primary/60" />
-                  <span className="text-sm font-medium">
-                    Click to upload CSV
-                  </span>
+                  <span className="text-sm font-medium">Click to upload CSV</span>
                   <span className="text-xs text-muted-foreground">
                     (Download campaign report from Amazon Ads and upload here)
                   </span>
@@ -317,17 +306,10 @@ export default function PpcCampaignAuditor() {
                   />
                 </label>
                 <div className="flex justify-center mt-4">
-                  <SampleCsvButton
-                    dataType="ppc"
-                    fileName="sample-ppc-campaign.csv"
-                  />
+                  <SampleCsvButton dataType="ppc" fileName="sample-ppc-campaign.csv" />
                 </div>
                 {campaigns.length > 0 && (
-                  <Button
-                    variant="outline"
-                    className="w-full mt-4"
-                    onClick={clearData}
-                  >
+                  <Button variant="outline" className="w-full mt-4" onClick={clearData}>
                     Clear Data
                   </Button>
                 )}
@@ -347,9 +329,7 @@ export default function PpcCampaignAuditor() {
       {isLoading && (
         <div className="space-y-2 py-4 text-center">
           <Progress value={45} className="h-2" />
-          <p className="text-sm text-muted-foreground">
-            Analyzing campaign performance...
-          </p>
+          <p className="text-sm text-muted-foreground">Analyzing campaign performance...</p>
         </div>
       )}
 

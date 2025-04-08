@@ -7,14 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import {
-  Upload,
-  FileText,
-  AlertCircle,
-  Download,
-  Filter,
-  Info,
-} from 'lucide-react';
+import { Upload, FileText, AlertCircle, Download, Filter, Info } from 'lucide-react';
 import Papa from 'papaparse';
 import SampleCsvButton from './sample-csv-button';
 import { useToast } from '@/hooks/use-toast';
@@ -45,11 +38,9 @@ export default function KeywordDeduplicator() {
     Papa.parse<KeywordData>(file, {
       header: true,
       skipEmptyLines: true,
-      complete: (result) => {
+      complete: result => {
         if (result.errors.length > 0) {
-          setError(
-            `Error parsing CSV file: ${result.errors[0].message}. Please check the format.`,
-          );
+          setError(`Error parsing CSV file: ${result.errors[0].message}. Please check the format.`);
           toast({
             title: 'CSV Error',
             description: `Error parsing CSV file: ${result.errors[0].message}. Please check the format.`,
@@ -76,14 +67,13 @@ export default function KeywordDeduplicator() {
                 product: String(item.product),
                 originalKeywords,
                 cleanedKeywords,
-                duplicatesRemoved:
-                  originalKeywords.length - cleanedKeywords.length,
+                duplicatesRemoved: originalKeywords.length - cleanedKeywords.length,
               };
             });
 
           if (processedData.length === 0) {
             setError(
-              'No valid data found in CSV. Please ensure your CSV has columns: product, keywords',
+              'No valid data found in CSV. Please ensure your CSV has columns: product, keywords'
             );
             toast({
               title: 'CSV Error',
@@ -116,7 +106,7 @@ export default function KeywordDeduplicator() {
           setIsLoading(false);
         }
       },
-      error: (error) => {
+      error: error => {
         setError(`Error parsing CSV file: ${error.message}`);
         toast({
           title: 'CSV Error',
@@ -143,7 +133,7 @@ export default function KeywordDeduplicator() {
       return;
     }
 
-    const originalKeywords = manualKeywords.split(',').map((k) => k.trim());
+    const originalKeywords = manualKeywords.split(',').map(k => k.trim());
     const cleanedKeywords = [...new Set(originalKeywords)];
 
     const result: KeywordData = {
@@ -175,7 +165,7 @@ export default function KeywordDeduplicator() {
       return;
     }
 
-    const exportData = products.map((product) => ({
+    const exportData = products.map(product => ({
       product: product.product,
       originalKeywords: product.originalKeywords.join(', '),
       cleanedKeywords: product.cleanedKeywords.join(', '),
@@ -218,15 +208,15 @@ export default function KeywordDeduplicator() {
         <div className="text-sm text-blue-700 dark:text-blue-300">
           <p className="font-medium">CSV Format Requirements:</p>
           <p>
-            Your CSV file should have the following columns:{' '}
-            <code>product</code>, <code>keywords</code> (comma-separated)
+            Your CSV file should have the following columns: <code>product</code>,{' '}
+            <code>keywords</code> (comma-separated)
           </p>
           <p className="mt-1">
             Example: <code>product,keywords</code>
             <br />
             <code>
-              Wireless Earbuds,&quot;bluetooth earbuds, wireless earbuds,
-              earbuds bluetooth, wireless headphones, bluetooth earbuds&quot;
+              Wireless Earbuds,&quot;bluetooth earbuds, wireless earbuds, earbuds bluetooth,
+              wireless headphones, bluetooth earbuds&quot;
             </code>
           </p>
         </div>
@@ -248,9 +238,7 @@ export default function KeywordDeduplicator() {
               <div className="w-full">
                 <label className="relative flex w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-primary/40 bg-background p-6 text-center hover:bg-primary/5">
                   <FileText className="mb-2 h-8 w-8 text-primary/60" />
-                  <span className="text-sm font-medium">
-                    Click to upload CSV
-                  </span>
+                  <span className="text-sm font-medium">Click to upload CSV</span>
                   <span className="text-xs text-muted-foreground">
                     (CSV with product name and comma-separated keywords)
                   </span>
@@ -270,11 +258,7 @@ export default function KeywordDeduplicator() {
                   />
                 </div>
                 {products.length > 0 && (
-                  <Button
-                    variant="outline"
-                    className="w-full mt-4"
-                    onClick={clearData}
-                  >
+                  <Button variant="outline" className="w-full mt-4" onClick={clearData}>
                     Clear Data
                   </Button>
                 )}
@@ -289,13 +273,11 @@ export default function KeywordDeduplicator() {
               <h3 className="text-lg font-medium">Manual Entry</h3>
               <div className="space-y-3">
                 <div>
-                  <label className="text-sm font-medium">
-                    Product Name (Optional)
-                  </label>
+                  <label className="text-sm font-medium">Product Name (Optional)</label>
                   <input
                     type="text"
                     value={manualProduct}
-                    onChange={(e) => setManualProduct(e.target.value)}
+                    onChange={e => setManualProduct(e.target.value)}
                     placeholder="Enter product name"
                     className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                   />
@@ -304,7 +286,7 @@ export default function KeywordDeduplicator() {
                   <label className="text-sm font-medium">Keywords</label>
                   <Textarea
                     value={manualKeywords}
-                    onChange={(e) => setManualKeywords(e.target.value)}
+                    onChange={e => setManualKeywords(e.target.value)}
                     placeholder="Enter comma-separated keywords"
                     rows={4}
                   />
@@ -332,9 +314,7 @@ export default function KeywordDeduplicator() {
       {isLoading && (
         <div className="space-y-2 py-4 text-center">
           <Progress value={45} className="h-2" />
-          <p className="text-sm text-muted-foreground">
-            Processing your keywords...
-          </p>
+          <p className="text-sm text-muted-foreground">Processing your keywords...</p>
         </div>
       )}
 
@@ -353,11 +333,7 @@ export default function KeywordDeduplicator() {
                 <CardContent className="p-4">
                   <div className="mb-4 flex items-center justify-between">
                     <h3 className="text-lg font-medium">{product.product}</h3>
-                    <Badge
-                      variant={
-                        product.duplicatesRemoved > 0 ? 'default' : 'secondary'
-                      }
-                    >
+                    <Badge variant={product.duplicatesRemoved > 0 ? 'default' : 'secondary'}>
                       {product.duplicatesRemoved} duplicates removed
                     </Badge>
                   </div>

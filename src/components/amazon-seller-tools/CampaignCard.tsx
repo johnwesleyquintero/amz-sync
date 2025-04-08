@@ -96,9 +96,11 @@ export default function CampaignCard({ campaign }: CampaignCardProps) {
             <div className="text-sm text-muted-foreground flex items-center gap-1">
               ACoS
               {isAcosHigh && <TrendingDown className="h-4 w-4 text-red-500" />}
-              {!isAcosHigh && campaign.acos !== undefined && <CheckCircle className="h-4 w-4 text-green-500" />}
+              {!isAcosHigh && campaign.acos !== undefined && (
+                <CheckCircle className="h-4 w-4 text-green-500" />
+              )}
             </div>
-            <div className={cn("text-xl font-semibold", isAcosHigh && "text-red-500")}>
+            <div className={cn('text-xl font-semibold', isAcosHigh && 'text-red-500')}>
               {campaign.acos !== undefined ? campaign.acos.toFixed(2) : 'N/A'}%
             </div>
           </div>
@@ -108,9 +110,11 @@ export default function CampaignCard({ campaign }: CampaignCardProps) {
             <div className="text-sm text-muted-foreground flex items-center gap-1">
               CTR
               {isCtrLow && <TrendingDown className="h-4 w-4 text-red-500" />}
-              {!isCtrLow && campaign.ctr !== undefined && <CheckCircle className="h-4 w-4 text-green-500" />}
+              {!isCtrLow && campaign.ctr !== undefined && (
+                <CheckCircle className="h-4 w-4 text-green-500" />
+              )}
             </div>
-            <div className={cn("text-xl font-semibold", isCtrLow && "text-red-500")}>
+            <div className={cn('text-xl font-semibold', isCtrLow && 'text-red-500')}>
               {campaign.ctr !== undefined ? campaign.ctr.toFixed(2) : 'N/A'}%
             </div>
           </div>
@@ -120,9 +124,11 @@ export default function CampaignCard({ campaign }: CampaignCardProps) {
             <div className="text-sm text-muted-foreground flex items-center gap-1">
               Conversion Rate
               {isConversionRateLow && <TrendingDown className="h-4 w-4 text-red-500" />}
-              {!isConversionRateLow && campaign.conversionRate !== undefined && <CheckCircle className="h-4 w-4 text-green-500" />}
+              {!isConversionRateLow && campaign.conversionRate !== undefined && (
+                <CheckCircle className="h-4 w-4 text-green-500" />
+              )}
             </div>
-            <div className={cn("text-xl font-semibold", isConversionRateLow && "text-red-500")}>
+            <div className={cn('text-xl font-semibold', isConversionRateLow && 'text-red-500')}>
               {campaign.conversionRate !== undefined ? campaign.conversionRate.toFixed(2) : 'N/A'}%
             </div>
           </div>

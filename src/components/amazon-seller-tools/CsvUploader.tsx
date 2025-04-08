@@ -50,36 +50,24 @@ export default function CsvUploader<T extends CsvRow>({
       Papa.parse<T>(file, {
         header: true,
         skipEmptyLines: true,
-        complete: (results) => {
+        complete: results => {
           setIsParsing(false);
           if (results.errors.length > 0) {
-            setParsingError(
-              `CSV parsing errors: ${results.errors
-                .map((e) => e.message)
-                .join(', ')}`,
-            );
+            setParsingError(`CSV parsing errors: ${results.errors.map(e => e.message).join(', ')}`);
             toast({
               title: 'Error',
-              description: `CSV parsing errors: ${results.errors
-                .map((e) => e.message)
-                .join(', ')}`,
+              description: `CSV parsing errors: ${results.errors.map(e => e.message).join(', ')}`,
               variant: 'destructive',
             });
             return;
           }
 
-          const missingColumns = requiredColumns.filter(
-            (col) => !results.meta.fields.includes(col),
-          );
+          const missingColumns = requiredColumns.filter(col => !results.meta.fields.includes(col));
           if (missingColumns.length > 0) {
-            setParsingError(
-              `Missing required columns: ${missingColumns.join(', ')}`,
-            );
+            setParsingError(`Missing required columns: ${missingColumns.join(', ')}`);
             toast({
               title: 'Error',
-              description: `Missing required columns: ${missingColumns.join(
-                ', ',
-              )}`,
+              description: `Missing required columns: ${missingColumns.join(', ')}`,
               variant: 'destructive',
             });
             return;
@@ -92,7 +80,7 @@ export default function CsvUploader<T extends CsvRow>({
             variant: 'default',
           });
         },
-        error: (error) => {
+        error: error => {
           setIsParsing(false);
           setParsingError(`Error parsing CSV: ${error.message}`);
           toast({
@@ -103,7 +91,7 @@ export default function CsvUploader<T extends CsvRow>({
         },
       });
     },
-    [onUploadSuccess, requiredColumns, toast],
+    [onUploadSuccess, requiredColumns, toast]
   );
 
   const onDrop = useCallback(
@@ -131,9 +119,7 @@ export default function CsvUploader<T extends CsvRow>({
       if (file.size > MAX_FILE_SIZE) {
         toast({
           title: 'Error',
-          description: `File size exceeds the maximum limit of ${
-            MAX_FILE_SIZE / (1024 * 1024)
-          }MB`,
+          description: `File size exceeds the maximum limit of ${MAX_FILE_SIZE / (1024 * 1024)}MB`,
           variant: 'destructive',
         });
         return;
@@ -150,7 +136,7 @@ export default function CsvUploader<T extends CsvRow>({
 
       parseCsv(file);
     },
-    [parseCsv, toast],
+    [parseCsv, toast]
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
@@ -180,9 +166,7 @@ export default function CsvUploader<T extends CsvRow>({
         {isDragActive ? (
           <p>Drop the files here ...</p>
         ) : (
-          <p>
-            Drag &apos;n&apos; drop some files here, or click to select files
-          </p>
+          <p>Drag &apos;n&apos; drop some files here, or click to select files</p>
         )}
         {(isLoading || isParsing) && (
           <div className="w-full mt-4">
@@ -195,11 +179,7 @@ export default function CsvUploader<T extends CsvRow>({
             <span>{parsingError}</span>
           </div>
         )}
-        <SampleCsvButton
-          dataType={dataType}
-          fileName={fileName}
-          className="mt-4"
-        />
+        <SampleCsvButton dataType={dataType} fileName={fileName} className="mt-4" />
       </div>
       {hasData && (
         <Button variant="outline" onClick={onClear}>

@@ -7,14 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import {
-  Upload,
-  FileText,
-  AlertCircle,
-  Download,
-  Search,
-  Info,
-} from 'lucide-react';
+import { Upload, FileText, AlertCircle, Download, Search, Info } from 'lucide-react';
 import {
   BarChart,
   Bar,
@@ -61,9 +54,7 @@ export default function KeywordAnalyzer() {
     }
   }, [products]);
 
-  const handleFileUpload = async (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -73,11 +64,9 @@ export default function KeywordAnalyzer() {
     Papa.parse<KeywordData>(file, {
       header: true,
       skipEmptyLines: true,
-      complete: async (result) => {
+      complete: async result => {
         if (result.errors.length > 0) {
-          setError(
-            `Error parsing CSV file: ${result.errors[0].message}. Please check the format.`,
-          );
+          setError(`Error parsing CSV file: ${result.errors[0].message}. Please check the format.`);
           toast({
             title: 'CSV Error',
             description: `Error parsing CSV file: ${result.errors[0].message}. Please check the format.`,
@@ -90,8 +79,8 @@ export default function KeywordAnalyzer() {
         try {
           const processedData: KeywordData[] = await Promise.all(
             result.data
-              .filter((item) => item.product && item.keywords)
-              .map(async (item) => {
+              .filter(item => item.product && item.keywords)
+              .map(async item => {
                 interface KeywordItem {
                   product: string;
                   keywords?: string | string[];
@@ -102,9 +91,7 @@ export default function KeywordAnalyzer() {
 
                 const keywordArray =
                   typeof (item as KeywordItem).keywords === 'string'
-                    ? (item as KeywordItem).keywords
-                        .split(',')
-                        .map((k: string) => k.trim())
+                    ? (item as KeywordItem).keywords.split(',').map((k: string) => k.trim())
                     : Array.isArray((item as KeywordItem).keywords)
                       ? (item as KeywordItem).keywords
                       : [];
@@ -114,16 +101,12 @@ export default function KeywordAnalyzer() {
                   : undefined;
 
                 const competition = (item as KeywordItem).competition
-                  ? COMPETITION_LEVELS.includes(
-                      item.competition as CompetitionLevel,
-                    )
+                  ? COMPETITION_LEVELS.includes(item.competition as CompetitionLevel)
                     ? (item as CompetitionLevel)
                     : DEFAULT_COMPETITION
                   : undefined;
 
-                const analysis = await KeywordIntelligence.analyzeBatch(
-                  keywordArray || [],
-                );
+                const analysis = await KeywordIntelligence.analyzeBatch(keywordArray || []);
 
                 return {
                   product: String(item.product),
@@ -131,16 +114,14 @@ export default function KeywordAnalyzer() {
                   searchVolume,
                   competition,
                   analysis,
-                  suggestions: analysis
-                    .map((a) => a.keyword)
-                    .slice(0, MAX_SUGGESTIONS),
+                  suggestions: analysis.map(a => a.keyword).slice(0, MAX_SUGGESTIONS),
                 };
-              }),
+              })
           );
 
           if (processedData.length === 0) {
             setError(
-              'No valid data found in CSV. Please ensure your CSV has columns: product, keywords',
+              'No valid data found in CSV. Please ensure your CSV has columns: product, keywords'
             );
             toast({
               title: 'CSV Error',
@@ -173,7 +154,7 @@ export default function KeywordAnalyzer() {
           setIsLoading(false);
         }
       },
-      error: (error) => {
+      error: error => {
         setError(`Error parsing CSV file: ${error.message}`);
         toast({
           title: 'CSV Error',
@@ -215,8 +196,7 @@ export default function KeywordAnalyzer() {
           `${searchTerm} with free shipping`,
         ].slice(0, MAX_SUGGESTIONS),
         searchVolume: Math.floor(Math.random() * 100000),
-        competition:
-          COMPETITION_LEVELS[Math.floor(Math.random() * COMPETITION_LEVELS.length)],
+        competition: COMPETITION_LEVELS[Math.floor(Math.random() * COMPETITION_LEVELS.length)],
       };
 
       setProducts([...products, newProduct]);
@@ -236,7 +216,7 @@ export default function KeywordAnalyzer() {
       return;
     }
 
-    const exportData = products.map((product) => ({
+    const exportData = products.map(product => ({
       product: product.product,
       keywords: product.keywords.join(', '),
       suggestions: product.suggestions?.join(', '),
@@ -280,12 +260,12 @@ export default function KeywordAnalyzer() {
         <div className="text-sm text-blue-700 dark:text-blue-300">
           <p className="font-medium">CSV Format Requirements:</p>
           <p>
-            Your CSV file should have the following columns:{' '}
-            <code>product</code>, <code>keywords</code> (comma-separated)
+            Your CSV file should have the following columns: <code>product</code>,{' '}
+            <code>keywords</code> (comma-separated)
           </p>
           <p>
-            Optional columns: <code>searchVolume</code>,{' '}
-            <code>competition</code> (Low, Medium, High)
+            Optional columns: <code>searchVolume</code>, <code>competition</code> (Low, Medium,
+            High)
           </p>
           <p className="mt-1">
             Example: <code>product,keywords,searchVolume,competition</code>
@@ -314,9 +294,7 @@ export default function KeywordAnalyzer() {
               <div className="w-full">
                 <label className="relative flex w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-primary/40 bg-background p-6 text-center hover:bg-primary/5">
                   <FileText className="mb-2 h-8 w-8 text-primary/60" />
-                  <span className="text-sm font-medium">
-                    Click to upload CSV
-                  </span>
+                  <span className="text-sm font-medium">Click to upload CSV</span>
                   <span className="text-xs text-muted-foreground">
                     (CSV with columns: product, keywords)
                   </span>
@@ -330,17 +308,10 @@ export default function KeywordAnalyzer() {
                   />
                 </label>
                 <div className="flex justify-center mt-4">
-                  <SampleCsvButton
-                    dataType="keyword"
-                    fileName="sample-keyword-analyzer.csv"
-                  />
+                  <SampleCsvButton dataType="keyword" fileName="sample-keyword-analyzer.csv" />
                 </div>
                 {products.length > 0 && (
-                  <Button
-                    variant="outline"
-                    className="w-full mt-4"
-                    onClick={clearData}
-                  >
+                  <Button variant="outline" className="w-full mt-4" onClick={clearData}>
                     Clear Data
                   </Button>
                 )}
@@ -355,9 +326,7 @@ export default function KeywordAnalyzer() {
               <h3 className="text-lg font-medium">Search for Keywords</h3>
               <div className="space-y-3">
                 <div>
-                  <label className="text-sm font-medium">
-                    Product or Keyword
-                  </label>
+                  <label className="text-sm font-medium">Product or Keyword</label>
                   <div className="flex gap-2">
                     <Input
                       value={searchTerm}
@@ -408,15 +377,9 @@ export default function KeywordAnalyzer() {
                     <h3 className="text-xl font-semibold">{product.product}</h3>
                     {product.searchVolume && (
                       <div className="flex items-center gap-2">
-                        <span className="text-sm text-muted-foreground">
-                          Search Volume:
-                        </span>
-                        <Badge variant="outline">
-                          {product.searchVolume.toLocaleString()}
-                        </Badge>
-                        <span className="text-sm text-muted-foreground">
-                          Competition:
-                        </span>
+                        <span className="text-sm text-muted-foreground">Search Volume:</span>
+                        <Badge variant="outline">{product.searchVolume.toLocaleString()}</Badge>
+                        <span className="text-sm text-muted-foreground">Competition:</span>
                         <Badge
                           variant={
                             product.competition === 'High'
@@ -433,9 +396,7 @@ export default function KeywordAnalyzer() {
                   </div>
                   <div className="space-y-3">
                     <div>
-                      <h4 className="mb-2 text-sm font-medium">
-                        Current Keywords
-                      </h4>
+                      <h4 className="mb-2 text-sm font-medium">Current Keywords</h4>
                       <div className="flex flex-wrap gap-2 mb-4">
                         {product.keywords.map((keyword, i) => (
                           <Badge key={i} variant="outline">
@@ -445,9 +406,7 @@ export default function KeywordAnalyzer() {
                       </div>
                       {product.searchVolume && (
                         <div className="h-80 w-full">
-                          <h4 className="mb-2 text-sm font-medium">
-                            Keyword Performance
-                          </h4>
+                          <h4 className="mb-2 text-sm font-medium">Keyword Performance</h4>
                           <ResponsiveContainer width="100%" height="100%">
                             <BarChart
                               data={[
@@ -476,9 +435,7 @@ export default function KeywordAnalyzer() {
                     </div>
                     {product.suggestions && (
                       <div>
-                        <h4 className="mb-2 text-sm font-medium">
-                          Suggested Keywords
-                        </h4>
+                        <h4 className="mb-2 text-sm font-medium">Suggested Keywords</h4>
                         <div className="flex flex-wrap gap-2">
                           {product.suggestions.map((keyword, i) => (
                             <Badge key={i} variant="secondary">

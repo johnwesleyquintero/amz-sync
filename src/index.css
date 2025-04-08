@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -6,7 +5,7 @@
 @layer base {
   :root {
     --background: 220 80% 98%; /* Solid color */
-  --catskill-white: 220 80% 98%; /* ED F2 F7 in HSL */
+    --catskill-white: 220 80% 98%; /* ED F2 F7 in HSL */
     --foreground: 222 47% 11%;
 
     --card: 0 0% 100%;
@@ -101,27 +100,27 @@
   .analytics-card {
     @apply bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300;
   }
-  
+
   .dashboard-stat {
     @apply text-3xl font-bold;
   }
-  
+
   .stat-label {
     @apply text-sm text-muted-foreground font-medium;
   }
-  
+
   .trend-up {
     @apply text-green-600;
   }
-  
+
   .trend-down {
     @apply text-burnt-sienna;
   }
-  
+
   .nav-link {
     @apply flex items-center gap-2 px-4 py-2 rounded-md hover:bg-muted transition-colors duration-200;
   }
-  
+
   .nav-link.active {
     @apply bg-primary/10 text-primary font-medium;
   }

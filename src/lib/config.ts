@@ -1,8 +1,7 @@
 export const siteConfig = {
   name: 'Wesley Quintero',
   title: 'Data Analytics Innovator',
-  description:
-    'Building tools that streamline workflows and provide valuable insights.',
+  description: 'Building tools that streamline workflows and provide valuable insights.',
   url: 'https://wesleyquintero.dev',
   links: {
     github: 'https://github.com/johnwesleyquintero',

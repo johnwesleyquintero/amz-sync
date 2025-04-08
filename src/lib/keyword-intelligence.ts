@@ -17,7 +17,7 @@ interface KeywordPattern {
 
 export class KeywordIntelligence {
   static async analyzeBatch(keywords: string[]): Promise<KeywordAnalysis[]> {
-    return Promise.all(keywords.map((keyword) => this.analyzeKeyword(keyword)));
+    return Promise.all(keywords.map(keyword => this.analyzeKeyword(keyword)));
   }
 
   private static patterns: KeywordPattern[] = [
@@ -54,7 +54,7 @@ export class KeywordIntelligence {
         matrix[i][j] = Math.min(
           matrix[i - 1][j] + 1,
           matrix[i][j - 1] + 1,
-          matrix[i - 1][j - 1] + cost,
+          matrix[i - 1][j - 1] + cost
         );
       }
     }
@@ -79,15 +79,14 @@ export class KeywordIntelligence {
     }
 
     // Check for fuzzy matches
-    const fuzzyMatches = prohibitedKeywords.map((pk) => ({
+    const fuzzyMatches = prohibitedKeywords.map(pk => ({
       keyword: pk,
       similarity: this.calculateSimilarity(normalizedKeyword, pk.toLowerCase()),
     }));
 
     const bestFuzzyMatch = fuzzyMatches.reduce(
-      (best, current) =>
-        current.similarity > best.similarity ? current : best,
-      { keyword: '', similarity: 0 },
+      (best, current) => (current.similarity > best.similarity ? current : best),
+      { keyword: '', similarity: 0 }
     );
 
     if (bestFuzzyMatch.similarity > 0.85) {
@@ -125,6 +124,6 @@ export class KeywordIntelligence {
   }
 
   static async analyzeBatch(keywords: string[]): Promise<KeywordAnalysis[]> {
-    return Promise.all(keywords.map((k) => this.analyzeKeyword(k)));
+    return Promise.all(keywords.map(k => this.analyzeKeyword(k)));
   }
 }

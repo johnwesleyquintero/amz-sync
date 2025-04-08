@@ -34,11 +34,7 @@ export function FileUploader({
         accept={accept}
         className="hidden"
       />
-      <Button
-        onClick={handleButtonClick}
-        variant="outline"
-        className="flex items-center gap-2"
-      >
+      <Button onClick={handleButtonClick} variant="outline" className="flex items-center gap-2">
         <Upload className="w-4 h-4" />
         <span>Upload File</span>
       </Button>

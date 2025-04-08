@@ -1,4 +1,3 @@
-
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Wrench } from 'lucide-react';
@@ -52,8 +51,8 @@ const Landing = () => {
               <Button
                 size="lg"
                 variant="outline"
-                className="bg-burnt-sienna hover:bg-burnt-sienna/90 text-white font-bold px-6 py-3 text-lg">
-              
+                className="bg-burnt-sienna hover:bg-burnt-sienna/90 text-white font-bold px-6 py-3 text-lg"
+              >
                 Explore Seller Tools <Wrench className="ml-2 w-6 h-6" />
               </Button>
             </Link>
@@ -64,7 +63,8 @@ const Landing = () => {
           <div className="bg-white p-8 rounded-xl hover:bg-gray-100 transition-colors duration-300 border border-gray-300 shadow-lg">
             <h3 className="text-xl font-bold text-shakespeare mb-4">Real-time Analytics</h3>
             <p className="text-gray-700">
-              Monitor your Amazon advertising performance metrics in real-time with our intuitive dashboard.
+              Monitor your Amazon advertising performance metrics in real-time with our intuitive
+              dashboard.
             </p>
           </div>
           <div className="bg-white p-8 rounded-xl hover:bg-gray-100 transition-colors duration-300 border border-gray-300 shadow-lg">
@@ -76,7 +76,8 @@ const Landing = () => {
           <div className="bg-white p-8 rounded-xl hover:bg-gray-100 transition-colors duration-300 border border-gray-300 shadow-lg">
             <h3 className="text-xl font-bold text-apricot mb-4">Seller Tools Suite</h3>
             <p className="text-gray-700">
-              Access our comprehensive suite of 11 specialized tools for Amazon sellers to optimize listings and increase profits.
+              Access our comprehensive suite of 11 specialized tools for Amazon sellers to optimize
+              listings and increase profits.
             </p>
           </div>
         </div>

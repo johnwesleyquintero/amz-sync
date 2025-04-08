@@ -10,13 +10,7 @@ type SampleDataType = 'fba' | 'keyword' | 'ppc' | 'keyword-dedup' | 'acos';
 interface SampleCsvButtonProps {
   dataType: SampleDataType;
   fileName?: string;
-  variant?:
-    | 'default'
-    | 'destructive'
-    | 'outline'
-    | 'secondary'
-    | 'ghost'
-    | 'link';
+  variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
   size?: 'default' | 'sm' | 'lg' | 'icon';
   className?: string;
   buttonText?: string;
@@ -46,12 +40,7 @@ export default function SampleCsvButton({
   };
 
   return (
-    <Button
-      variant={variant}
-      size={size}
-      className={className}
-      onClick={handleDownload}
-    >
+    <Button variant={variant} size={size} className={className} onClick={handleDownload}>
       <Download className="mr-2 h-4 w-4" />
       {buttonText}
     </Button>

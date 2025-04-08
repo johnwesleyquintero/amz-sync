@@ -94,7 +94,7 @@ export function ToolNavigation() {
 
   return (
     <nav className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
-      {tools.map((tool) => (
+      {tools.map(tool => (
         <Link key={tool.id} href={tool.path} className="block">
           <Button
             variant={pathname === tool.path ? 'default' : 'outline'}
@@ -103,9 +103,7 @@ export function ToolNavigation() {
             {tool.icon}
             <div>
               <div className="font-medium">{tool.name}</div>
-              <div className="text-sm text-muted-foreground">
-                {tool.description}
-              </div>
+              <div className="text-sm text-muted-foreground">{tool.description}</div>
             </div>
           </Button>
         </Link>

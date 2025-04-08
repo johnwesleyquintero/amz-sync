@@ -2,13 +2,7 @@
 
 import { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '../components/ui/badge';
 import FbaCalculator from '../components/amazon-seller-tools/fba-calculator';
 import KeywordAnalyzer from '../components/amazon-seller-tools/keyword-analyzer';
@@ -56,8 +50,7 @@ export default function FeaturedToolsSection() {
     {
       id: 'competitor-analyzer',
       name: 'Competitor Analyzer',
-      description:
-        'Analyze competitor listings, pricing strategies, and market positioning',
+      description: 'Analyze competitor listings, pricing strategies, and market positioning',
       icon: <Users className="h-5 w-5" />,
       status: 'beta', // Changed to "beta"
       version: '0.9.0', // Updated version
@@ -77,8 +70,7 @@ export default function FeaturedToolsSection() {
     {
       id: 'profit-margin-calculator',
       name: 'Profit Margin Calculator',
-      description:
-        'Calculate and analyze profit margins with detailed breakdowns',
+      description: 'Calculate and analyze profit margins with detailed breakdowns',
       icon: <Percent className="h-5 w-5" />,
       status: 'active',
       version: '1.0.0',
@@ -88,8 +80,7 @@ export default function FeaturedToolsSection() {
     {
       id: 'fba-calculator',
       name: 'FBA Calculator',
-      description:
-        'Calculate profitability for FBA products with real-time ROI analysis',
+      description: 'Calculate profitability for FBA products with real-time ROI analysis',
       icon: <Package className="h-5 w-5" />,
       status: 'active',
       version: '1.0.0',
@@ -139,8 +130,7 @@ export default function FeaturedToolsSection() {
     {
       id: 'keyword-deduplicator',
       name: 'Keyword Deduplicator',
-      description:
-        'Identifies and removes duplicate keywords with enhanced metrics',
+      description: 'Identifies and removes duplicate keywords with enhanced metrics',
       icon: <Filter className="h-5 w-5" />,
       status: 'active',
       version: '1.0.0',
@@ -150,8 +140,7 @@ export default function FeaturedToolsSection() {
     {
       id: 'acos-calculator',
       name: 'ACoS Calculator',
-      description:
-        'Advertising Cost of Sales analysis tool with advanced metrics',
+      description: 'Advertising Cost of Sales analysis tool with advanced metrics',
       icon: <DollarSign className="h-5 w-5" />,
       status: 'active',
       version: '1.0.0',
@@ -161,8 +150,7 @@ export default function FeaturedToolsSection() {
     {
       id: 'sales-estimator',
       name: 'Sales Estimator',
-      description:
-        'Sales volume and revenue estimation tool with confidence indicators',
+      description: 'Sales volume and revenue estimation tool with confidence indicators',
       icon: <BarChart3 className="h-5 w-5" />,
       status: 'beta',
       version: '0.8.0',
@@ -172,13 +160,16 @@ export default function FeaturedToolsSection() {
   ];
 
   // Group tools by category
-  const categorizedTools = tools.reduce((acc, tool) => {
-    if (!acc[tool.category]) {
-      acc[tool.category] = [];
-    }
-    acc[tool.category].push(tool);
-    return acc;
-  }, {} as { [key: string]: Tool[] });
+  const categorizedTools = tools.reduce(
+    (acc, tool) => {
+      if (!acc[tool.category]) {
+        acc[tool.category] = [];
+      }
+      acc[tool.category].push(tool);
+      return acc;
+    },
+    {} as { [key: string]: Tool[] }
+  );
 
   const categories = Object.keys(categorizedTools);
 
@@ -190,17 +181,13 @@ export default function FeaturedToolsSection() {
       <div className="container px-4 md:px-6">
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden group">
           <div className="p-6 border-b border-gray-200 dark:border-gray-700">
-            <Tabs
-              value={activeTab}
-              onValueChange={setActiveTab}
-              className="w-full"
-            >
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
               <div className="flex flex-col gap-8">
                 {/* Render Tabs by Category */}
-                {categories.map((category) => (
+                {categories.map(category => (
                   <div key={category} className="flex justify-center">
                     <TabsList className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                      {categorizedTools[category].map((tool) => (
+                      {categorizedTools[category].map(tool => (
                         <TabsTrigger
                           key={tool.id}
                           value={tool.id}
@@ -209,10 +196,7 @@ export default function FeaturedToolsSection() {
                           {tool.icon}
                           <span className="hidden md:inline">{tool.name}</span>
                           {tool.status === 'beta' && (
-                            <Badge
-                              variant="secondary"
-                              className="ml-1 px-1.5 py-0.5 text-xs"
-                            >
+                            <Badge variant="secondary" className="ml-1 px-1.5 py-0.5 text-xs">
                               Beta
                             </Badge>
                           )}
@@ -224,7 +208,7 @@ export default function FeaturedToolsSection() {
               </div>
 
               {/* Render Tab Contents */}
-              {tools.map((tool) => (
+              {tools.map(tool => (
                 <TabsContent key={tool.id} value={tool.id} className="mt-4">
                   <Card className="hover:shadow-lg transition-all duration-300">
                     <CardHeader>
@@ -234,11 +218,7 @@ export default function FeaturedToolsSection() {
                           <CardTitle>{tool.name}</CardTitle>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Badge
-                            variant={
-                              tool.status === 'active' ? 'default' : 'secondary'
-                            }
-                          >
+                          <Badge variant={tool.status === 'active' ? 'default' : 'secondary'}>
                             {tool.status === 'active' ? 'Active' : 'Beta'}
                           </Badge>
                           <Badge variant="outline">v{tool.version}</Badge>
@@ -258,14 +238,13 @@ export default function FeaturedToolsSection() {
             <div className="text-sm text-muted-foreground">
               <p className="font-medium mb-2">About These Tools:</p>
               <p>
-                This comprehensive suite helps Amazon sellers optimize listings,
-                analyze performance, and maximize profitability. All tools
-                support CSV uploads for bulk processing and provide detailed
-                analysis with actionable insights.
+                This comprehensive suite helps Amazon sellers optimize listings, analyze
+                performance, and maximize profitability. All tools support CSV uploads for bulk
+                processing and provide detailed analysis with actionable insights.
               </p>
               <p className="mt-2">
-                For a demo, you can upload your own CSV files or use the manual
-                entry options to see real-time calculations and analysis.
+                For a demo, you can upload your own CSV files or use the manual entry options to see
+                real-time calculations and analysis.
               </p>
             </div>
           </div>

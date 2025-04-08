@@ -1,6 +1,5 @@
-
-import React from "react";
-import { BarChart3 } from "lucide-react";
+import React from 'react';
+import { BarChart3 } from 'lucide-react';
 
 interface SearchTerm {
   term: string;
@@ -24,16 +23,26 @@ const TopSearchTerms: React.FC<TopSearchTermsProps> = ({ terms }) => {
         </h3>
         <span className="text-xs px-2 py-1 bg-muted rounded-md">Last 30 days</span>
       </div>
-      
+
       <div className="overflow-x-auto">
         <table className="min-w-full">
           <thead className="border-b border-border">
             <tr>
-              <th className="text-left py-3 px-4 text-xs font-medium text-muted-foreground">Term</th>
-              <th className="text-right py-3 px-4 text-xs font-medium text-muted-foreground">Clicks</th>
-              <th className="text-right py-3 px-4 text-xs font-medium text-muted-foreground">Impressions</th>
-              <th className="text-right py-3 px-4 text-xs font-medium text-muted-foreground">CTR</th>
-              <th className="text-right py-3 px-4 text-xs font-medium text-muted-foreground">Avg. Rank</th>
+              <th className="text-left py-3 px-4 text-xs font-medium text-muted-foreground">
+                Term
+              </th>
+              <th className="text-right py-3 px-4 text-xs font-medium text-muted-foreground">
+                Clicks
+              </th>
+              <th className="text-right py-3 px-4 text-xs font-medium text-muted-foreground">
+                Impressions
+              </th>
+              <th className="text-right py-3 px-4 text-xs font-medium text-muted-foreground">
+                CTR
+              </th>
+              <th className="text-right py-3 px-4 text-xs font-medium text-muted-foreground">
+                Avg. Rank
+              </th>
             </tr>
           </thead>
           <tbody>

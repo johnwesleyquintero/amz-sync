@@ -5,14 +5,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '../ui/table';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
 import { Progress } from '../ui/progress';
 import { Upload, AlertCircle, Download, Percent, Info } from 'lucide-react';
@@ -89,7 +82,7 @@ const AmazonAlgorithms = {
     } = params;
 
     // Example calculation - adjust as needed
-    let score =
+    const score =
       conversionRate * 0.2 +
       sessions * 0.1 +
       reviewRating * 0.3 +
@@ -106,14 +99,13 @@ const AmazonAlgorithms = {
   calculateOptimalPrice: (
     currentPrice: number,
     competitorPrices: number[],
-    productScore: number,
+    productScore: number
   ) => {
     // Placeholder implementation - replace with your actual logic
     const averageCompetitorPrice =
       competitorPrices.reduce((a, b) => a + b, 0) / competitorPrices.length;
     const priceDifference = currentPrice - averageCompetitorPrice;
-    const adjustedPrice =
-      currentPrice - priceDifference * (1 - productScore);
+    const adjustedPrice = currentPrice - priceDifference * (1 - productScore);
     return Math.max(0, adjustedPrice);
   },
 };
@@ -151,18 +143,14 @@ export default function ProfitMarginCalculator() {
       header: true,
       dynamicTyping: true,
       skipEmptyLines: true,
-      complete: (result) => {
+      complete: result => {
         try {
           // Validate required columns
           const requiredColumns = ['product', 'cost', 'price', 'fees'];
-          const missingColumns = requiredColumns.filter(
-            (col) => !result.meta.fields.includes(col),
-          );
+          const missingColumns = requiredColumns.filter(col => !result.meta.fields.includes(col));
 
           if (missingColumns.length > 0) {
-            throw new Error(
-              `Missing required columns: ${missingColumns.join(', ')}`,
-            );
+            throw new Error(`Missing required columns: ${missingColumns.join(', ')}`);
           }
 
           const processedData = result.data
@@ -171,7 +159,7 @@ export default function ProfitMarginCalculator() {
                 item.product &&
                 !isNaN(Number(item.cost)) &&
                 !isNaN(Number(item.price)) &&
-                !isNaN(Number(item.fees)),
+                !isNaN(Number(item.fees))
             )
             .map((item: ProductData) => ({
               product: String(item.product),
@@ -197,7 +185,7 @@ export default function ProfitMarginCalculator() {
           setIsLoading(false);
         }
       },
-      error: (error) => {
+      error: error => {
         setError(`Error parsing CSV: ${error.message}`);
         toast({
           title: 'CSV Error',
@@ -220,7 +208,7 @@ export default function ProfitMarginCalculator() {
       return;
     }
 
-    const calculated = data.map((item) => {
+    const calculated = data.map(item => {
       const productScore = AmazonAlgorithms.calculateProductScore({
         conversionRate: item.conversionRate || 15,
         sessions: item.sessions || 300,
@@ -236,7 +224,7 @@ export default function ProfitMarginCalculator() {
       const adjustedPrice = AmazonAlgorithms.calculateOptimalPrice(
         item.price,
         item.competitorPrices || [item.price * 0.9, item.price * 1.1],
-        productScore / 100,
+        productScore / 100
       );
 
       const profit = adjustedPrice - item.cost - item.fees;
@@ -313,7 +301,7 @@ export default function ProfitMarginCalculator() {
 
     if (price <= cost + fees) {
       setError(
-        'Selling price must be greater than the sum of cost and fees for a profitable margin',
+        'Selling price must be greater than the sum of cost and fees for a profitable margin'
       );
       toast({
         title: 'Input Error',
@@ -351,7 +339,7 @@ export default function ProfitMarginCalculator() {
       return;
     }
 
-    const exportData = results.map((product) => ({
+    const exportData = results.map(product => ({
       product: product.product,
       cost: product.cost.toFixed(2),
       price: product.price.toFixed(2),
@@ -400,17 +388,11 @@ export default function ProfitMarginCalculator() {
                   onChange={handleFileUpload}
                   className="hidden"
                 />
-                <Button
-                  variant="outline"
-                  onClick={() => fileInputRef.current?.click()}
-                >
+                <Button variant="outline" onClick={() => fileInputRef.current?.click()}>
                   <Upload className="mr-2 h-4 w-4" />
                   Upload CSV
                 </Button>
-                <SampleCsvButton
-                  dataType="fba"
-                  fileName="sample-fba-calculator.csv"
-                />
+                <SampleCsvButton dataType="fba" fileName="sample-fba-calculator.csv" />
               </div>
               <p className="text-sm text-muted-foreground">
                 CSV should have columns: product, cost, price, fees
@@ -427,7 +409,7 @@ export default function ProfitMarginCalculator() {
                 <Input
                   id="product"
                   value={manualProduct.product}
-                  onChange={(e) =>
+                  onChange={e =>
                     setManualProduct({
                       ...manualProduct,
                       product: e.target.value,
@@ -442,7 +424,7 @@ export default function ProfitMarginCalculator() {
                   id="cost"
                   type="number"
                   value={manualProduct.cost || ''}
-                  onChange={(e) =>
+                  onChange={e =>
                     setManualProduct({
                       ...manualProduct,
                       cost: e.target.valueAsNumber,
@@ -458,7 +440,7 @@ export default function ProfitMarginCalculator() {
                   id="price"
                   type="number"
                   value={manualProduct.price || ''}
-                  onChange={(e) =>
+                  onChange={e =>
                     setManualProduct({
                       ...manualProduct,
                       price: e.target.valueAsNumber,
@@ -474,7 +456,7 @@ export default function ProfitMarginCalculator() {
                   id="fees"
                   type="number"
                   value={manualProduct.fees || ''}
-                  onChange={(e) =>
+                  onChange={e =>
                     setManualProduct({
                       ...manualProduct,
                       fees: e.target.valueAsNumber,
@@ -513,10 +495,7 @@ export default function ProfitMarginCalculator() {
               {/* Bar Chart */}
               <div className="h-80">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart
-                    data={results}
-                    margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-                  >
+                  <BarChart data={results} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="product" />
                     <YAxis />
@@ -531,33 +510,15 @@ export default function ProfitMarginCalculator() {
               {/* Line Chart */}
               <div className="h-80">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart
-                    data={results}
-                    margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-                  >
+                  <LineChart data={results} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="product" />
                     <YAxis />
                     <Tooltip />
                     <Legend />
-                    <Line
-                      type="monotone"
-                      dataKey="price"
-                      stroke="#ff7300"
-                      name="Price"
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="cost"
-                      stroke="#387908"
-                      name="Cost"
-                    />
-                    <Line
-                      type="monotone"
-                      dataKey="fees"
-                      stroke="#ff0000"
-                      name="Fees"
-                    />
+                    <Line type="monotone" dataKey="price" stroke="#ff7300" name="Price" />
+                    <Line type="monotone" dataKey="cost" stroke="#387908" name="Cost" />
+                    <Line type="monotone" dataKey="fees" stroke="#ff0000" name="Fees" />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
@@ -577,15 +538,9 @@ export default function ProfitMarginCalculator() {
                 {results.map((result, index) => (
                   <TableRow key={index}>
                     <TableCell>{result.product}</TableCell>
-                    <TableCell className="text-right">
-                      ${result.profit?.toFixed(2)}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      {result.margin}%
-                    </TableCell>
-                    <TableCell className="text-right">
-                      {result.roi}%
-                    </TableCell>
+                    <TableCell className="text-right">${result.profit?.toFixed(2)}</TableCell>
+                    <TableCell className="text-right">{result.margin}%</TableCell>
+                    <TableCell className="text-right">{result.roi}%</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

@@ -26,13 +26,9 @@ export function downloadFile(content: string, fileName: string) {
 
 export function exportData<T extends Record<string, unknown>>(
   data: T[],
-  options: ExportOptions = {},
+  options: ExportOptions = {}
 ) {
-  const {
-    fileName = 'export',
-    format = 'csv',
-    fields = Object.keys(data[0] || {}),
-  } = options;
+  const { fileName = 'export', format = 'csv', fields = Object.keys(data[0] || {}) } = options;
 
   const timestamp = new Date().toISOString().split('T')[0];
   const fullFileName = `${fileName}_${timestamp}.${format}`;
@@ -50,9 +46,7 @@ export function exportData<T extends Record<string, unknown>>(
       break;
     case 'txt':
       content = data
-        .map((item) =>
-          fields.map((field) => `${field}: ${item[field]}`).join('\n'),
-        )
+        .map(item => fields.map(field => `${field}: ${item[field]}`).join('\n'))
         .join('\n\n');
       break;
   }
@@ -80,11 +74,7 @@ export function DataExporter<T extends Record<string, unknown>>({
   };
 
   return (
-    <Button
-      onClick={handleExport}
-      variant={variant}
-      className="flex items-center gap-2"
-    >
+    <Button onClick={handleExport} variant={variant} className="flex items-center gap-2">
       <Download className="w-4 h-4" />
       <span>Export {format.toUpperCase()}</span>
     </Button>

@@ -28,9 +28,7 @@ export default function DescriptionEditor() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [targetKeywords, setTargetKeywords] = useState<string[]>([]);
-  const [activeProduct, setActiveProduct] = useState<ProductDescription | null>(
-    null,
-  );
+  const [activeProduct, setActiveProduct] = useState<ProductDescription | null>(null);
   const [showPreview, setShowPreview] = useState(false);
   const [newProduct, setNewProduct] = useState({
     product: '',
@@ -48,7 +46,7 @@ export default function DescriptionEditor() {
     Papa.parse(file, {
       header: true,
       skipEmptyLines: true,
-      complete: (results) => {
+      complete: results => {
         try {
           interface ProductData {
             product: string;
@@ -57,28 +55,23 @@ export default function DescriptionEditor() {
           }
 
           const requiredColumns = ['product', 'description'];
-          const missingColumns = requiredColumns.filter((col) =>
-            results.meta.fields ? !results.meta.fields.includes(col) : true,
+          const missingColumns = requiredColumns.filter(col =>
+            results.meta.fields ? !results.meta.fields.includes(col) : true
           );
           if (missingColumns.length > 0) {
-            throw new Error(
-              `Missing required columns: ${missingColumns.join(', ')}`,
-            );
+            throw new Error(`Missing required columns: ${missingColumns.join(', ')}`);
           }
 
-          const processedData: ProductDescription[] = results.data.map(
-            (row: unknown) => {
-              const productRow = row as ProductData;
-              return {
-                product: productRow.product,
-                asin: productRow.asin || '',
-                description: productRow.description,
-                characterCount: productRow.description?.length || 0,
-                keywordCount: (productRow.description?.match(/\b\w+\b/g) || [])
-                  .length,
-              };
-            },
-          );
+          const processedData: ProductDescription[] = results.data.map((row: unknown) => {
+            const productRow = row as ProductData;
+            return {
+              product: productRow.product,
+              asin: productRow.asin || '',
+              description: productRow.description,
+              characterCount: productRow.description?.length || 0,
+              keywordCount: (productRow.description?.match(/\b\w+\b/g) || []).length,
+            };
+          });
 
           setProducts(processedData);
           setError(null);
@@ -88,9 +81,7 @@ export default function DescriptionEditor() {
             variant: 'default',
           });
         } catch (error) {
-          setError(
-            error instanceof Error ? error.message : 'An error occurred',
-          );
+          setError(error instanceof Error ? error.message : 'An error occurred');
           toast({
             title: 'Processing Failed',
             description: error.message,
@@ -99,7 +90,7 @@ export default function DescriptionEditor() {
         }
         setIsLoading(false);
       },
-      error: (error) => {
+      error: error => {
         setError(error.message);
         setIsLoading(false);
       },
@@ -111,20 +102,16 @@ export default function DescriptionEditor() {
 
     const updatedProduct = {
       ...activeProduct,
-        description: value,
-        characterCount: value.length,
-        keywordCount: countKeywords(value, targetKeywords),
-        score: calculateScore(value, targetKeywords),
+      description: value,
+      characterCount: value.length,
+      keywordCount: countKeywords(value, targetKeywords),
+      score: calculateScore(value, targetKeywords),
     };
 
     setActiveProduct(updatedProduct);
 
     // Update the product in the products array
-    setProducts(
-      products.map((p) =>
-        p.product === activeProduct.product ? updatedProduct : p,
-      ),
-    );
+    setProducts(products.map(p => (p.product === activeProduct.product ? updatedProduct : p)));
   };
 
   const handleAddProduct = () => {
@@ -244,15 +231,13 @@ export default function DescriptionEditor() {
     const cleanedText = text
       .toLowerCase()
       .split(/\s+/)
-      .filter((word) => !stopWords.includes(word))
+      .filter(word => !stopWords.includes(word))
       .join(' ');
 
-    const stemmedKeywords = targetKeywords.map((keyword) =>
-      stemWord(keyword.toLowerCase()),
-    );
+    const stemmedKeywords = targetKeywords.map(keyword => stemWord(keyword.toLowerCase()));
 
     let keywordCount = 0;
-    stemmedKeywords.forEach((keyword) => {
+    stemmedKeywords.forEach(keyword => {
       const regex = new RegExp(`\\b${keyword}\\b`, 'g');
       const matches = cleanedText.match(regex);
       keywordCount += matches ? matches.length : 0;
@@ -281,7 +266,7 @@ export default function DescriptionEditor() {
     // --- Keyword Placement Score (0-20 points) ---
     const firstSentence = text.split(/[.!?]+/).filter(Boolean)[0] || '';
     let placementScore = 0;
-    targetKeywords.forEach((keyword) => {
+    targetKeywords.forEach(keyword => {
       if (firstSentence.toLowerCase().includes(keyword.toLowerCase())) {
         placementScore += 5;
       }
@@ -292,15 +277,10 @@ export default function DescriptionEditor() {
     const sentences = text.split(/[.!?]+/).filter(Boolean).length;
     const syllables = text
       .split(/\s+/)
-      .reduce(
-        (count, word) => count + (word.match(/[aeiouy]+/gi)?.length || 0),
-        0,
-      );
+      .reduce((count, word) => count + (word.match(/[aeiouy]+/gi)?.length || 0), 0);
 
     const fleschKincaid =
-      206.835 -
-      1.015 * (wordCount / sentences) -
-      84.6 * (syllables / wordCount);
+      206.835 - 1.015 * (wordCount / sentences) - 84.6 * (syllables / wordCount);
 
     if (fleschKincaid > 90) {
       score += 30; // Very easy to read
@@ -331,9 +311,7 @@ export default function DescriptionEditor() {
               <div className="w-full">
                 <label className="relative flex w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-primary/40 bg-background p-6 text-center hover:bg-primary/5">
                   <FileText className="mb-2 h-8 w-8 text-primary/60" />
-                  <span className="text-sm font-medium">
-                    Click to upload CSV
-                  </span>
+                  <span className="text-sm font-medium">Click to upload CSV</span>
                   <span className="text-xs text-muted-foreground">
                     (CSV with product name, ASIN, and description)
                   </span>
@@ -359,9 +337,7 @@ export default function DescriptionEditor() {
                   <label className="text-sm font-medium">Product Name</label>
                   <Input
                     value={newProduct.product}
-                    onChange={(e) =>
-                      setNewProduct({ ...newProduct, product: e.target.value })
-                    }
+                    onChange={e => setNewProduct({ ...newProduct, product: e.target.value })}
                     placeholder="Enter product name"
                   />
                 </div>
@@ -369,9 +345,7 @@ export default function DescriptionEditor() {
                   <label className="text-sm font-medium">ASIN (Optional)</label>
                   <Input
                     value={newProduct.asin}
-                    onChange={(e) =>
-                      setNewProduct({ ...newProduct, asin: e.target.value })
-                    }
+                    onChange={e => setNewProduct({ ...newProduct, asin: e.target.value })}
                     placeholder="Enter Amazon ASIN"
                   />
                 </div>
@@ -379,7 +353,7 @@ export default function DescriptionEditor() {
                   <label className="text-sm font-medium">Description</label>
                   <Textarea
                     value={newProduct.description}
-                    onChange={(e) =>
+                    onChange={e =>
                       setNewProduct({
                         ...newProduct,
                         description: e.target.value,
@@ -408,9 +382,7 @@ export default function DescriptionEditor() {
       {isLoading && (
         <div className="space-y-2 py-4 text-center">
           <Progress value={45} className="h-2" />
-          <p className="text-sm text-muted-foreground">
-            Processing your data...
-          </p>
+          <p className="text-sm text-muted-foreground">Processing your data...</p>
         </div>
       )}
 
@@ -420,11 +392,7 @@ export default function DescriptionEditor() {
             {products.map((product, index) => (
               <Badge
                 key={index}
-                variant={
-                  activeProduct?.product === product.product
-                    ? 'default'
-                    : 'outline'
-                }
+                variant={activeProduct?.product === product.product ? 'default' : 'outline'}
                 className="cursor-pointer"
                 onClick={() => {
                   setActiveProduct(product);
@@ -441,13 +409,9 @@ export default function DescriptionEditor() {
               <CardContent className="p-4">
                 <div className="mb-4 flex items-center justify-between">
                   <div>
-                    <h3 className="text-lg font-medium">
-                      {activeProduct.product}
-                    </h3>
+                    <h3 className="text-lg font-medium">{activeProduct.product}</h3>
                     {activeProduct.asin && (
-                      <p className="text-sm text-muted-foreground">
-                        ASIN: {activeProduct.asin}
-                      </p>
+                      <p className="text-sm text-muted-foreground">ASIN: {activeProduct.asin}</p>
                     )}
                   </div>
                   <div className="flex items-center gap-2">
@@ -476,10 +440,8 @@ export default function DescriptionEditor() {
                   <label className="text-sm font-medium">Target Keywords</label>
                   <Input
                     value={targetKeywords.join(', ')}
-                    onChange={(e) =>
-                      setTargetKeywords(
-                        e.target.value.split(',').map((keyword) => keyword.trim()),
-                      )
+                    onChange={e =>
+                      setTargetKeywords(e.target.value.split(',').map(keyword => keyword.trim()))
                     }
                     placeholder="Enter keywords separated by commas"
                   />
@@ -514,25 +476,23 @@ export default function DescriptionEditor() {
                   <div className="rounded-lg border p-4">
                     <h4 className="mb-2 text-sm font-medium">Preview</h4>
                     <div className="prose prose-sm max-w-none dark:prose-invert">
-                      {activeProduct.description
-                        .split('\n')
-                        .map((paragraph, i) => (
-                          <p key={i}>{paragraph}</p>
-                        ))}
+                      {activeProduct.description.split('\n').map((paragraph, i) => (
+                        <p key={i}>{paragraph}</p>
+                      ))}
                     </div>
                   </div>
                 ) : (
                   <div>
                     <Textarea
                       value={activeProduct.description}
-                      onChange={(e) => handleDescriptionChange(e.target.value)}
+                      onChange={e => handleDescriptionChange(e.target.value)}
                       placeholder="Enter product description"
                       rows={10}
                       className="font-mono text-sm"
                     />
                     <div className="mt-2 text-xs text-muted-foreground">
-                      <span className="font-medium">Tip:</span> Aim for 1000+
-                      characters with relevant keywords for better visibility.
+                      <span className="font-medium">Tip:</span> Aim for 1000+ characters with
+                      relevant keywords for better visibility.
                     </div>
                   </div>
                 )}
@@ -544,4 +504,6 @@ export default function DescriptionEditor() {
     </div>
   );
 }
-                {/* TODO: Fix this error */}
+{
+  /* TODO: Fix this error */
+}

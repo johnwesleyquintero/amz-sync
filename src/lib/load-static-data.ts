@@ -13,7 +13,7 @@ type StaticDataTypes = {
 
 // Utility function to load static data from JSON files
 export async function loadStaticData<T extends keyof StaticDataTypes>(
-  file: T,
+  file: T
 ): Promise<StaticDataTypes[T]> {
   if (file === 'projects') {
     return (await import('../data/portfolio-data/projects.json')).default;

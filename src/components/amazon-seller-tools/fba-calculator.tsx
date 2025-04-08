@@ -56,11 +56,9 @@ export default function FbaCalculator() {
       header: true,
       dynamicTyping: true,
       skipEmptyLines: true,
-      complete: (result) => {
+      complete: result => {
         if (result.errors.length > 0) {
-          setError(
-            `Error parsing CSV file: ${result.errors[0].message}. Please check the format.`,
-          );
+          setError(`Error parsing CSV file: ${result.errors[0].message}. Please check the format.`);
           toast({
             title: 'CSV Error',
             description: `Error parsing CSV file: ${result.errors[0].message}. Please check the format.`,
@@ -73,14 +71,10 @@ export default function FbaCalculator() {
         try {
           // Validate required columns
           const requiredColumns = ['product', 'cost', 'price', 'fees'];
-          const missingColumns = requiredColumns.filter(
-            (col) => !result.meta.fields?.includes(col),
-          );
+          const missingColumns = requiredColumns.filter(col => !result.meta.fields?.includes(col));
 
           if (missingColumns.length > 0) {
-            throw new Error(
-              `Missing required columns: ${missingColumns.join(', ')}`,
-            );
+            throw new Error(`Missing required columns: ${missingColumns.join(', ')}`);
           }
 
           const validData = result.data
@@ -89,7 +83,7 @@ export default function FbaCalculator() {
                 item.product &&
                 !isNaN(Number(item.cost)) &&
                 !isNaN(Number(item.price)) &&
-                !isNaN(Number(item.fees)),
+                !isNaN(Number(item.fees))
             )
             .map((item: ProductData) => ({
               product: String(item.product),
@@ -113,7 +107,7 @@ export default function FbaCalculator() {
           setError(
             `Failed to process CSV data: ${
               err instanceof Error ? err.message : String(err)
-            }. Please ensure your CSV has columns: product, cost, price, fees`,
+            }. Please ensure your CSV has columns: product, cost, price, fees`
           );
           toast({
             title: 'Processing Failed',
@@ -126,7 +120,7 @@ export default function FbaCalculator() {
           setIsLoading(false);
         }
       },
-      error: (error) => {
+      error: error => {
         setError(`Error parsing CSV file: ${error.message}`);
         toast({
           title: 'CSV Error',
@@ -143,7 +137,7 @@ export default function FbaCalculator() {
   };
 
   const calculateProfit = (data: ProductData[]) => {
-    const calculatedResults = data.map((item) => {
+    const calculatedResults = data.map(item => {
       const profit = item.price - item.cost - item.fees;
       const roi = (profit / item.cost) * 100;
       const margin = (profit / item.price) * 100;
@@ -188,7 +182,7 @@ export default function FbaCalculator() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type } = e.target;
-    setManualProduct((prev) => ({
+    setManualProduct(prev => ({
       ...prev,
       [name]: type === 'number' ? Number(value) : value,
     }));
@@ -241,9 +235,8 @@ export default function FbaCalculator() {
         <div className="text-sm text-blue-700 dark:text-blue-300">
           <p className="font-medium">CSV Format Requirements:</p>
           <p>
-            Your CSV file should have the following columns:{' '}
-            <code>product</code>, <code>cost</code>, <code>price</code>,{' '}
-            <code>fees</code>
+            Your CSV file should have the following columns: <code>product</code>, <code>cost</code>
+            , <code>price</code>, <code>fees</code>
           </p>
           <p className="mt-1">
             Example: <code>product,cost,price,fees</code>
@@ -279,10 +272,7 @@ export default function FbaCalculator() {
                     Clear Data
                   </Button>
                 )}
-                <SampleCsvButton
-                  dataType="fba"
-                  fileName="sample-fba-calculator.csv"
-                />
+                <SampleCsvButton dataType="fba" fileName="sample-fba-calculator.csv" />
               </div>
             </div>
           </CardContent>
@@ -389,41 +379,27 @@ export default function FbaCalculator() {
               <TableBody>
                 {products.map((item, index) => (
                   <TableRow key={index}>
-                    <TableCell className="font-medium">
-                      {item.product}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      {item.cost.toFixed(2)}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      {item.price.toFixed(2)}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      {item.fees.toFixed(2)}
-                    </TableCell>
+                    <TableCell className="font-medium">{item.product}</TableCell>
+                    <TableCell className="text-right">{item.cost.toFixed(2)}</TableCell>
+                    <TableCell className="text-right">{item.price.toFixed(2)}</TableCell>
+                    <TableCell className="text-right">{item.fees.toFixed(2)}</TableCell>
                     <TableCell
                       className={`text-right font-semibold ${
-                        item.profit && item.profit < 0
-                          ? 'text-red-500'
-                          : 'text-green-500'
+                        item.profit && item.profit < 0 ? 'text-red-500' : 'text-green-500'
                       }`}
                     >
                       {item.profit?.toFixed(2)}
                     </TableCell>
                     <TableCell
                       className={`text-right ${
-                        item.roi && item.roi < 0
-                          ? 'text-red-500'
-                          : 'text-green-500'
+                        item.roi && item.roi < 0 ? 'text-red-500' : 'text-green-500'
                       }`}
                     >
                       {item.roi?.toFixed(2)}%
                     </TableCell>
                     <TableCell
                       className={`text-right ${
-                        item.margin && item.margin < 0
-                          ? 'text-red-500'
-                          : 'text-green-500'
+                        item.margin && item.margin < 0 ? 'text-red-500' : 'text-green-500'
                       }`}
                     >
                       {item.margin?.toFixed(2)}%
@@ -431,17 +407,13 @@ export default function FbaCalculator() {
                     <TableCell>
                       <div className="w-full">
                         <Progress
-                          value={
-                            item.margin && item.margin > 0
-                              ? Math.min(item.margin, 100)
-                              : 0
-                          }
+                          value={item.margin && item.margin > 0 ? Math.min(item.margin, 100) : 0}
                           className={`h-2 ${
                             item.margin && item.margin < 15
                               ? 'bg-red-200'
                               : item.margin && item.margin < 30
-                              ? 'bg-yellow-200'
-                              : 'bg-green-200'
+                                ? 'bg-yellow-200'
+                                : 'bg-green-200'
                           }`}
                         />
                       </div>
@@ -460,9 +432,7 @@ export default function FbaCalculator() {
           <li>Upload a CSV file with columns: product, cost, price, fees</li>
           <li>Or manually enter product details in the form</li>
           <li>View calculated profit, ROI, and profit margin</li>
-          <li>
-            Use the results to make informed decisions about your FBA products
-          </li>
+          <li>Use the results to make informed decisions about your FBA products</li>
           <li>Export the results to CSV for further analysis</li>
         </ol>
       </div>

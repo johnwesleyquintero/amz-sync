@@ -1,12 +1,11 @@
-
-import React from "react";
-import { CheckCircle, XCircle, AlertCircle } from "lucide-react";
-import { cn } from "@/lib/utils";
+import React from 'react';
+import { CheckCircle, XCircle, AlertCircle } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface Campaign {
   id: string;
   name: string;
-  status: "active" | "paused" | "warning";
+  status: 'active' | 'paused' | 'warning';
   budget: number;
   spent: number;
 }
@@ -18,27 +17,27 @@ interface CampaignStatusProps {
 const CampaignStatus: React.FC<CampaignStatusProps> = ({ campaigns }) => {
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case "active":
+      case 'active':
         return <CheckCircle className="h-4 w-4 text-green-500" />;
-      case "paused":
+      case 'paused':
         return <XCircle className="h-4 w-4 text-burnt-sienna" />;
-      case "warning":
+      case 'warning':
         return <AlertCircle className="h-4 w-4 text-amber-500" />;
       default:
         return null;
     }
   };
-  
+
   const getStatusText = (status: string) => {
     switch (status) {
-      case "active":
-        return "Active";
-      case "paused":
-        return "Paused";
-      case "warning":
-        return "Warning";
+      case 'active':
+        return 'Active';
+      case 'paused':
+        return 'Paused';
+      case 'warning':
+        return 'Warning';
       default:
-        return "";
+        return '';
     }
   };
 
@@ -48,9 +47,9 @@ const CampaignStatus: React.FC<CampaignStatusProps> = ({ campaigns }) => {
         <h3 className="text-lg font-medium">Campaign Status</h3>
         <button className="text-xs text-shakespeare hover:underline">View All</button>
       </div>
-      
+
       <div className="space-y-3">
-        {campaigns.map((campaign) => (
+        {campaigns.map(campaign => (
           <div key={campaign.id} className="p-3 border border-border rounded-lg">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -61,18 +60,22 @@ const CampaignStatus: React.FC<CampaignStatusProps> = ({ campaigns }) => {
                   <h4 className="text-sm font-medium">{campaign.name}</h4>
                   <div className="flex items-center gap-1 mt-1">
                     {getStatusIcon(campaign.status)}
-                    <span className={cn(
-                      "text-xs",
-                      campaign.status === "active" ? "text-green-500" : 
-                      campaign.status === "paused" ? "text-burnt-sienna" : 
-                      "text-amber-500"
-                    )}>
+                    <span
+                      className={cn(
+                        'text-xs',
+                        campaign.status === 'active'
+                          ? 'text-green-500'
+                          : campaign.status === 'paused'
+                            ? 'text-burnt-sienna'
+                            : 'text-amber-500'
+                      )}
+                    >
                       {getStatusText(campaign.status)}
                     </span>
                   </div>
                 </div>
               </div>
-              
+
               <div className="text-right">
                 <p className="text-sm font-medium">${campaign.spent.toLocaleString()}</p>
                 <p className="text-xs text-muted-foreground">
@@ -80,15 +83,17 @@ const CampaignStatus: React.FC<CampaignStatusProps> = ({ campaigns }) => {
                 </p>
               </div>
             </div>
-            
+
             <div className="mt-3">
               <div className="h-2 bg-muted rounded-full">
-                <div 
+                <div
                   className={cn(
-                    "h-full rounded-full",
-                    campaign.status === "active" ? "bg-green-500" : 
-                    campaign.status === "paused" ? "bg-burnt-sienna" : 
-                    "bg-amber-500"
+                    'h-full rounded-full',
+                    campaign.status === 'active'
+                      ? 'bg-green-500'
+                      : campaign.status === 'paused'
+                        ? 'bg-burnt-sienna'
+                        : 'bg-amber-500'
                   )}
                   style={{ width: `${Math.min(100, (campaign.spent / campaign.budget) * 100)}%` }}
                 ></div>

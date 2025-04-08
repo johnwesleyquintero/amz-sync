@@ -23,10 +23,17 @@ export interface TrendData {
   competitionLevel?: 'low' | 'medium' | 'high';
 }
 
+import { validateCampaignData, validateTrendData } from './validation-utils';
+
 export const calculateMetrics = (
   data: Pick<CampaignData, 'adSpend' | 'sales' | 'impressions' | 'clicks'>,
-  trendData?: TrendData,
+  trendData?: TrendData
 ): Omit<CampaignData, 'campaign' | 'adSpend' | 'sales'> => {
+  // Validate input data
+  const validatedData = validateCampaignData({ ...data, campaign: 'temp' });
+  if (trendData) {
+    validateTrendData(trendData);
+  }
   const { adSpend, sales, impressions, clicks } = data;
 
   // Calculate base metrics
@@ -54,10 +61,8 @@ export const calculateMetrics = (
 
     if (trendData?.industryAverageConversion) {
       // Adjust conversion score based on industry performance
-      const conversionPerformanceRatio =
-        rawConversionRate / trendData.industryAverageConversion;
-      metrics.conversionRate =
-        rawConversionRate * (0.7 + conversionPerformanceRatio * 0.3);
+      const conversionPerformanceRatio = rawConversionRate / trendData.industryAverageConversion;
+      metrics.conversionRate = rawConversionRate * (0.7 + conversionPerformanceRatio * 0.3);
     }
 
     metrics.cpc = adSpend / clicks;
@@ -66,13 +71,9 @@ export const calculateMetrics = (
   // Calculate trend-based metrics with advanced analysis
   if (trendData) {
     const salesGrowth =
-      ((sales - trendData.previousPeriodSales) /
-        trendData.previousPeriodSales) *
-      100;
+      ((sales - trendData.previousPeriodSales) / trendData.previousPeriodSales) * 100;
     const adSpendGrowth =
-      ((adSpend - trendData.previousPeriodAdSpend) /
-        trendData.previousPeriodAdSpend) *
-      100;
+      ((adSpend - trendData.previousPeriodAdSpend) / trendData.previousPeriodAdSpend) * 100;
 
     // Calculate weighted performance score
     const performanceWeight = 0.6; // Base performance weight
@@ -109,10 +110,8 @@ export const calculateMetrics = (
 
     // Calculate final ACOS with weighted performance score
     const baseAcos = metrics.acos;
-    const adjustedAcos =
-      baseAcos * (1 / Math.max(0.8, Math.min(1.2, trendFactor)));
-    metrics.acos =
-      baseAcos * (1 - performanceWeight) + adjustedAcos * performanceWeight;
+    const adjustedAcos = baseAcos * (1 / Math.max(0.8, Math.min(1.2, trendFactor)));
+    metrics.acos = baseAcos * (1 - performanceWeight) + adjustedAcos * performanceWeight;
   }
 
   return metrics;

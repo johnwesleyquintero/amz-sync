@@ -1,5 +1,50 @@
 import { ZodIssue } from 'zod';
 
+export class AmazonAPIError extends Error {
+  readonly errorCode: string;
+  constructor(
+    message: string,
+    public statusCode?: number
+  ) {
+    super(message);
+    this.name = 'AmazonAPIError';
+    this.errorCode = 'API_001';
+  }
+}
+
+export class ValidationError extends Error {
+  readonly errorCode: string;
+  constructor(
+    message: string,
+    public field?: string
+  ) {
+    super(message);
+    this.name = 'ValidationError';
+    this.errorCode = 'VAL_001';
+  }
+}
+
+export class RateLimitError extends Error {
+  readonly errorCode: string;
+  constructor(
+    message: string,
+    public retryAfter?: number
+  ) {
+    super(message);
+    this.name = 'RateLimitError';
+    this.errorCode = 'RATE_001';
+  }
+}
+
+export class AuthenticationError extends Error {
+  readonly errorCode: string;
+  constructor(message: string) {
+    super(message);
+    this.name = 'AuthenticationError';
+    this.errorCode = 'AUTH_001';
+  }
+}
+
 export class InventoryOptimizationError extends Error {
   readonly errorCode: string;
   readonly details: ZodIssue[];
@@ -21,5 +66,29 @@ export class PricingOptimizationError extends Error {
     this.name = 'PricingOptimizationError';
     this.errorCode = 'PRICING_002';
     this.historicalData = historicalData;
+  }
+}
+
+export class SecurityError extends Error {
+  readonly errorCode: string;
+  constructor(
+    message: string,
+    public securityType?: string
+  ) {
+    super(message);
+    this.name = 'SecurityError';
+    this.errorCode = 'SEC_001';
+  }
+}
+
+export class DataProcessingError extends Error {
+  readonly errorCode: string;
+  constructor(
+    message: string,
+    public data?: Record<string, unknown>
+  ) {
+    super(message);
+    this.name = 'DataProcessingError';
+    this.errorCode = 'DATA_001';
   }
 }

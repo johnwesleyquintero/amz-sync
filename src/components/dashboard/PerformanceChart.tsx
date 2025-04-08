@@ -1,6 +1,13 @@
-
-import React from "react";
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import React from 'react';
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from 'recharts';
 
 interface PerformanceChartProps {
   data: any[];
@@ -17,7 +24,7 @@ const PerformanceChart: React.FC<PerformanceChartProps> = ({ data }) => {
           <option>Last 90 days</option>
         </select>
       </div>
-      
+
       <ResponsiveContainer width="100%" height="85%">
         <AreaChart data={data} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
           <defs>
@@ -34,8 +41,20 @@ const PerformanceChart: React.FC<PerformanceChartProps> = ({ data }) => {
           <XAxis dataKey="name" fontSize={12} tickLine={false} axisLine={false} />
           <YAxis fontSize={12} tickLine={false} axisLine={false} />
           <Tooltip />
-          <Area type="monotone" dataKey="impressions" stroke="#4FBBDA" fillOpacity={1} fill="url(#colorImpressions)" />
-          <Area type="monotone" dataKey="revenue" stroke="#ED595B" fillOpacity={1} fill="url(#colorRevenue)" />
+          <Area
+            type="monotone"
+            dataKey="impressions"
+            stroke="#4FBBDA"
+            fillOpacity={1}
+            fill="url(#colorImpressions)"
+          />
+          <Area
+            type="monotone"
+            dataKey="revenue"
+            stroke="#ED595B"
+            fillOpacity={1}
+            fill="url(#colorRevenue)"
+          />
         </AreaChart>
       </ResponsiveContainer>
     </div>

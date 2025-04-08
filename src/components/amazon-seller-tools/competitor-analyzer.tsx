@@ -16,18 +16,14 @@ import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { useToast } from '../ui/use-toast';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '../ui/tooltip';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 import { Info, FileText } from 'lucide-react';
 import { useIsMobile } from '../../hooks/use-mobile';
 import { ProcessedRow, ChartDataPoint } from '@/lib/amazon-types';
 import { Progress } from '../ui/progress';
 import { cn } from '@/lib/utils';
-import { CsvRow, processCsvData, parseAndValidateCsv } from '@/lib/csv-utils';
+import { BatchProcessor, ProcessingResult } from '@/lib/enhanced-csv-utils';
+import { ProcessedRow } from '@/lib/amazon-types';
 
 // Constants
 const COMPETITOR_ANALYSIS_ENDPOINT = '/api/amazon/competitor-analysis';
@@ -73,11 +69,7 @@ interface ApiResponse {
 export default function CompetitorAnalyzer() {
   const { toast } = useToast();
   const [asin, setAsin] = useState('');
-  const [metrics, setMetrics] = useState<MetricType[]>([
-    'price',
-    'reviews',
-    'rating',
-  ]);
+  const [metrics, setMetrics] = useState<MetricType[]>(['price', 'reviews', 'rating']);
   const [chartData, setChartData] = useState<ChartDataPoint[] | null>(null);
   const [sellerData, setSellerData] = useState<ProcessedRow | null>(null);
   const [competitorData, setCompetitorData] = useState<ProcessedRow[]>([]);
@@ -92,82 +84,31 @@ export default function CompetitorAnalyzer() {
   }, [chartData, metrics]);
 
   const handleFileUpload = useCallback(
-    async (
-      event: React.ChangeEvent<HTMLInputElement>,
-      setData: (data: ProcessedRow | ProcessedRow[]) => void,
-      type: 'seller' | 'competitor',
-    ) => {
-      const file = event.target.files?.[0];
-      if (!file) {
-        toast({
-          title: 'Error',
-          description: 'No file selected',
-          variant: 'destructive',
-        });
-        return;
-      }
-
-      if (!file.name.endsWith('.csv')) {
-        toast({
-          title: 'Error',
-          description: 'Only CSV files are supported',
-          variant: 'destructive',
-        });
-        return;
-      }
-
-      if (file.size > MAX_FILE_SIZE) {
-        toast({
-          title: 'Error',
-          description: `File size exceeds the maximum limit of ${
-            MAX_FILE_SIZE / (1024 * 1024)
-          }MB`,
-          variant: 'destructive',
-        });
-        return;
-      }
-
-      if (file.size === 0) {
-        toast({
-          title: 'Error',
-          description: 'The file is empty',
-          variant: 'destructive',
-        });
-        return;
-      }
-
+    async (file: File, type: 'seller' | 'competitor') => {
       setIsLoading(true);
       try {
-        const { data, error } = await parseAndValidateCsv<CsvRow>(file);
-
-        if (error) {
-          throw new Error(error);
-        }
-
-        const processedData = processCsvData(data);
+        const data = await processCSV(file);
         if (type === 'seller') {
-          setData(processedData[0]);
+          setSellerData(data);
         } else {
-          setData(processedData);
+          setCompetitorData(data);
         }
         toast({
           title: 'Success',
-          description: `${type} data (${file.name}) processed successfully`,
+          description: `${type} data processed successfully`,
           variant: 'default',
         });
       } catch (error) {
         toast({
           title: 'Error',
-          description: `Failed to process ${type} CSV (${file.name}): ${
-            error instanceof Error ? error.message : 'Unknown error'
-          }`,
+          description: `Failed to process ${type} CSV: ${error instanceof Error ? error.message : 'Unknown error'}`,
           variant: 'destructive',
         });
       } finally {
         setIsLoading(false);
       }
     },
-    [toast],
+    [toast]
   );
 
   const analyzeCompetitor = async () => {
@@ -203,7 +144,7 @@ export default function CompetitorAnalyzer() {
               name: competitor,
             };
 
-            metrics.forEach((metric) => {
+            metrics.forEach(metric => {
               const value = row[metric as keyof ProcessedRow];
               if (value !== undefined) {
                 dataPoint[metric] = value;
@@ -211,7 +152,7 @@ export default function CompetitorAnalyzer() {
             });
 
             return dataPoint;
-          },
+          }
         );
 
         if (formattedData.length > 0) {
@@ -257,7 +198,7 @@ export default function CompetitorAnalyzer() {
         };
 
         // Safely map each metric
-        metrics.forEach((metric) => {
+        metrics.forEach(metric => {
           const metricData = data.metrics[metric];
           if (Array.isArray(metricData) && metricData[index] !== undefined) {
             dataPoint[metric] = Number(metricData[index]) || 0;
@@ -294,14 +235,10 @@ export default function CompetitorAnalyzer() {
     <Card className="p-6">
       <CardHeader>
         <CardTitle>Competitor Analyzer</CardTitle>
-        <CardDescription>
-          Upload your data or enter an ASIN to analyze competitors.
-        </CardDescription>
+        <CardDescription>Upload your data or enter an ASIN to analyze competitors.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div
-          className={`grid ${isMobile ? 'grid-cols-1' : 'grid-cols-2'} gap-4`}
-        >
+        <div className={`grid ${isMobile ? 'grid-cols-1' : 'grid-cols-2'} gap-4`}>
           <div>
             <div className="flex items-center gap-2">
               <Label htmlFor="seller-csv">Seller Data CSV</Label>
@@ -312,8 +249,8 @@ export default function CompetitorAnalyzer() {
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>
-                      Upload a CSV with columns: asin, price, reviews, rating,
-                      conversion_rate, click_through_rate, brands, keywords, niche
+                      Upload a CSV with columns: asin, price, reviews, rating, conversion_rate,
+                      click_through_rate, brands, keywords, niche
                     </p>
                   </TooltipContent>
                 </Tooltip>
@@ -324,7 +261,7 @@ export default function CompetitorAnalyzer() {
                 id="seller-csv"
                 type="file"
                 accept=".csv"
-                onChange={(e) => handleFileUpload(e, setSellerData, 'seller')}
+                onChange={e => handleFileUpload(e, setSellerData, 'seller')}
                 className="cursor-pointer"
               />
               <FileText className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
@@ -340,8 +277,8 @@ export default function CompetitorAnalyzer() {
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>
-                      Upload a CSV with columns: asin, price, reviews, rating,
-                      conversion_rate, click_through_rate, brands, keywords, niche
+                      Upload a CSV with columns: asin, price, reviews, rating, conversion_rate,
+                      click_through_rate, brands, keywords, niche
                     </p>
                   </TooltipContent>
                 </Tooltip>
@@ -352,9 +289,7 @@ export default function CompetitorAnalyzer() {
                 id="competitor-csv"
                 type="file"
                 accept=".csv"
-                onChange={(e) =>
-                  handleFileUpload(e, setCompetitorData, 'competitor')
-                }
+                onChange={e => handleFileUpload(e, setCompetitorData, 'competitor')}
                 className="cursor-pointer"
               />
               <FileText className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
@@ -367,7 +302,7 @@ export default function CompetitorAnalyzer() {
           <Input
             id="asin"
             value={asin}
-            onChange={(e) => setAsin(e.target.value)}
+            onChange={e => setAsin(e.target.value)}
             placeholder="Enter competitor ASIN or niche"
           />
         </div>
@@ -383,17 +318,17 @@ export default function CompetitorAnalyzer() {
               'inventory_levels',
               'conversion_rate',
               'click_through_rate',
-            ].map((metric) => (
+            ].map(metric => (
               <div key={metric} className="flex items-center gap-2">
                 <input
                   type="checkbox"
                   id={metric}
                   checked={metrics.includes(metric)}
-                  onChange={(e) => {
+                  onChange={e => {
                     if (e.target.checked) {
                       setMetrics([...metrics, metric]);
                     } else {
-                      setMetrics(metrics.filter((m) => m !== metric));
+                      setMetrics(metrics.filter(m => m !== metric));
                     }
                   }}
                   className="h-4 w-4 rounded border-gray-300"
@@ -401,7 +336,7 @@ export default function CompetitorAnalyzer() {
                 <Label htmlFor={metric}>
                   {metric
                     .split('_')
-                    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
                     .join(' ')}
                 </Label>
               </div>
@@ -426,9 +361,7 @@ export default function CompetitorAnalyzer() {
             onClick={() => {
               // Save analysis results to localStorage
               const timestamp = new Date().toISOString();
-              const savedAnalyses = JSON.parse(
-                localStorage.getItem('competitorAnalyses') || '[]',
-              );
+              const savedAnalyses = JSON.parse(localStorage.getItem('competitorAnalyses') || '[]');
               savedAnalyses.push({
                 id: timestamp,
                 date: new Date().toLocaleString(),
@@ -436,10 +369,7 @@ export default function CompetitorAnalyzer() {
                 metrics,
                 chartData,
               });
-              localStorage.setItem(
-                'competitorAnalyses',
-                JSON.stringify(savedAnalyses),
-              );
+              localStorage.setItem('competitorAnalyses', JSON.stringify(savedAnalyses));
               toast({
                 title: 'Success',
                 description: 'Analysis saved for future reference',
@@ -473,7 +403,7 @@ export default function CompetitorAnalyzer() {
                 <YAxis />
                 <RechartsTooltip />
                 <Legend wrapperStyle={{ paddingTop: 20 }} />
-                {selectedMetrics.map((metric) => (
+                {selectedMetrics.map(metric => (
                   <Line
                     key={metric}
                     type="monotone"
