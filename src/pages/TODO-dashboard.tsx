@@ -96,71 +96,56 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, level = 0, onToggleTask }) =>
   );
 };
 
+// Move updateTaskStatus outside the component
+const updateTaskStatus = (
+  tasks: (Task | SubTask)[],
+  taskId: string,
+  completed: boolean
+): (Task | SubTask)[] => {
+  return tasks.map(task => {
+    if (task.id === taskId) {
+      return { ...task, completed };
+    }
+    if (task.subTasks && task.subTasks.length > 0) {
+      const updatedSubTasks = updateTaskStatus(task.subTasks, taskId, completed);
+      if (updatedSubTasks !== task.subTasks) {
+        return { ...task, subTasks: updatedSubTasks };
+      }
+    }
+    return task;
+  });
+};
+
 // --- Main Dashboard Component ---
 const TODODashboard: React.FC = () => {
   // --- State Management ---
-  // Initialize state with the data from the JSON file
   const [tasksData, setTasksData] = useState<TodoData>(todoDataJson as TodoData);
 
-  // --- Immutable Update Function ---
-  // Recursively finds and updates the status of a task/subtask
-  const updateTaskStatus = (
-    tasks: (Task | SubTask)[],
-    taskId: string,
-    completed: boolean
-  ): (Task | SubTask)[] => {
-    return tasks.map(task => {
-      if (task.id === taskId) {
-        // Found the task, return a new object with updated status
-        return { ...task, completed };
-      }
-      if (task.subTasks && task.subTasks.length > 0) {
-        // Recursively check subtasks
-        const updatedSubTasks = updateTaskStatus(task.subTasks, taskId, completed);
-        // If subtasks were updated, return a new parent task object
-        if (updatedSubTasks !== task.subTasks) {
-          return { ...task, subTasks: updatedSubTasks };
-        }
-      }
-      // If not the task and no subtasks were updated, return the original task
-      return task;
-    });
-  };
-
   // --- Toggle Handler ---
-  // Passed down to TaskItem components
   const handleToggleTask = useCallback(
     (taskId: string, completed: boolean) => {
       setTasksData(currentData => {
-        // Create a new top-level structure
         const newPhases = currentData.phases.map(phase => {
-          // Create new sections within the phase
           const newSections = phase.sections.map(section => {
-            // Update tasks within the section using the recursive helper
             const updatedTasks = updateTaskStatus(section.tasks, taskId, completed);
-            // If tasks changed, return a new section object
             if (updatedTasks !== section.tasks) {
               return { ...section, tasks: updatedTasks };
             }
-            return section; // Otherwise, return the original section
+            return section;
           });
-          // If sections changed, return a new phase object
           if (newSections !== phase.sections) {
             return { ...phase, sections: newSections };
           }
-          return phase; // Otherwise, return the original phase
+          return phase;
         });
-
-        // If phases changed, return a new data object
         if (newPhases !== currentData.phases) {
           return { ...currentData, phases: newPhases };
         }
-        return currentData; // Otherwise, return the original data (no change needed)
+        return currentData;
       });
-      // Note: Progress bars will automatically update on re-render due to state change
     },
-    [updateTaskStatus]
-  ); // Include updateTaskStatus in dependencies since it's used inside the callback
+    [] // Remove updateTaskStatus from dependencies since it's now stable
+  );
 
   return (
     <MainLayout>

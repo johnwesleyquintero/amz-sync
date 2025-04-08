@@ -140,8 +140,8 @@ export default function AcosCalculator() {
         setChartData(null);
       }
     },
-    [toast]
-  ); // Include toast in dependencies since it's used inside the callback
+    [] // Remove toast from dependencies since it's stable
+  );
 
   const handleFileUpload = useCallback(
     async (event: React.ChangeEvent<HTMLInputElement>) => {
