@@ -237,7 +237,7 @@ export default function ProfitMarginCalculator() {
         },
       });
     },
-    [toast]
+    [toast, calculateResults]
   );
 
   const calculateResults = (data: ProductData[]) => {

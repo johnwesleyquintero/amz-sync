@@ -405,7 +405,7 @@ export default function SalesEstimator() {
       });
     } catch (exportError) {
       const errorMsg = `Error exporting data: ${
-        exportError instanceof Error ? error.message : 'Unknown error'
+        exportError instanceof Error ? exportError.message : 'Unknown error'
       }`;
       setError(errorMsg);
       toast({ title: 'Export Error', description: errorMsg, variant: 'destructive' });

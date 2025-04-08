@@ -187,7 +187,7 @@ export default function CsvUploader<T extends CsvRow>({
         },
       });
     },
-    [onUploadSuccess, requiredColumns, toast] // Correct dependencies
+    [onUploadSuccess, requiredColumns, toast, handleUploadError] // Added handleUploadError to dependencies
   );
 
   const onDrop = useCallback(

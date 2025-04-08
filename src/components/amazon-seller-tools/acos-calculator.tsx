@@ -94,12 +94,9 @@ export default function AcosCalculator() {
   }, [campaigns]);
 
   // Centralized function to process data (from CSV or manual) and update state
-  const processAndSetData = useCallback(
-    (data: CampaignData[]) => {
-      // ... (rest of your processAndSetData function remains the same)
-    },
-    [toast]
-  );
+  const processAndSetData = useCallback((data: CampaignData[]) => {
+    // ... (rest of your processAndSetData function remains the same)
+  }, []);
 
   const handleFileUpload = useCallback(
     async (event: React.ChangeEvent<HTMLInputElement>) => {
