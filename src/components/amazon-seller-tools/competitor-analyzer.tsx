@@ -84,15 +84,34 @@ export default function CompetitorAnalyzer() {
   }, [chartData, metrics]);
 
   const handleFileUpload = useCallback(
-    async (file: File, type: 'seller' | 'competitor') => {
+    async (event: React.ChangeEvent<HTMLInputElement>, type: 'seller' | 'competitor') => {
+      const file = event.target.files?.[0];
+      if (!file) {
+        toast({
+          title: 'Error',
+          description: 'Please select a file',
+          variant: 'destructive',
+        });
+        return;
+      }
+
       setIsLoading(true);
       try {
-        const data = await processCSV(file);
-        if (type === 'seller') {
-          setSellerData(data);
-        } else {
-          setCompetitorData(data);
+        const batchProcessor = new BatchProcessor<ProcessedRow>();
+        const result = await batchProcessor.processFile(file, (progress) => {
+          // You could add a progress indicator here if needed
+        });
+
+        if (result.errors.length > 0) {
+          console.warn('Some rows had errors:', result.errors);
         }
+
+        if (type === 'seller') {
+          setSellerData(result.data[0]); // We only need the first row for seller data
+        } else {
+          setCompetitorData(result.data);
+        }
+
         toast({
           title: 'Success',
           description: `${type} data processed successfully`,
@@ -112,10 +131,10 @@ export default function CompetitorAnalyzer() {
   );
 
   const analyzeCompetitor = async () => {
-    if (!sellerData && !competitorData && !asin) {
+    if (!sellerData || !competitorData.length) {
       toast({
         title: 'Error',
-        description: 'Please upload data files or enter an ASIN',
+        description: 'Please upload both seller and competitor data files',
         variant: 'destructive',
       });
       return;
@@ -123,94 +142,46 @@ export default function CompetitorAnalyzer() {
 
     setIsAnalyzing(true);
     try {
-      // Process CSV data if uploaded
-      let processedSellerData = sellerData;
-      let processedCompetitorData = competitorData;
-
-      if (Array.isArray(sellerData)) {
-        processedSellerData = processCsvData(sellerData);
-      }
-
-      if (Array.isArray(competitorData)) {
-        processedCompetitorData = processCsvData(competitorData);
-      }
-
-      // If no API call needed (using uploaded CSV data)
-      if (processedSellerData && processedCompetitorData) {
-        const formattedData = processedCompetitorData.map(
-          (row: { asin?: string; sales_rank?: number }) => {
-            const competitor = row.asin ?? row.niche ?? 'N/A';
-            const dataPoint: ChartDataPoint = {
-              name: competitor,
-            };
-
-            metrics.forEach(metric => {
-              const value = row[metric as keyof ProcessedRow];
-              if (value !== undefined) {
-                dataPoint[metric] = value;
-              }
-            });
-
-            return dataPoint;
-          }
-        );
-
-        if (formattedData.length > 0) {
-          setChartData(formattedData);
-          setIsAnalyzing(false);
-          return;
-        }
-      }
-
-      // Fallback to API call if no valid CSV data
-      const response = await fetch('/api/amazon/competitor-analysis', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          asin,
-          metrics,
-          sellerData: processedSellerData,
-          competitorData: processedCompetitorData,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch competitor data');
-      }
-
-      interface ApiResponse {
-        competitors: string[];
-        metrics: Record<MetricType, number[]>;
-      }
-
-      const data = (await response.json()) as ApiResponse;
-
-      // Ensure data has the expected structure
-      if (!data || !data.competitors || !data.metrics) {
-        throw new Error('Invalid response format from server');
-      }
-
-      const formattedData = data.competitors.map((competitor, index) => {
+      // Format competitor data for chart display
+      const formattedData = competitorData.map((row) => {
+        const competitor = row.asin || 'N/A';
         const dataPoint: ChartDataPoint = {
           name: competitor,
         };
 
-        // Safely map each metric
+        // Add metrics data with proper type conversion
         metrics.forEach(metric => {
-          const metricData = data.metrics[metric];
-          if (Array.isArray(metricData) && metricData[index] !== undefined) {
-            dataPoint[metric] = Number(metricData[index]) || 0;
-          } else {
-            dataPoint[metric] = 0; // Default value if data is missing
+          let value = row[metric as keyof ProcessedRow];
+          if (value !== undefined && value !== null) {
+            // Convert string values to numbers and handle invalid values
+            const numValue = typeof value === 'string' ? parseFloat(value) : Number(value);
+            if (!isNaN(numValue)) {
+              dataPoint[metric] = numValue;
+            }
           }
         });
 
         return dataPoint;
       });
 
-      // Ensure we have data to render
+      // Add seller data as first point for comparison
+      const sellerPoint: ChartDataPoint = {
+        name: sellerData.asin || 'Your Product',
+      };
+
+      metrics.forEach(metric => {
+        let value = sellerData[metric as keyof ProcessedRow];
+        if (value !== undefined && value !== null) {
+          // Convert string values to numbers and handle invalid values
+          const numValue = typeof value === 'string' ? parseFloat(value) : Number(value);
+          if (!isNaN(numValue)) {
+            sellerPoint[metric] = numValue;
+          }
+        }
+      });
+
+      formattedData.unshift(sellerPoint);
+
       if (formattedData.length > 0) {
         setChartData(formattedData);
       } else {
@@ -221,7 +192,7 @@ export default function CompetitorAnalyzer() {
     } catch (error) {
       toast({
         title: 'Error',
-        description: error.message,
+        description: error instanceof Error ? error.message : 'Failed to analyze data',
         variant: 'destructive',
       });
       setChartData(null);
@@ -261,7 +232,7 @@ export default function CompetitorAnalyzer() {
                 id="seller-csv"
                 type="file"
                 accept=".csv"
-                onChange={e => handleFileUpload(e, setSellerData, 'seller')}
+                onChange={e => handleFileUpload(e, 'seller')}
                 className="cursor-pointer"
               />
               <FileText className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
@@ -289,7 +260,7 @@ export default function CompetitorAnalyzer() {
                 id="competitor-csv"
                 type="file"
                 accept=".csv"
-                onChange={e => handleFileUpload(e, setCompetitorData, 'competitor')}
+                onChange={e => handleFileUpload(e, 'competitor')}
                 className="cursor-pointer"
               />
               <FileText className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
