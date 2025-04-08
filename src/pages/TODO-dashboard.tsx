@@ -1,5 +1,5 @@
 // src/pages/TODO-dashboard.tsx
-import React from 'react';
+import React, { useState, useCallback } from 'react'; // Import useState and useCallback
 import todoDataJson from '../../TODO.json'; // Adjust the path as necessary
 import type { TodoData, Phase, Section, Task, SubTask } from '../types/todo'; // Adjust path if needed
 import MainLayout from '@/components/layout/MainLayout'; // Import MainLayout
@@ -10,10 +10,8 @@ import { Progress } from '@/components/ui/progress'; // Import Progress
 import { cn } from '@/lib/utils'; // Import cn utility
 import { Target, ListChecks } from 'lucide-react'; // Import icons
 
-// Cast the imported JSON to our defined type
-const todoData: TodoData = todoDataJson as TodoData;
-
 // --- Helper Function to Calculate Progress ---
+// (No changes needed in calculateProgress)
 const calculateProgress = (
   items: (Task | SubTask)[]
 ): { completed: number; total: number; percentage: number } => {
@@ -42,42 +40,54 @@ const calculateProgress = (
 interface TaskItemProps {
   task: Task | SubTask;
   level?: number; // For indentation
+  onToggleTask: (taskId: string, completed: boolean) => void; // Add handler prop
 }
 
-const TaskItem: React.FC<TaskItemProps> = ({ task, level = 0 }) => {
-  // Use Tailwind classes for indentation (adjust multiplier as needed for visual spacing)
-  // ml-0, ml-5, ml-10, etc. (corresponds to Tailwind spacing scale)
+const TaskItem: React.FC<TaskItemProps> = ({ task, level = 0, onToggleTask }) => {
+  // Use Tailwind classes for indentation
   const indentClass = `ml-${level * 5}`;
+
+  const handleCheckedChange = (checked: boolean | 'indeterminate') => {
+    // Ensure we pass a boolean value
+    onToggleTask(task.id, !!checked);
+  };
 
   return (
     <div className={cn('task-item flex items-start gap-2 py-1', indentClass)}>
       <Checkbox
-        id={task.id} // Use task id for label association
+        id={task.id}
         checked={task.completed}
-        disabled // Make checkbox read-only for display purposes
+        // Remove the disabled prop to make it interactive
+        // disabled
+        onCheckedChange={handleCheckedChange} // Add the change handler
         aria-label={`Task ${task.completed ? 'completed' : 'pending'}: ${task.text}`}
-        className="mt-1" // Align checkbox slightly better with text
+        className="mt-1"
       />
       <div className="flex-1">
-        <label
-          htmlFor={task.id} // Associate label with checkbox
+        {/* Use a standard div instead of label for better click handling on checkbox */}
+        <div
           className={cn(
-            'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70', // Shadcn label styles
+            'text-sm font-medium leading-none', // Basic styles
             task.completed ? 'line-through text-muted-foreground' : 'text-foreground'
           )}
         >
           {task.text}
-        </label>
+        </div>
         {task.owner && (
           <Badge variant="outline" className="ml-2 text-xs font-normal">
             @{task.owner}
           </Badge>
         )}
-        {/* Recursively render subtasks */}
+        {/* Recursively render subtasks, passing down the handler */}
         {task.subTasks && task.subTasks.length > 0 && (
           <div className="subtasks mt-2">
             {task.subTasks.map(subTask => (
-              <TaskItem key={subTask.id} task={subTask} level={level + 1} />
+              <TaskItem
+                key={subTask.id}
+                task={subTask}
+                level={level + 1}
+                onToggleTask={onToggleTask} // Pass handler down
+              />
             ))}
           </div>
         )}
@@ -88,6 +98,67 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, level = 0 }) => {
 
 // --- Main Dashboard Component ---
 const TODODashboard: React.FC = () => {
+  // --- State Management ---
+  // Initialize state with the data from the JSON file
+  const [tasksData, setTasksData] = useState<TodoData>(todoDataJson as TodoData);
+
+  // --- Immutable Update Function ---
+  // Recursively finds and updates the status of a task/subtask
+  const updateTaskStatus = (
+    tasks: (Task | SubTask)[],
+    taskId: string,
+    completed: boolean
+  ): (Task | SubTask)[] => {
+    return tasks.map(task => {
+      if (task.id === taskId) {
+        // Found the task, return a new object with updated status
+        return { ...task, completed };
+      }
+      if (task.subTasks && task.subTasks.length > 0) {
+        // Recursively check subtasks
+        const updatedSubTasks = updateTaskStatus(task.subTasks, taskId, completed);
+        // If subtasks were updated, return a new parent task object
+        if (updatedSubTasks !== task.subTasks) {
+          return { ...task, subTasks: updatedSubTasks };
+        }
+      }
+      // If not the task and no subtasks were updated, return the original task
+      return task;
+    });
+  };
+
+  // --- Toggle Handler ---
+  // Passed down to TaskItem components
+  const handleToggleTask = useCallback((taskId: string, completed: boolean) => {
+    setTasksData(currentData => {
+      // Create a new top-level structure
+      const newPhases = currentData.phases.map(phase => {
+        // Create new sections within the phase
+        const newSections = phase.sections.map(section => {
+          // Update tasks within the section using the recursive helper
+          const updatedTasks = updateTaskStatus(section.tasks, taskId, completed);
+          // If tasks changed, return a new section object
+          if (updatedTasks !== section.tasks) {
+            return { ...section, tasks: updatedTasks };
+          }
+          return section; // Otherwise, return the original section
+        });
+        // If sections changed, return a new phase object
+        if (newSections !== phase.sections) {
+          return { ...phase, sections: newSections };
+        }
+        return phase; // Otherwise, return the original phase
+      });
+
+      // If phases changed, return a new data object
+      if (newPhases !== currentData.phases) {
+        return { ...currentData, phases: newPhases };
+      }
+      return currentData; // Otherwise, return the original data (no change needed)
+    });
+    // Note: Progress bars will automatically update on re-render due to state change
+  }, []); // No dependencies needed for this specific useCallback
+
   return (
     <MainLayout>
       <div className="todo-dashboard p-4 md:p-6 space-y-6 animate-fade-in">
@@ -96,7 +167,9 @@ const TODODashboard: React.FC = () => {
           <h1 className="text-2xl font-bold">Project TODO Dashboard</h1>
         </div>
 
-        {todoData.phases.map((phase: Phase) => {
+        {/* Iterate over the state data (tasksData) instead of the static import */}
+        {tasksData.phases.map((phase: Phase) => {
+          // Recalculate progress based on the current state
           const phaseProgress = calculateProgress(
             phase.sections.flatMap(section => section.tasks)
           );
@@ -122,10 +195,12 @@ const TODODashboard: React.FC = () => {
                     <span>{phase.objective}</span>
                   </CardDescription>
                 )}
+                {/* Progress bar updates automatically */}
                 <Progress value={phaseProgress.percentage} className="mt-2 h-2" />
               </CardHeader>
               <CardContent className="space-y-4">
                 {phase.sections.map((section: Section) => {
+                  // Recalculate progress based on the current state
                   const sectionProgress = calculateProgress(section.tasks);
                   return (
                     <div
@@ -150,11 +225,17 @@ const TODODashboard: React.FC = () => {
                           Goal: {section.goal}
                         </p>
                       )}
+                      {/* Progress bar updates automatically */}
                       <Progress value={sectionProgress.percentage} className="mb-3 h-1.5" />
 
                       <div className="tasks space-y-1">
                         {section.tasks.map((task: Task) => (
-                          <TaskItem key={task.id} task={task} level={0} /> // Start tasks at level 0 within section
+                          <TaskItem
+                            key={task.id}
+                            task={task}
+                            level={0}
+                            onToggleTask={handleToggleTask} // Pass the handler down
+                          />
                         ))}
                       </div>
                     </div>
