@@ -18,6 +18,7 @@ import Security from './pages/Security';
 import Resources from './pages/Resources';
 import AboutUs from './pages/AboutUs';
 import Documentation from './pages/Documentation';
+import Blog from './pages/Blog';
 
 // Initialize React Query client
 const queryClient = new QueryClient();
