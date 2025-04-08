@@ -129,7 +129,7 @@ export default function CsvUploader<T extends CsvRow>({
         step: (results, parser) => {
           // Calculate progress based on cursor
           if (file.size > 0) {
-             setParsingProgress(Math.floor((results.meta.cursor / file.size) * 100));
+            setParsingProgress(Math.floor((results.meta.cursor / file.size) * 100));
           }
         },
         complete: results => {
@@ -138,16 +138,16 @@ export default function CsvUploader<T extends CsvRow>({
 
           if (results.errors.length > 0) {
             // Handle non-fatal parsing errors
-             const errorMessages = results.errors.map(e => `Row ${e.row}: ${e.message}`).slice(0, 5); // Limit messages
-             const description = `CSV parsing completed with errors: ${errorMessages.join('; ')}...`;
-             console.warn('CSV Parsing Errors:', results.errors);
-             setParsingError(description); // Show simplified error
-             toast({
-               title: 'CSV Warning',
-               description: 'Some rows had parsing errors. Check console.',
-               variant: 'default', // Use warning, not destructive
-             });
-             // Continue processing potentially valid data
+            const errorMessages = results.errors.map(e => `Row ${e.row}: ${e.message}`).slice(0, 5); // Limit messages
+            const description = `CSV parsing completed with errors: ${errorMessages.join('; ')}...`;
+            console.warn('CSV Parsing Errors:', results.errors);
+            setParsingError(description); // Show simplified error
+            toast({
+              title: 'CSV Warning',
+              description: 'Some rows had parsing errors. Check console.',
+              variant: 'default', // Use warning, not destructive
+            });
+            // Continue processing potentially valid data
           }
 
           // Validate required columns
@@ -156,9 +156,9 @@ export default function CsvUploader<T extends CsvRow>({
             col => !headers?.includes(col.toLowerCase()) // Check lowercase
           );
           if (missingColumns.length > 0) {
-             const errorMsg = `Missing required columns: ${missingColumns.join(', ')}`;
-             handleUploadError(new Error(errorMsg)); // Use handleUploadError
-             return;
+            const errorMsg = `Missing required columns: ${missingColumns.join(', ')}`;
+            handleUploadError(new Error(errorMsg)); // Use handleUploadError
+            return;
           }
 
           // Optional: Add more validation using validateCSV if needed
@@ -170,8 +170,8 @@ export default function CsvUploader<T extends CsvRow>({
           // }
 
           if (results.data.length === 0) {
-             handleUploadError(new Error('No valid data rows found in the CSV.'));
-             return;
+            handleUploadError(new Error('No valid data rows found in the CSV.'));
+            return;
           }
 
           onUploadSuccess(results.data);
@@ -233,12 +233,12 @@ export default function CsvUploader<T extends CsvRow>({
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
-     onDrop,
-     onDragEnter: () => setIsDragging(true),
-     onDragLeave: () => setIsDragging(false),
-     multiple: false, // Only allow single file upload
-     accept: { 'text/csv': ['.csv'] } // Specify accepted MIME type
-   });
+    onDrop,
+    onDragEnter: () => setIsDragging(true),
+    onDragLeave: () => setIsDragging(false),
+    multiple: false, // Only allow single file upload
+    accept: { 'text/csv': ['.csv'] }, // Specify accepted MIME type
+  });
 
   // Determine combined loading state
   const currentIsLoading = isLoading || isParsing;
@@ -290,23 +290,24 @@ export default function CsvUploader<T extends CsvRow>({
           <div className="w-full mt-4">
             <Progress value={parsingProgress} className="h-2" />
             <p className="text-xs text-muted-foreground mt-1 text-center">
-               Processing... {parsingProgress}%
-             </p>
+              Processing... {parsingProgress}%
+            </p>
           </div>
         )}
 
-         {/* Parsing Error Display */}
-         {parsingError && !isParsing && ( // Only show error when not actively parsing
-           <div className="w-full flex items-center justify-center gap-2 rounded-lg bg-red-100 p-3 text-red-800 dark:bg-red-900/30 dark:text-red-400 mt-4 text-xs">
-             <AlertCircle className="h-4 w-4 flex-shrink-0" />
-             <span>{parsingError}</span>
-           </div>
-         )}
+        {/* Parsing Error Display */}
+        {parsingError &&
+          !isParsing && ( // Only show error when not actively parsing
+            <div className="w-full flex items-center justify-center gap-2 rounded-lg bg-red-100 p-3 text-red-800 dark:bg-red-900/30 dark:text-red-400 mt-4 text-xs">
+              <AlertCircle className="h-4 w-4 flex-shrink-0" />
+              <span>{parsingError}</span>
+            </div>
+          )}
 
         {/* Sample Button (only if not loading/parsing) */}
         {!currentIsLoading && (
-           <SampleCsvButton dataType={dataType} fileName={fileName} className="mt-4" />
-         )}
+          <SampleCsvButton dataType={dataType} fileName={fileName} className="mt-4" />
+        )}
       </div>
 
       {/* Clear Button */}
