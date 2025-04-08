@@ -37,7 +37,11 @@ export const SimpleTable = ({ headers, rows }: TableProps) => (
   </table>
 );
 
-export const CSVUploader = ({ onUpload }: { onUpload: (data: any[]) => void }) => {
+export const CSVUploader = ({
+  onUpload,
+}: {
+  onUpload: (data: Record<string, unknown>[]) => void;
+}) => {
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {

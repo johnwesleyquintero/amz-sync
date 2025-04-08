@@ -134,6 +134,60 @@ export default function ProfitMarginCalculator() {
     }
   }, [results]);
 
+  const calculateResults = useCallback((data: ProductData[]) => {
+    if (!data || data.length === 0) {
+      setError('No valid data to calculate');
+      toast({
+        title: 'Calculation Error',
+        description: 'No valid data to calculate',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    const calculated = data.map(item => {
+      const productScore = AmazonAlgorithms.calculateProductScore({
+        conversionRate: item.conversionRate || 15,
+        sessions: item.sessions || 300,
+        reviewRating: item.reviewRating || 4.5,
+        reviewCount: item.reviewCount || 42,
+        priceCompetitiveness: item.priceCompetitiveness || 0.92,
+        inventoryHealth: item.inventoryHealth || 0.8,
+        weight: item.weight || 1.2,
+        volume: item.volume || 0.05,
+        category: ProductCategory.STANDARD,
+      });
+
+      const adjustedPrice = AmazonAlgorithms.calculateOptimalPrice(
+        item.price,
+        item.competitorPrices || [item.price * 0.9, item.price * 1.1],
+        productScore / 100
+      );
+
+      const profit = adjustedPrice - item.cost - item.fees;
+      const margin = (profit / item.price) * 100;
+      const roi = (profit / item.cost) * 100;
+      return {
+        ...item,
+        profit,
+        margin: parseFloat(margin.toFixed(2)),
+        roi: parseFloat(roi.toFixed(2)),
+      };
+    });
+
+    if (calculated.length === 0) {
+      setError('Failed to calculate results');
+      toast({
+        title: 'Calculation Error',
+        description: 'Failed to calculate results',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    setResults(calculated);
+  }, []); // No dependencies needed as we're only using setState functions which are stable
+
   const handleFileUpload = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const file = event.target.files?.[0];
@@ -239,60 +293,6 @@ export default function ProfitMarginCalculator() {
     },
     [toast, calculateResults]
   );
-
-  const calculateResults = (data: ProductData[]) => {
-    if (!data || data.length === 0) {
-      setError('No valid data to calculate');
-      toast({
-        title: 'Calculation Error',
-        description: 'No valid data to calculate',
-        variant: 'destructive',
-      });
-      return;
-    }
-
-    const calculated = data.map(item => {
-      const productScore = AmazonAlgorithms.calculateProductScore({
-        conversionRate: item.conversionRate || 15,
-        sessions: item.sessions || 300,
-        reviewRating: item.reviewRating || 4.5,
-        reviewCount: item.reviewCount || 42,
-        priceCompetitiveness: item.priceCompetitiveness || 0.92,
-        inventoryHealth: item.inventoryHealth || 0.8,
-        weight: item.weight || 1.2,
-        volume: item.volume || 0.05,
-        category: ProductCategory.STANDARD,
-      });
-
-      const adjustedPrice = AmazonAlgorithms.calculateOptimalPrice(
-        item.price,
-        item.competitorPrices || [item.price * 0.9, item.price * 1.1],
-        productScore / 100
-      );
-
-      const profit = adjustedPrice - item.cost - item.fees;
-      const margin = (profit / item.price) * 100;
-      const roi = (profit / item.cost) * 100;
-      return {
-        ...item,
-        profit,
-        margin: parseFloat(margin.toFixed(2)),
-        roi: parseFloat(roi.toFixed(2)),
-      };
-    });
-
-    if (calculated.length === 0) {
-      setError('Failed to calculate results');
-      toast({
-        title: 'Calculation Error',
-        description: 'Failed to calculate results',
-        variant: 'destructive',
-      });
-      return;
-    }
-
-    setResults(calculated);
-  };
 
   const handleManualSubmit = (e: React.FormEvent) => {
     e.preventDefault();

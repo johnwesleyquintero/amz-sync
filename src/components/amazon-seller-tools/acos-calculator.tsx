@@ -95,8 +95,50 @@ export default function AcosCalculator() {
 
   // Centralized function to process data (from CSV or manual) and update state
   const processAndSetData = useCallback((data: CampaignData[]) => {
-    // ... (rest of your processAndSetData function remains the same)
-  }, []);
+    if (!data || data.length === 0) {
+      setError('No valid campaign data to process.');
+      setCampaigns([]);
+      setChartData(null);
+      toast({
+        title: 'Processing Error',
+        description: 'No valid campaign data to process.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    try {
+      const processedData = data.map(campaign => calculateMetrics(campaign));
+      setCampaigns(processedData);
+
+      // Format data for charts
+      const chartFormatted = processedData.map(c => ({
+        name: c.campaign,
+        adSpend: c.adSpend,
+        sales: c.sales,
+        acos: c.acos,
+        roas: c.roas,
+      }));
+      setChartData(chartFormatted);
+
+      toast({
+        title: 'Success',
+        description: `Processed ${processedData.length} campaign(s)`,
+        variant: 'default',
+      });
+      setError(null);
+    } catch (err) {
+      const errorMsg = `Failed to process campaign data: ${err instanceof Error ? err.message : 'Unknown error'}`;
+      setError(errorMsg);
+      toast({
+        title: 'Processing Error',
+        description: errorMsg,
+        variant: 'destructive',
+      });
+      setCampaigns([]);
+      setChartData(null);
+    }
+  }, []); // No dependencies needed as we're only using setState functions which are stable
 
   const handleFileUpload = useCallback(
     async (event: React.ChangeEvent<HTMLInputElement>) => {
