@@ -1,5 +1,11 @@
 'use client';
 
+/**
+ * Listing Quality Checker
+ * AI-powered analysis tool to optimize product listings and improve visibility.
+ * Analyze and optimize your Amazon product listings for better visibility and conversion.
+ */
+
 import type React from 'react';
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
@@ -12,6 +18,7 @@ import Papa from 'papaparse';
 import { KeywordIntelligence } from '@/lib/keyword-intelligence';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
+import ToolLabel from '../ui/tool-label';
 
 type ListingData = {
   product: string;
@@ -258,6 +265,10 @@ export default function ListingQualityChecker() {
 
   return (
     <div className="space-y-6">
+      <ToolLabel 
+        title="Listing Quality Checker"
+        description="AI-powered analysis tool to optimize product listings and improve visibility."
+      />
       <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg flex items-start gap-3">
         <Info className="h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0" />
         <div className="text-sm text-blue-700 dark:text-blue-300">

@@ -1,5 +1,11 @@
 'use client';
 
+/**
+ * Description Editor
+ * AI-enhanced rich text editor for Amazon product descriptions with SEO optimization.
+ * Create and optimize Amazon product descriptions with AI-powered suggestions and SEO tools.
+ */
+
 import type React from 'react';
 
 import { useState } from 'react';
@@ -21,6 +27,8 @@ type ProductDescription = {
   keywordCount: number;
   score?: number;
 };
+
+import ToolLabel from '../ui/tool-label';
 
 export default function DescriptionEditor() {
   const { toast } = useToast();
@@ -304,6 +312,7 @@ export default function DescriptionEditor() {
               </div>
               <div>
                 <h3 className="text-lg font-medium">Upload CSV</h3>
+                <ToolLabel>CSV Upload</ToolLabel>
                 <p className="text-sm text-muted-foreground">
                   Upload a CSV file with your product descriptions
                 </p>
@@ -334,7 +343,7 @@ export default function DescriptionEditor() {
               <h3 className="text-lg font-medium">Add New Product</h3>
               <div className="space-y-3">
                 <div>
-                  <label className="text-sm font-medium">Product Name</label>
+                  <ToolLabel>Product Name</ToolLabel>
                   <Input
                     value={newProduct.product}
                     onChange={e => setNewProduct({ ...newProduct, product: e.target.value })}
@@ -342,7 +351,7 @@ export default function DescriptionEditor() {
                   />
                 </div>
                 <div>
-                  <label className="text-sm font-medium">ASIN (Optional)</label>
+                  <ToolLabel>ASIN (Optional)</ToolLabel>
                   <Input
                     value={newProduct.asin}
                     onChange={e => setNewProduct({ ...newProduct, asin: e.target.value })}
@@ -350,7 +359,7 @@ export default function DescriptionEditor() {
                   />
                 </div>
                 <div>
-                  <label className="text-sm font-medium">Description</label>
+                  <ToolLabel>Description</ToolLabel>
                   <Textarea
                     value={newProduct.description}
                     onChange={e =>
@@ -437,7 +446,7 @@ export default function DescriptionEditor() {
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium">Target Keywords</label>
+                  <ToolLabel>Target Keywords</ToolLabel>
                   <Input
                     value={targetKeywords.join(', ')}
                     onChange={e =>

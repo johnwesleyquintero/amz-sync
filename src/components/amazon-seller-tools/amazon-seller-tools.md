@@ -55,9 +55,9 @@ These tools help you manage your finances, calculate profitability, and optimize
 
 These tools help you create and optimize your product listings and manage your keywords.
 
-- **Description Editor**
-- **Keyword Deduplicator**
-- **Listing Quality Checker**
+- **Description Editor**: AI-enhanced rich text editor for Amazon product descriptions with SEO optimization.
+- **Keyword Deduplicator**: Tool to identify and remove duplicate keywords across your product listings.
+- **Listing Quality Checker**: AI-powered analysis tool to optimize product listings and improve visibility.
 
 ### Tool Details
 

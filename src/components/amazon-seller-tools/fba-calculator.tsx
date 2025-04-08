@@ -1,5 +1,11 @@
 'use client';
 
+/**
+ * FBA Calculator
+ * Calculate FBA fees, profit margins, and ROI for your Amazon FBA products.
+ * Calculate and analyze your FBA fees and profitability for Amazon products.
+ */
+
 import type React from 'react';
 import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
@@ -19,6 +25,7 @@ import { Upload, FileUp, AlertCircle, Download, Info } from 'lucide-react';
 import Papa from 'papaparse';
 import SampleCsvButton from './sample-csv-button';
 import { useToast } from '@/hooks/use-toast';
+import ToolLabel from '../ui/tool-label';
 
 type ProductData = {
   product: string;
@@ -230,6 +237,10 @@ export default function FbaCalculator() {
 
   return (
     <div className="space-y-6">
+      <ToolLabel 
+        title="FBA Calculator"
+        description="Calculate FBA fees, profit margins, and ROI for your Amazon FBA products."
+      />
       <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg flex items-start gap-3">
         <Info className="h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0" />
         <div className="text-sm text-blue-700 dark:text-blue-300">

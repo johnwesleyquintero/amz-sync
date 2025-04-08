@@ -45,6 +45,9 @@ This document outlines the development roadmap for My Amazon Analytics, an enter
     - [ ] Improve TypeScript type definitions for Amazon API responses
     - [x] Add performance monitoring to core algorithms
     - [x] Migrate test framework to Vitest for faster execution
+    - [ ] Refactor utility functions into dedicated modules (owner: @dev/core)
+    - [ ] Standardize error handling patterns across components (owner: @dev/frontend)
+    - [ ] Audit and optimize bundle size (owner: @dev/build)
   - [ ] **Documentation & Support:** Document the tools and provide support.
   - [ ] **Individual Tools:**
     - [ ] FBA Calculator
