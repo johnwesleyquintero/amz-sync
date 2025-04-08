@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <style>
+    .title { font: bold 72px 'Inter', sans-serif; fill: #ffffff; }
+    .subtitle { font: 500 48px 'Inter', sans-serif; fill: rgba(255,255,255,0.9); }
+  </style>
+  
+  <!-- Gradient background -->
+  <rect width="1200" height="630" fill="url(#gradient)" />
+  <defs>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E88E5" />
+      <stop offset="50%" stop-color="#E67E22" />
+      <stop offset="100%" stop-color="#F1C40F" />
+    </linearGradient>
+  </defs>
+
+  <!-- Your logo in top left corner -->
+  <g transform="translate(60 60)" width="120" height="120">
+    <svg viewBox="0 0 16 16" width="120" height="120">
+      <rect x="4" y="6.4" width="2.4" height="6.2" fill="#ED595B" />
+      <rect x="6.8" y="4.8" width="2.4" height="7.8" fill="#FFD600" />
+      <rect x="9.6" y="3.2" width="2.4" height="9.4" fill="#4FBBDA" />
+    </svg>
+  </g>
+
+  <g transform="translate(100 180)">
+    <text x="240" y="140" class="title">My Amazon Analytics</text>
+    <text x="240" y="220" class="subtitle">Enterprise Advertising Platform</text>
+    <text x="240" y="300" style="font: 400 36px 'Inter'; fill: rgba(255,255,255,0.7)">
+      Data-Driven Insights for Amazon Sellers
+    </text>
+  </g>
+</svg>
