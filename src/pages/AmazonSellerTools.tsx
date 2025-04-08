@@ -16,21 +16,21 @@ import CompetitorAnalyzer from '../components/amazon-seller-tools/competitor-ana
 import KeywordTrendAnalyzer from '../components/amazon-seller-tools/keyword-trend-analyzer';
 import ProfitMarginCalculator from '../components/amazon-seller-tools/profit-margin-calculator';
 import {
-  Calculator,
-  Search,
-  CheckSquare,
-  TrendingUp,
-  FileText,
-  Filter,
-  DollarSign,
-  BarChart3,
-  Users,
-  LineChart,
-  Percent,
-  Package,
-  // LayoutDashboard, // Removed as unused
-  // Target, // Removed as unused
+  Calculator, // Used by FbaCalculator (implicitly)
+  Search, // Used by KeywordAnalyzer
+  CheckSquare, // Used by ListingQualityChecker
+  TrendingUp, // Used by PpcCampaignAuditor
+  FileText, // Used by DescriptionEditor
+  Filter, // Used by KeywordDeduplicator
+  DollarSign, // Used by AcosCalculator
+  BarChart3, // Used by SalesEstimator
+  Users, // Used by CompetitorAnalyzer
+  LineChart, // Used by KeywordTrendAnalyzer
+  Percent, // Used by ProfitMarginCalculator
+  Package, // Used by FbaCalculator
+  Wrench, // Icon for the overall section title
 } from 'lucide-react';
+import { cn } from '@/lib/utils'; // Import cn utility
 
 // Define the structure for a tool
 interface Tool {
@@ -205,39 +205,51 @@ export default function AmazonSellerTools() {
   return (
     <section
       id="tools"
+      // Consistent background gradient/color
       className="py-12 md:py-16 bg-gradient-to-b from-white to-blue-50 dark:from-gray-900 dark:to-slate-900"
     >
       <div className="container px-4 md:px-6">
-        <div className="mb-8 text-center">
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Amazon Seller Tools</h2>
-          <p className="mt-2 text-lg text-muted-foreground">
-            A suite of tools to optimize your Amazon business.
+        {/* Consistent Section Header */}
+        <div className="mb-8 md:mb-12 text-center">
+          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl flex items-center justify-center gap-2">
+            <Wrench className="h-7 w-7 text-primary" /> Amazon Seller Tools
+          </h2>
+          <p className="mt-3 text-lg text-muted-foreground max-w-2xl mx-auto">
+            A comprehensive suite of specialized tools designed to help you analyze data, optimize listings, manage PPC, and maximize profitability on Amazon.
           </p>
         </div>
 
-        <div className="bg-card dark:bg-card rounded-xl shadow-lg border border-border dark:border-border overflow-hidden">
+        {/* Main Container Card - applying consistent styling */}
+        <Card className="overflow-hidden shadow-lg"> {/* Removed border, added overflow-hidden */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            {/* Consolidated TabsList with Category Grouping */}
-            <div className="p-4 md:p-6 border-b border-border dark:border-border">
-              <TabsList className="h-auto flex flex-wrap justify-center gap-x-2 gap-y-4 bg-transparent p-0">
+            {/* Tab Navigation Area - styled consistently */}
+            <div className="bg-muted/30 dark:bg-muted/20 p-4 md:p-6 border-b">
+              <TabsList className="h-auto flex flex-wrap justify-center gap-x-3 gap-y-4 bg-transparent p-0">
                 {categories.map(category => (
                   <div key={category} className="w-full md:w-auto flex flex-col items-center">
-                    <h3 className="text-sm font-semibold mb-2 text-muted-foreground uppercase tracking-wider w-full text-center md:text-left">
+                    {/* Category Title */}
+                    <h3 className="text-xs font-semibold mb-2 text-muted-foreground uppercase tracking-wider w-full text-center md:text-left px-1">
                       {category}
                     </h3>
+                    {/* Tool Buttons within Category */}
                     <div className="flex flex-wrap justify-center md:justify-start gap-2">
                       {categorizedTools[category].map(tool => (
                         <TabsTrigger
                           key={tool.id}
                           value={tool.id}
-                          className="flex items-center gap-2 px-3 py-2 text-sm h-auto data-[state=active]:bg-primary data-[state=active]:text-primary-foreground hover:bg-muted transition-colors duration-200"
+                          // Consistent button styling for tabs
+                          className={cn(
+                            "flex items-center gap-2 px-3 py-1.5 text-sm h-auto rounded-md border border-transparent",
+                            "data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-sm",
+                            "hover:bg-muted hover:text-foreground transition-colors duration-200"
+                          )}
                         >
                           {tool.icon}
                           <span>{tool.name}</span>
                           {tool.status === 'beta' && (
                             <Badge
                               variant="secondary"
-                              className="ml-1 px-1.5 py-0.5 text-xs scale-90"
+                              className="ml-1 px-1.5 py-0.5 text-xs scale-90 rounded-sm" // Slightly smaller badge
                             >
                               Beta
                             </Badge>
@@ -250,54 +262,31 @@ export default function AmazonSellerTools() {
               </TabsList>
             </div>
 
-            {/* Render Tab Contents */}
-            <div className="p-4 md:p-6">
+            {/* Tab Content Area - consistent padding */}
+            <div className="p-4 md:p-6 lg:p-8"> {/* Added slightly more padding */}
               {ALL_TOOLS.map(tool => (
-                <TabsContent key={tool.id} value={tool.id} className="mt-0 focus-visible:ring-0">
-                  <Card className="border-none shadow-none bg-transparent">
-                    {' '}
-                    {/* Removed hover effect and inner card styling */}
-                    <CardHeader className="px-0 pt-0 pb-4">
-                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                        <div className="flex items-center gap-3">
-                          <span className="text-primary">{tool.icon}</span>
-                          <CardTitle className="text-xl md:text-2xl">{tool.name}</CardTitle>
-                        </div>
-                        <div className="flex items-center gap-2 flex-shrink-0">
-                          <Badge variant={tool.status === 'active' ? 'default' : 'secondary'}>
-                            {tool.status === 'active' ? 'Active' : 'Beta'}
-                          </Badge>
-                          <Badge variant="outline">v{tool.version}</Badge>
-                        </div>
-                      </div>
-                      <CardDescription className="mt-1">{tool.description}</CardDescription>
-                    </CardHeader>
-                    <CardContent className="px-0 pb-0">
-                      {/* Render the actual tool component */}
-                      {tool.component}
-                    </CardContent>
-                  </Card>
+                <TabsContent key={tool.id} value={tool.id} className="mt-0 focus-visible:ring-0 focus-visible:outline-none">
+                  {/* Inner card structure removed to let the tool component define its own card */}
+                  {/* The tool component itself should be wrapped in <Card>...</Card> */}
+                  {tool.component}
                 </TabsContent>
               ))}
             </div>
           </Tabs>
 
-          {/* Footer Section */}
-          <div className="p-6 bg-muted/50 dark:bg-muted/30 border-t border-border dark:border-border">
+          {/* Footer Section - consistent styling */}
+          <div className="p-6 bg-muted/50 dark:bg-muted/30 border-t">
             <div className="text-sm text-muted-foreground">
               <p className="font-medium mb-2">About These Tools:</p>
               <p>
-                This comprehensive suite helps Amazon sellers optimize listings, analyze
-                performance, and maximize profitability. Most tools support CSV uploads for bulk
-                processing and provide detailed analysis with actionable insights.
+                This suite helps Amazon sellers optimize listings, analyze performance, and maximize profitability. Most tools support CSV uploads for bulk processing and provide detailed analysis with actionable insights.
               </p>
               <p className="mt-2">
-                For a demo, upload your own CSV files or use the manual entry options where
-                available to see real-time calculations and analysis. Download sample CSVs to understand the required format.
+                Use the <Badge variant="outline" size="sm" className="px-1.5 py-0.5 text-xs">Sample</Badge> buttons to download example CSV files and understand the required format. You can upload your own data or use manual entry options where available.
               </p>
             </div>
           </div>
-        </div>
+        </Card>
       </div>
     </section>
   );
