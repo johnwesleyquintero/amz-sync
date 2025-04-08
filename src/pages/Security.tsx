@@ -80,9 +80,9 @@ const Security = () => {
             </h2>
             <p className="text-gray-700 dark:text-gray-300">
               We value the security community. If you believe you have discovered a security vulnerability in our platform, please report it responsibly to us at{' '}
-              <a href="mailto:security@example.com" className="text-primary hover:underline">
-                security@example.com
-              </a> {/* Replace with actual security contact email */}
+              <a href="mailto:info.wescode@gmail.com" className="text-primary hover:underline">
+                info.wescode@gmail.com
+              </a>
               . We are committed to investigating all reports promptly.
             </p>
           </section>
