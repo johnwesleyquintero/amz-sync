@@ -94,57 +94,60 @@ export default function AcosCalculator() {
   }, [campaigns]);
 
   // Centralized function to process data (from CSV or manual) and update state
-  const processAndSetData = useCallback((data: CampaignData[]) => {
-    if (!data || data.length === 0) {
-      setError('No valid campaign data to process.');
-      setCampaigns([]);
-      setChartData(null);
-      toast({
-        title: 'Processing Error',
-        description: 'No valid campaign data to process.',
-        variant: 'destructive',
-      });
-      return;
-    }
+  const processAndSetData = useCallback(
+    (data: CampaignData[]) => {
+      if (!data || data.length === 0) {
+        setError('No valid campaign data to process.');
+        setCampaigns([]);
+        setChartData(null);
+        toast({
+          title: 'Processing Error',
+          description: 'No valid campaign data to process.',
+          variant: 'destructive',
+        });
+        return;
+      }
 
-    try {
-      const processedData = data.map(campaign => calculateMetrics(campaign));
-      setCampaigns(processedData);
+      try {
+        const processedData = data.map(campaign => calculateMetrics(campaign));
+        setCampaigns(processedData);
 
-      // Format data for charts
-      const chartFormatted = processedData.map(c => ({
-        name: c.campaign,
-        adSpend: c.adSpend,
-        sales: c.sales,
-        acos: c.acos,
-        roas: c.roas,
-      }));
-      setChartData(chartFormatted);
+        // Format data for charts
+        const chartFormatted = processedData.map(c => ({
+          name: c.campaign,
+          adSpend: c.adSpend,
+          sales: c.sales,
+          acos: c.acos,
+          roas: c.roas,
+        }));
+        setChartData(chartFormatted);
 
-      toast({
-        title: 'Success',
-        description: `Processed ${processedData.length} campaign(s)`,
-        variant: 'default',
-      });
-      setError(null);
-    } catch (err) {
-      const errorMsg = `Failed to process campaign data: ${err instanceof Error ? err.message : 'Unknown error'}`;
-      setError(errorMsg);
-      toast({
-        title: 'Processing Error',
-        description: errorMsg,
-        variant: 'destructive',
-      });
-      setCampaigns([]);
-      setChartData(null);
-    }
-  }, []); // No dependencies needed as we're only using setState functions which are stable
+        toast({
+          title: 'Success',
+          description: `Processed ${processedData.length} campaign(s)`,
+          variant: 'default',
+        });
+        setError(null);
+      } catch (err) {
+        const errorMsg = `Failed to process campaign data: ${err instanceof Error ? err.message : 'Unknown error'}`;
+        setError(errorMsg);
+        toast({
+          title: 'Processing Error',
+          description: errorMsg,
+          variant: 'destructive',
+        });
+        setCampaigns([]);
+        setChartData(null);
+      }
+    },
+    [toast]
+  ); // Include toast in dependencies since it's used inside the callback
 
   const handleFileUpload = useCallback(
     async (event: React.ChangeEvent<HTMLInputElement>) => {
       // ... (rest of your handleFileUpload function remains the same)
     },
-    [toast, processAndSetData]
+    [toast]
   );
 
   const handleManualCalculate = () => {

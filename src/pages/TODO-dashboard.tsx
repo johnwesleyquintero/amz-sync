@@ -129,35 +129,38 @@ const TODODashboard: React.FC = () => {
 
   // --- Toggle Handler ---
   // Passed down to TaskItem components
-  const handleToggleTask = useCallback((taskId: string, completed: boolean) => {
-    setTasksData(currentData => {
-      // Create a new top-level structure
-      const newPhases = currentData.phases.map(phase => {
-        // Create new sections within the phase
-        const newSections = phase.sections.map(section => {
-          // Update tasks within the section using the recursive helper
-          const updatedTasks = updateTaskStatus(section.tasks, taskId, completed);
-          // If tasks changed, return a new section object
-          if (updatedTasks !== section.tasks) {
-            return { ...section, tasks: updatedTasks };
+  const handleToggleTask = useCallback(
+    (taskId: string, completed: boolean) => {
+      setTasksData(currentData => {
+        // Create a new top-level structure
+        const newPhases = currentData.phases.map(phase => {
+          // Create new sections within the phase
+          const newSections = phase.sections.map(section => {
+            // Update tasks within the section using the recursive helper
+            const updatedTasks = updateTaskStatus(section.tasks, taskId, completed);
+            // If tasks changed, return a new section object
+            if (updatedTasks !== section.tasks) {
+              return { ...section, tasks: updatedTasks };
+            }
+            return section; // Otherwise, return the original section
+          });
+          // If sections changed, return a new phase object
+          if (newSections !== phase.sections) {
+            return { ...phase, sections: newSections };
           }
-          return section; // Otherwise, return the original section
+          return phase; // Otherwise, return the original phase
         });
-        // If sections changed, return a new phase object
-        if (newSections !== phase.sections) {
-          return { ...phase, sections: newSections };
-        }
-        return phase; // Otherwise, return the original phase
-      });
 
-      // If phases changed, return a new data object
-      if (newPhases !== currentData.phases) {
-        return { ...currentData, phases: newPhases };
-      }
-      return currentData; // Otherwise, return the original data (no change needed)
-    });
-    // Note: Progress bars will automatically update on re-render due to state change
-  }, []); // No dependencies needed for this specific useCallback
+        // If phases changed, return a new data object
+        if (newPhases !== currentData.phases) {
+          return { ...currentData, phases: newPhases };
+        }
+        return currentData; // Otherwise, return the original data (no change needed)
+      });
+      // Note: Progress bars will automatically update on re-render due to state change
+    },
+    [updateTaskStatus]
+  ); // Include updateTaskStatus in dependencies since it's used inside the callback
 
   return (
     <MainLayout>
