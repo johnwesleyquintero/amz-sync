@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Wrench } from 'lucide-react';
+import { ArrowRight, Wrench, Github } from 'lucide-react';
 
 const Landing = () => {
   return (
@@ -14,6 +14,16 @@ const Landing = () => {
             </span>
           </div>
           <div className="flex items-center gap-4">
+            <a
+              href="https://github.com/johnwesleyquintero/my-amazon-analytics"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Button className="bg-gray-900 text-white hover:bg-gray-800 font-bold">
+                <Github className="mr-2 h-4 w-4" />
+                GitHub
+              </Button>
+            </a>
             <Link to="/tools">
               <Button className="bg-gold text-black hover:bg-gold/90 font-bold">
                 <Wrench className="mr-2 h-4 w-4" />
