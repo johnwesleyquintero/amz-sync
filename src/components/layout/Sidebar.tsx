@@ -1,11 +1,12 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button'; // Import Button
 import {
   BarChart3,
   FileSpreadsheet,
   Settings,
-  Home,
+  // Home, // Home icon wasn't used, removed unless needed elsewhere
   Users,
   LayoutDashboard,
   Search,
@@ -16,6 +17,7 @@ import {
 const Sidebar = () => {
   const location = useLocation();
 
+  // Navigation items remain the same
   const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
     { name: 'Search Analytics', href: '/search-analytics', icon: Search },
@@ -28,37 +30,52 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className="w-64 border-r border-border bg-white dark:bg-sidebar">
+    <aside className="w-64 border-r border-border bg-white dark:bg-sidebar flex-shrink-0"> {/* Added flex-shrink-0 */}
       <div className="flex flex-col h-full">
+        {/* Header Section */}
         <div className="p-4 border-b border-border">
-          <div className="flex items-center gap-2">
+          {/* Wrap logo/title in a link to the dashboard */}
+          <Link to="/dashboard" className="flex items-center gap-2 group">
             <img src="/logo.svg" className="h-8 w-8" alt="Amazon Analytics Logo" />
-            <h1 className="text-xl font-bold">My Amazon Analytics</h1>
-          </div>
+            <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100 group-hover:text-burnt-sienna transition-colors duration-200">
+              My Amazon Analytics
+            </h1>
+          </Link>
         </div>
 
-        <nav className="flex-1 p-4 space-y-1">
+        {/* Navigation Section */}
+        <nav className="flex-1 p-4 space-y-1 overflow-y-auto"> {/* Added overflow-y-auto */}
           {navigation.map(item => (
-            <Link
-              key={item.name}
-              to={item.href}
-              className={cn('nav-link', location.pathname === item.href && 'active')}
-            >
-              <item.icon className="h-5 w-5" />
-              <span>{item.name}</span>
+            <Link key={item.name} to={item.href} className="block"> {/* Link as block */}
+              <Button
+                variant="ghost"
+                className={cn(
+                  'w-full justify-start items-center gap-3 px-3 py-2 text-sm font-medium h-auto rounded-md', // Base styles from AmazonSellerTools sidebar
+                  location.pathname === item.href || (item.href !== '/dashboard' && location.pathname.startsWith(item.href)) // Active state logic (handle sub-routes)
+                    ? 'bg-primary/10 text-primary dark:bg-primary/20' // Active styles
+                    : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground' // Default/hover styles
+                )}
+              >
+                <item.icon className="h-5 w-5 flex-shrink-0" /> {/* Consistent icon size */}
+                <span className="truncate">{item.name}</span> {/* Truncate long names */}
+              </Button>
             </Link>
           ))}
         </nav>
 
-        <div className="p-4 border-t border-border">
+        {/* Footer/User Section */}
+        <div className="p-4 border-t border-border mt-auto"> {/* Added mt-auto to push to bottom */}
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
+            <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center flex-shrink-0">
+              {/* Placeholder Initials - Replace with dynamic data if available */}
               <span className="font-medium text-sm">JD</span>
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium truncate">John Doe</p>
+              {/* Placeholder Name/Email - Replace with dynamic data */}
+              <p className="text-sm font-medium truncate text-foreground dark:text-gray-200">John Doe</p>
               <p className="text-xs text-muted-foreground truncate">john@example.com</p>
             </div>
+            {/* Optional: Add a settings/logout icon button here */}
           </div>
         </div>
       </div>

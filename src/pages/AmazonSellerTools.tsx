@@ -167,6 +167,11 @@ const CATEGORY_ORDER: string[] = [
   'Financial Analysis',
 ];
 
+/**
+ * AmazonSellerTools Component
+ * Renders a page showcasing various tools for Amazon sellers, organized by category.
+ * Features a sidebar for navigation and a main content area to display the selected tool.
+ */
 export default function AmazonSellerTools() {
   // Set the default active tool to the first tool in the list
   const [activeToolId, setActiveToolId] = useState<string>(ALL_TOOLS[0].id);
@@ -206,7 +211,7 @@ export default function AmazonSellerTools() {
   return (
     <section
       id="tools"
-      className="py-12 md:py-16 bg-gradient-to-b from-white to-blue-50 dark:from-gray-900 dark:to-slate-950" // Slightly darker end gradient for dark mode
+      className="py-12 md:py-16 bg-gradient-to-b from-white to-blue-50 dark:from-gray-900 dark:to-slate-950" // Consistent background gradient
     >
       <div className="container px-4 md:px-6">
         {/* Section Header */}
@@ -223,31 +228,37 @@ export default function AmazonSellerTools() {
         <div className="flex flex-col md:flex-row gap-6 lg:gap-8">
           {/* Sidebar Navigation */}
           <aside className="w-full md:w-64 lg:w-72 flex-shrink-0">
-            <div className="sticky top-20 space-y-6 p-4 bg-card rounded-lg shadow-sm border"> {/* Added border */}
+            {/* Sticky container for the sidebar content */}
+            <div className="sticky top-20 space-y-6 p-4 bg-card rounded-lg shadow-sm border dark:border-border"> {/* Consistent card styling */}
               {categories.map(category => (
                 <div key={category}>
+                  {/* Category Title */}
                   <h3 className="mb-3 px-2 text-sm font-semibold text-muted-foreground uppercase tracking-wider">
                     {category}
                   </h3>
+                  {/* Tool Buttons within Category */}
                   <div className="space-y-1">
                     {categorizedTools[category].map(tool => (
                       <Button
                         key={tool.id}
-                        variant="ghost" // Use ghost variant for sidebar items
+                        variant="ghost" // Ghost variant for subtle sidebar items
                         onClick={() => setActiveToolId(tool.id)}
                         className={cn(
-                          'w-full justify-start items-center gap-3 px-3 py-2 text-sm font-medium h-auto rounded-md',
+                          'w-full justify-start items-center gap-3 px-3 py-2 text-sm font-medium h-auto rounded-md', // Base styles
                           activeToolId === tool.id
-                            ? 'bg-primary/10 text-primary dark:bg-primary/20' // Active state styling
-                            : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground' // Default/hover state
+                            ? 'bg-primary/10 text-primary dark:bg-primary/20' // Active state styling (matches Sidebar.tsx)
+                            : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground' // Default/hover state (matches Sidebar.tsx)
                         )}
                       >
+                        {/* Icon wrapper */}
                         <span className={cn(activeToolId === tool.id ? 'text-primary' : '')}>{tool.icon}</span>
+                        {/* Tool Name (truncated if long) */}
                         <span className="flex-1 text-left truncate">{tool.name}</span>
+                        {/* Beta Badge (if applicable) */}
                         {tool.status === 'beta' && (
                           <Badge
-                            variant="secondary"
-                            className="ml-auto px-1.5 py-0.5 text-xs scale-90 rounded-sm font-normal"
+                            variant="secondary" // Subtle badge variant
+                            className="ml-auto px-1.5 py-0.5 text-xs scale-90 rounded-sm font-normal" // Small, rounded badge
                           >
                             Beta
                           </Badge>
@@ -263,7 +274,7 @@ export default function AmazonSellerTools() {
           {/* Content Area */}
           <main className="flex-1 min-w-0">
             {/* Render the active tool's component */}
-            {/* The tool component itself should be wrapped in <Card>...</Card> */}
+            {/* The individual tool components already contain their own <Card> wrapper */}
             {activeTool ? activeTool.component : (
               <Card>
                 <CardContent className="p-6 text-center text-muted-foreground">
@@ -272,10 +283,10 @@ export default function AmazonSellerTools() {
               </Card>
             )}
 
-            {/* Footer Section (Moved inside main content area for better context) */}
-            <div className="mt-8 p-6 bg-muted/50 dark:bg-muted/30 rounded-lg border">
+            {/* Footer Section (Provides context about the tools) */}
+            <div className="mt-8 p-6 bg-muted/50 dark:bg-muted/30 rounded-lg border dark:border-border">
               <div className="text-sm text-muted-foreground">
-                <p className="font-medium mb-2 text-foreground">About These Tools:</p>
+                <p className="font-medium mb-2 text-foreground dark:text-gray-200">About These Tools:</p>
                 <p>
                   This suite helps Amazon sellers optimize listings, analyze performance, and maximize profitability. Most tools support CSV uploads for bulk processing and provide detailed analysis with actionable insights.
                 </p>
