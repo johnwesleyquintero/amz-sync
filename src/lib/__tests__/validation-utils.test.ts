@@ -16,6 +16,8 @@ import {
   PricingOptimizationError,
 } from '../amazon-errors';
 
+import { describe, expect, it } from 'vitest';
+
 describe('Validation Utils', () => {
   describe('Campaign Data Validation', () => {
     it('should validate correct campaign data', () => {
@@ -125,11 +127,11 @@ describe('Validation Utils', () => {
 
   describe('Rate Limiting', () => {
     it('should allow requests within rate limit', () => {
-      expect(() => checkRateLimit(50, Date.now() - 1000)).not.toThrow();
+      expect(checkRateLimit(50, Date.now() - 1000)).toBe(true);
     });
 
     it('should throw error when rate limit exceeded', () => {
-      expect(() => checkRateLimit(101, Date.now() - 1000)).toThrow(SecurityError);
+      expect(() => checkRateLimit(101, Date.now() - 1000)).toThrowError(SecurityError);
     });
   });
 
