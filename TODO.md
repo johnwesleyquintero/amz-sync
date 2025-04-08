@@ -66,6 +66,21 @@ This document outlines the development roadmap for My Amazon Analytics, an enter
   - [ ] **Accessibility:**
     - [ ] **ARIA Attributes:** Ensure all interactive elements have appropriate ARIA attributes.
     - [ ] **Keyboard Navigation:** Verify keyboard navigation for tab navigation and tool interactions.
+  - [ ] **AmazonSellerTools.tsx Improvements:**
+    - [ ] **Tool Descriptions:** Add more detail and examples to tool descriptions in the `ALL_TOOLS` array.
+    - [ ] **Tool Status:** Use the `status` property in the `ALL_TOOLS` array to indicate the development stage of each tool (e.g., "active", "beta", "alpha", "planned").
+    - [ ] **Tool Versioning:** Use the `version` property in the `ALL_TOOLS` array to track the version of each tool and provide a changelog for users.
+    - [ ] **Accessibility:** Improve the component to be more accessible to users with disabilities. This could include adding ARIA attributes and improving keyboard navigation.
+    - [ ] **Testing:** Test the component and its associated tools more thoroughly to ensure they function correctly and provide accurate results.
+    - [ ] **Component Decomposition:** Break down the `AmazonSellerTools` component into smaller, more focused components (e.g., `ToolCard`, `ToolTabs`).
+  - [ ] **General Codebase Review:**
+    - [ ] Review the codebase for potential error handling issues and improve the overall robustness of the application.
+  - [ ] **CsvUploader.tsx Improvements:**
+    - [ ] **Error Handling:** Provide more specific and user-friendly error messages.
+    - [ ] **Data Validation:** Add data type validation to ensure that the data is in the correct format.
+    - [ ] **Progress Indicator:** Provide a more accurate progress indicator that reflects the actual parsing progress.
+    - [ ] **Accessibility:** Improve the component to be more accessible to users with disabilities. This could include adding ARIA attributes and improving keyboard navigation.
+    - [ ] **File Size Limit:** Make the file size limit configurable.
 
 ### Phase 2: Basic Infrastructure & Integrations (Medium Priority)
 
@@ -150,7 +165,6 @@ This document outlines the development roadmap for My Amazon Analytics, an enter
 - **Low** - Low Priority
 - **Goal:** - The objective of the section
 - **Objective:** - The objective of the phase
-- **Priority:** - The priority of the section
 
 ---
 
