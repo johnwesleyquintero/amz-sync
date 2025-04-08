@@ -1,14 +1,14 @@
 'use client';
 
 import type React from 'react';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
 import { Progress } from '../ui/progress';
-import { Upload, AlertCircle, Download, Percent, Info } from 'lucide-react';
+import { Upload, AlertCircle, Download, Percent, Info, BarChartHorizontalBig } from 'lucide-react';
 import Papa from 'papaparse';
 import SampleCsvButton from './sample-csv-button';
 import {
@@ -23,7 +23,6 @@ import {
   LineChart,
   Line,
 } from 'recharts';
-import { ChartContainer } from '../ui/chart';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 
@@ -110,6 +109,10 @@ const AmazonAlgorithms = {
   },
 };
 
+// --- Constants ---
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const REQUIRED_COLUMNS: (keyof ProductData)[] = ['product', 'cost', 'price', 'fees'];
+
 export default function ProfitMarginCalculator() {
   const { toast } = useToast();
   const [csvData, setCsvData] = useState<ProductData[]>([]);
@@ -122,6 +125,7 @@ export default function ProfitMarginCalculator() {
     fees: 0,
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<number | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -130,72 +134,111 @@ export default function ProfitMarginCalculator() {
     }
   }, [results]);
 
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setError(null);
-    setIsLoading(true);
-    const file = event.target.files?.[0];
-    if (!file) {
-      setIsLoading(false);
-      return;
-    }
+  const handleFileUpload = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0];
+      if (event.target) event.target.value = ''; // Allow re-upload
 
-    Papa.parse<ProductData>(file, {
-      header: true,
-      dynamicTyping: true,
-      skipEmptyLines: true,
-      complete: result => {
-        try {
-          // Validate required columns
-          const requiredColumns = ['product', 'cost', 'price', 'fees'];
-          const missingColumns = requiredColumns.filter(col => !result.meta.fields.includes(col));
+      if (!file) return;
 
-          if (missingColumns.length > 0) {
-            throw new Error(`Missing required columns: ${missingColumns.join(', ')}`);
-          }
-
-          const processedData = result.data
-            .filter(
-              (item: ProductData) =>
-                item.product &&
-                !isNaN(Number(item.cost)) &&
-                !isNaN(Number(item.price)) &&
-                !isNaN(Number(item.fees))
-            )
-            .map((item: ProductData) => ({
-              product: String(item.product),
-              cost: Number(item.cost),
-              price: Number(item.price),
-              fees: Number(item.fees),
-            }));
-
-          if (processedData.length === 0) {
-            throw new Error('No valid data found in CSV');
-          }
-
-          setCsvData(processedData);
-          calculateResults(processedData);
-        } catch (err) {
-          setError(`Error processing CSV file: ${err.message}`);
-          toast({
-            title: 'CSV Error',
-            description: `Error processing CSV file: ${err.message}`,
-            variant: 'destructive',
-          });
-        } finally {
-          setIsLoading(false);
-        }
-      },
-      error: error => {
-        setError(`Error parsing CSV: ${error.message}`);
+      if (file.size > MAX_FILE_SIZE) {
         toast({
-          title: 'CSV Error',
-          description: `Error parsing CSV: ${error.message}`,
+          title: 'Error',
+          description: `File size exceeds ${MAX_FILE_SIZE / (1024 * 1024)}MB`,
           variant: 'destructive',
         });
-        setIsLoading(false);
-      },
-    });
-  };
+        return;
+      }
+      if (!file.name.toLowerCase().endsWith('.csv')) {
+        toast({
+          title: 'Error',
+          description: 'Invalid file type. Please upload a CSV.',
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      setIsLoading(true);
+      setUploadProgress(0);
+      setError(null);
+      setResults([]); // Clear previous data
+
+      Papa.parse<ProductData>(file, {
+        header: true,
+        skipEmptyLines: true,
+        dynamicTyping: false, // Keep as strings for initial validation
+        step: (results, parser) => {
+          // Estimate progress
+          if (file.size > 0) {
+            const progress = results.meta.cursor / file.size;
+            setUploadProgress(Math.min(progress * 100, 99)); // Cap at 99 until complete
+          }
+        },
+        complete: result => {
+          setUploadProgress(100);
+
+          if (result.errors.length > 0) {
+            const errorMsg = `CSV parsing completed with errors: ${result.errors
+              .slice(0, 3)
+              .map(e => `Row ${e.row}: ${e.message}`)
+              .join('; ')}...`;
+            console.warn('CSV Parsing Errors:', result.errors);
+            setError(errorMsg);
+            toast({
+              title: 'CSV Warning',
+              description: 'Some rows had parsing errors. Check console.',
+              variant: 'default',
+            });
+          }
+
+          // Validate required columns exist
+          const headers = result.meta.fields;
+          const missingColumns = REQUIRED_COLUMNS.filter(col => !headers?.includes(col));
+          if (missingColumns.length > 0) {
+            const errMsg = `Missing required columns: ${missingColumns.join(', ')}`;
+            setError(errMsg);
+            toast({ title: 'Upload Error', description: errMsg, variant: 'destructive' });
+            setIsLoading(false);
+            setUploadProgress(null);
+            return;
+          }
+
+          const validData = result.data.filter(
+            item => item.product && item.cost && item.price && item.fees
+          ); // Basic check
+
+          if (validData.length === 0) {
+            setError('No data rows with required fields found in the CSV file.');
+            toast({
+              title: 'Upload Error',
+              description: 'No valid data rows found.',
+              variant: 'destructive',
+            });
+            setIsLoading(false);
+            setUploadProgress(null);
+            return;
+          }
+
+          setCsvData(validData);
+          calculateResults(validData);
+          toast({
+            title: 'CSV Processed',
+            description: `${validData.length} product(s) loaded from file.`,
+            variant: 'default',
+          });
+        },
+        error: error => {
+          const errorMsg = `Failed to parse CSV: ${error.message}`;
+          setError(errorMsg);
+          toast({ title: 'Upload Error', description: errorMsg, variant: 'destructive' });
+          setResults([]);
+          setIsLoading(false);
+          setUploadProgress(null);
+        },
+      });
+    },
+    [toast]
+  );
 
   const calculateResults = (data: ProductData[]) => {
     if (!data || data.length === 0) {
@@ -365,44 +408,83 @@ export default function ProfitMarginCalculator() {
     });
   };
 
+  const clearAllData = useCallback(() => {
+    setResults([]);
+    setCsvData([]);
+    setError(null);
+    setManualProduct({ product: '', cost: 0, price: 0, fees: 0 });
+    if (fileInputRef.current) fileInputRef.current.value = '';
+    toast({ title: 'Data Cleared', description: 'All profit margin data has been cleared.' });
+  }, [toast]);
+
   return (
-    <Card className="w-full max-w-4xl mx-auto">
-      <CardHeader className="flex flex-row items-center space-y-0 pb-2">
-        <Percent className="mr-2 h-6 w-6" />
-        <CardTitle className="text-2xl font-bold">Profit Margin Calculator</CardTitle>
-        <CardDescription>Calculate and analyze your product's profitability.</CardDescription>
+    <Card>
+      <CardHeader>
+        <CardTitle>Profit Margin Calculator</CardTitle>
+        <CardDescription>
+          Calculate and analyze your product's profitability.
+        </CardDescription>
       </CardHeader>
-      <CardContent className="p-6 space-y-6">
+      <CardContent className="space-y-6">
+        {/* CSV Format Info */}
+        <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg flex items-start gap-3">
+          <Info className="h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0" />
+          <div className="text-sm text-blue-700 dark:text-blue-300">
+            <p className="font-medium">CSV Format Requirements:</p>
+            <p>
+              Your CSV file should have the following columns: <code>product</code>, <code>cost</code>
+              , <code>price</code>, <code>fees</code>
+            </p>
+            <p className="mt-1">
+              Example: <code>product,cost,price,fees</code>
+              <br />
+              <code>Wireless Earbuds,22.50,49.99,7.25</code>
+            </p>
+          </div>
+        </div>
+
         {/* Input Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* CSV Upload */}
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="csv-upload">Upload CSV File</Label>
-              <div className="flex items-center gap-2">
-                <Input
-                  id="csv-upload"
-                  type="file"
-                  accept=".csv"
-                  ref={fileInputRef}
-                  onChange={handleFileUpload}
-                  className="hidden"
-                />
-                <Button variant="outline" onClick={() => fileInputRef.current?.click()}>
-                  <Upload className="mr-2 h-4 w-4" />
-                  Upload CSV
-                </Button>
-                <SampleCsvButton dataType="fba" fileName="sample-fba-calculator.csv" />
-              </div>
-              <p className="text-sm text-muted-foreground">
-                CSV should have columns: product, cost, price, fees
-              </p>
+          <div className="space-y-4 rounded-lg border p-4">
+            <h3 className="text-md font-semibold mb-2">1. Upload CSV Data</h3>
+            <Label htmlFor="csv-upload" className="flex items-center gap-1 mb-1 text-sm font-medium">
+              Product Data (CSV)
+            </Label>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={isLoading}
+                className="flex-grow justify-start text-left"
+              >
+                <Upload className="mr-2 h-4 w-4" />
+                {results.length > 0 ? `${results.length} Product(s) Loaded` : 'Choose CSV File...'}
+              </Button>
+              <Input
+                id="csv-upload"
+                type="file"
+                accept=".csv"
+                ref={fileInputRef}
+                onChange={handleFileUpload}
+                className="hidden"
+                disabled={isLoading}
+              />
+              <SampleCsvButton dataType="fba" fileName="sample-fba-calculator.csv" size="sm" buttonText="Sample" />
             </div>
+            {isLoading && uploadProgress !== null && (
+              <div className="mt-2 space-y-1">
+                <Progress value={uploadProgress} className="h-2 w-full" />
+                <p className="text-xs text-muted-foreground text-center">Processing file... {uploadProgress.toFixed(0)}%</p>
+              </div>
+            )}
+            {results.length > 0 && !isLoading && <p className="text-xs text-green-600 mt-1">{results.length} product(s) loaded from file.</p>}
           </div>
 
           {/* Manual Input */}
-          <div className="space-y-4">
-            <h3 className="font-medium">Or Enter Manually</h3>
+          <div className="space-y-4 rounded-lg border p-4">
+            <h3 className="text-md font-semibold mb-2">2. Or Enter Manually</h3>
             <form onSubmit={handleManualSubmit} className="space-y-3">
               <div>
                 <Label htmlFor="product">Product Name</Label>
@@ -418,37 +500,39 @@ export default function ProfitMarginCalculator() {
                   placeholder="Product name"
                 />
               </div>
-              <div>
-                <Label htmlFor="cost">Product Cost ($)</Label>
-                <Input
-                  id="cost"
-                  type="number"
-                  value={manualProduct.cost || ''}
-                  onChange={e =>
-                    setManualProduct({
-                      ...manualProduct,
-                      cost: e.target.valueAsNumber,
-                    })
-                  }
-                  placeholder="0.00"
-                  step="0.01"
-                />
-              </div>
-              <div>
-                <Label htmlFor="price">Selling Price ($)</Label>
-                <Input
-                  id="price"
-                  type="number"
-                  value={manualProduct.price || ''}
-                  onChange={e =>
-                    setManualProduct({
-                      ...manualProduct,
-                      price: e.target.valueAsNumber,
-                    })
-                  }
-                  placeholder="0.00"
-                  step="0.01"
-                />
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <Label htmlFor="cost">Product Cost ($)</Label>
+                  <Input
+                    id="cost"
+                    type="number"
+                    value={manualProduct.cost || ''}
+                    onChange={e =>
+                      setManualProduct({
+                        ...manualProduct,
+                        cost: e.target.valueAsNumber,
+                      })
+                    }
+                    placeholder="0.00"
+                    step="0.01"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="price">Selling Price ($)</Label>
+                  <Input
+                    id="price"
+                    type="number"
+                    value={manualProduct.price || ''}
+                    onChange={e =>
+                      setManualProduct({
+                        ...manualProduct,
+                        price: e.target.valueAsNumber,
+                      })
+                    }
+                    placeholder="0.00"
+                    step="0.01"
+                  />
+                </div>
               </div>
               <div>
                 <Label htmlFor="fees">Fees ($)</Label>
@@ -466,24 +550,45 @@ export default function ProfitMarginCalculator() {
                   step="0.01"
                 />
               </div>
-              <Button type="submit" className="w-full">
+              <Button type="submit" className="w-full" disabled={isLoading}>
                 Calculate
               </Button>
             </form>
           </div>
         </div>
 
+        {/* Action Buttons */}
+        <div className="flex flex-wrap items-center gap-4">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={clearAllData}
+            disabled={isLoading && uploadProgress !== null} // Disable clear during upload
+          >
+            Clear All Data
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleExport}
+            disabled={results.length === 0 || isLoading}
+          >
+            <Download className="mr-2 h-4 w-4" />
+            Export Results
+          </Button>
+        </div>
+
         {/* Loading and Error States */}
-        {isLoading && (
-          <div className="space-y-2 py-4 text-center">
-            <Progress value={33} className="h-2" />
-            <p className="text-sm text-muted-foreground">Processing data...</p>
-          </div>
-        )}
         {error && (
           <div className="flex items-center gap-2 rounded-lg bg-red-100 p-3 text-red-800 dark:bg-red-900/30 dark:text-red-400">
             <AlertCircle className="h-5 w-5" />
             <span>{error}</span>
+          </div>
+        )}
+        {isLoading && uploadProgress === null && (
+          <div className="mt-2 space-y-1 text-center">
+            <BarChartHorizontalBig className="mx-auto h-6 w-6 animate-pulse text-primary" />
+            <p className="text-sm text-muted-foreground">Calculating metrics...</p>
           </div>
         )}
 
@@ -525,33 +630,30 @@ export default function ProfitMarginCalculator() {
             </div>
 
             {/* Table */}
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Product</TableHead>
-                  <TableHead className="text-right">Profit</TableHead>
-                  <TableHead className="text-right">Margin</TableHead>
-                  <TableHead className="text-right">ROI</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {results.map((result, index) => (
-                  <TableRow key={index}>
-                    <TableCell>{result.product}</TableCell>
-                    <TableCell className="text-right">${result.profit?.toFixed(2)}</TableCell>
-                    <TableCell className="text-right">{result.margin}%</TableCell>
-                    <TableCell className="text-right">{result.roi}%</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-
-            {/* Export Button */}
-            <div className="flex justify-end gap-2">
-              <Button variant="outline" size="sm" onClick={handleExport}>
-                <Download className="mr-2 h-4 w-4" />
-                Export as CSV
-              </Button>
+            <div className="rounded-lg border">
+              <h3 className="text-md font-semibold mb-0 px-4 py-3 border-b">Profit Margin Results</h3>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Product</TableHead>
+                      <TableHead className="text-right">Profit</TableHead>
+                      <TableHead className="text-right">Margin</TableHead>
+                      <TableHead className="text-right">ROI</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {results.map((result, index) => (
+                      <TableRow key={index}>
+                        <TableCell>{result.product}</TableCell>
+                        <TableCell className="text-right">${result.profit?.toFixed(2)}</TableCell>
+                        <TableCell className="text-right">{result.margin}%</TableCell>
+                        <TableCell className="text-right">{result.roi}%</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
             </div>
           </div>
         )}
