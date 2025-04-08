@@ -2,6 +2,9 @@
 import Papa from 'papaparse';
 import { toast } from '@/hooks/use-toast';
 
+const BATCH_SIZE = 1000; // Process 1000 rows at a time
+const CACHE_KEY_PREFIX = 'csv_cache_';
+
 export interface CsvRow {
   asin: string;
   price: string;
@@ -52,13 +55,57 @@ export const processCsvData = (csvData: CsvRow[]): ProcessedRow[] => {
   }));
 };
 
+interface ParseProgress {
+  processed: number;
+  total: number;
+  currentBatch: number;
+}
+
+export const getCacheKey = (file: File): string => {
+  return `${CACHE_KEY_PREFIX}${file.name}_${file.size}_${file.lastModified}`;
+};
+
 export const parseAndValidateCsv = async <T extends CsvRow>(
   file: File,
+  onProgress?: (progress: ParseProgress) => void,
 ): Promise<{ data: T[]; error: string | null }> => {
+  // Check cache first
+  const cacheKey = getCacheKey(file);
+  const cached = localStorage.getItem(cacheKey);
+  if (cached) {
+    try {
+      const parsedCache = JSON.parse(cached);
+      return { data: parsedCache as T[], error: null };
+    } catch (e) {
+      localStorage.removeItem(cacheKey);
+    }
+  }
   return new Promise((resolve) => {
+    let processedRows: T[] = [];
+    let currentBatch = 0;
+    
     Papa.parse<T>(file, {
       header: true,
       skipEmptyLines: true,
+      chunk: (results, parser) => {
+        const rows = results.data as T[];
+        processedRows = [...processedRows, ...rows];
+        currentBatch++;
+        
+        if (onProgress) {
+          onProgress({
+            processed: processedRows.length,
+            total: -1, // Unknown total until complete
+            currentBatch,
+          });
+        }
+        
+        // Process in batches to avoid blocking the UI
+        if (processedRows.length >= BATCH_SIZE) {
+          parser.pause();
+          setTimeout(() => parser.resume(), 0);
+        }
+      },
       complete: (results) => {
         if (results.errors.length > 0) {
           resolve({
@@ -81,7 +128,23 @@ export const parseAndValidateCsv = async <T extends CsvRow>(
           return;
         }
 
-        const processedData = processCsvData(results.data);
+        const processedData = processCsvData(processedRows);
+        
+        // Cache the results
+        try {
+          localStorage.setItem(cacheKey, JSON.stringify(processedData));
+        } catch (e) {
+          console.warn('Failed to cache CSV data:', e);
+        }
+        
+        if (onProgress) {
+          onProgress({
+            processed: processedData.length,
+            total: processedData.length,
+            currentBatch,
+          });
+        }
+        
         resolve({ data: processedData as T[], error: null });
       },
       error: (error) => {
