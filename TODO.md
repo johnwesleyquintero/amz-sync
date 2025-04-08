@@ -29,7 +29,17 @@ This document outlines the development roadmap for My Amazon Analytics, an enter
   - [ ] **Tool UI:** Develop a user interface for the tools.
   - [ ] **Data Handling:** Implement data fetching and processing for the tools.
   - [ ] **Security & Compliance:** Ensure the tools are secure and compliant with Amazon's API guidelines.
-  - [ ] **Testing:** Test the tools thoroughly.
+  - [ ] **Testing:** 
+    - [ ] Implement comprehensive test suites for core algorithms (acos-utils, validation-utils)
+    - [ ] Add integration tests for CSV data validation workflows
+    - [ ] Achieve 80% test coverage for all utility libraries
+
+  - [ ] **Technical Debt**:
+    - [ ] Enhance CSV validation with schema-based parsing (owner: @dev/backend)
+    - [ ] Implement React error boundary components (owner: @dev/frontend)
+    - [ ] Improve TypeScript type definitions for Amazon API responses
+    - [ ] Add performance monitoring to core algorithms
+    - [ ] Migrate test framework to Vitest for faster execution
   - [ ] **Documentation & Support:** Document the tools and provide support.
   - [ ] **Individual Tools:**
     - [ ] FBA Calculator
