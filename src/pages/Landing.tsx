@@ -149,10 +149,10 @@ const Landing = () => {
             <div className="space-y-4">
               <h4 className="text-lg font-semibold text-jaffa">Legal</h4>
               <nav className="space-y-2">
-                <Link to="/privacy" className="block text-gray-600 hover:text-jaffa transition-colors">
+                <Link to="/privacy-policy" className="block text-gray-600 hover:text-jaffa transition-colors">
                   Privacy Policy
                 </Link>
-                <Link to="/terms" className="block text-gray-600 hover:text-jaffa transition-colors">
+                <Link to="/terms-of-service" className="block text-gray-600 hover:text-jaffa transition-colors">
                   Terms of Service
                 </Link>
                 <Link to="/security" className="block text-gray-600 hover:text-jaffa transition-colors">
