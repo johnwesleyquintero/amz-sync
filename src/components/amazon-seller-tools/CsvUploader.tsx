@@ -80,7 +80,7 @@ export default function CsvUploader<T extends CsvRow>({
           },
         });
       },
-      [onUploadComplete, toast]
+      [onUploadSuccess, toast]
     );
 
     const handleUploadError = (error: unknown) => {
@@ -156,7 +156,7 @@ export default function CsvUploader<T extends CsvRow>({
           },
         });
       },
-      [onUploadSuccess, requiredColumns, toast, handleUploadError]
+      [onUploadSuccess, toast, handleUploadError]
     );
 
     const onDrop = useCallback(

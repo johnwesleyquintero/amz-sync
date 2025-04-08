@@ -6,10 +6,17 @@ import { Button } from '@/components/ui/button';
 import { AlertCircle, CheckCircle, Upload } from 'lucide-react';
 
 interface CsvProcessorProps {
-  onProcessComplete?: (data: any[]) => void;
-  validateRow?: (row: any) => boolean;
+  onProcessComplete?: (data: CSVData[]) => void;
+  validateRow?: (row: CSVData) => boolean;
   batchSize?: number;
 }
+
+type CSVData = Record<string, string> & {
+  meta?: {
+    fields?: string[];
+    errors?: Papa.ParseError[];
+  };
+};
 
 export function CsvProcessor({
   onProcessComplete,

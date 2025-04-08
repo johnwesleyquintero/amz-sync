@@ -8,7 +8,11 @@ import { Dialog, DialogContent } from '@/components/ui/dialog';
 
 const Command = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive>,
-  React.ComponentPropsWithoutRef<typeof CommandPrimitive>
+  React.ComponentPropsWithoutRef<typeof CommandPrimitive> & {
+    shouldFilter?: boolean;
+    filter?: (value: string, search: string) => number;
+    loop?: boolean;
+  }
 >(({ className, ...props }, ref) => (
   <CommandPrimitive
     ref={ref}
