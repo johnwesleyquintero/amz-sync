@@ -437,6 +437,20 @@
                     },
                     {
                       "id": "p1-s1-t14-sub1-sub4",
+                      "text": "Implement component decomposition plan for complex UI elements",
+                      "completed": false,
+                      "owner": "@dev/design",
+                      "subTasks": []
+                    },
+                    {
+                      "id": "p1-s1-t14-sub1-sub5",
+                      "text": "Create atomic design system documentation for UI consistency",
+                      "completed": false,
+                      "owner": "@dev/design",
+                      "subTasks": []
+                    },
+                    {
+                      "id": "p1-s1-t14-sub1-sub4",
                       "text": "Unify beta badge positioning and styling in tool headers",
                       "completed": false,
                       "owner": null,
