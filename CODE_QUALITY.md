@@ -89,10 +89,10 @@ import { execSync } from 'child_process';
 
 // Define the sequence of commands based on your package.json scripts
 const commands = [
-  { name: 'format', script: 'npm run format' },    // Formats the code
-  { name: 'lint', script: 'npm run lint' },        // Lints the code
+  { name: 'format', script: 'npm run format' }, // Formats the code
+  { name: 'lint', script: 'npm run lint' }, // Lints the code
   { name: 'typecheck', script: 'npm run typecheck' }, // Checks types
-  { name: 'build', script: 'npm run build' }        // Builds the project
+  { name: 'build', script: 'npm run build' }, // Builds the project
 ];
 
 (async () => {
@@ -106,11 +106,17 @@ const commands = [
       // Execute the command, inherit stdio to see output/errors in real-time
       execSync(script, { stdio: 'inherit' });
       const stepEndTime = Date.now();
-      console.log(chalk.gray(`  Completed ${name} in ${((stepEndTime - stepStartTime) / 1000).toFixed(2)}s`));
+      console.log(
+        chalk.gray(`  Completed ${name} in ${((stepEndTime - stepStartTime) / 1000).toFixed(2)}s`)
+      );
     }
 
     const endTime = Date.now();
-    console.log(chalk.green(`\n✔ All code quality checks passed successfully in ${((endTime - startTime) / 1000).toFixed(2)}s!`));
+    console.log(
+      chalk.green(
+        `\n✔ All code quality checks passed successfully in ${((endTime - startTime) / 1000).toFixed(2)}s!`
+      )
+    );
     process.exit(0); // Exit with success code
   } catch (error) {
     // execSync throws an error if the command fails (exits non-zero)
