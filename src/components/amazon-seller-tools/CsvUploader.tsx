@@ -38,14 +38,13 @@ export default function CsvUploader<T extends CsvRow>({
   dataType,
   fileName,
 }: CsvUploaderProps<T>) {
-  const CsvUploader: React.FC<CsvUploaderProps> = ({ onUploadComplete }) => {
+  const CsvUploader: React.FC<CsvUploaderProps> = ({ onUploadSuccess }) => {
     const [isDragging, setIsDragging] = useState(false);
     const [validationErrors, setValidationErrors] = useState<string[]>([]);
     const [parsingProgress, setParsingProgress] = useState(0);
 
     const { toast } = useToast();
-
-    const validateCSV = (results: Papa.ParseResult<any>) => {
+    const validateCSV = (results: Papa.ParseResult<unknown>) => {
       const errors = validateCSVSchema(results.meta.fields, results.data);
       if (errors.length > 0) {
         setValidationErrors(errors);
@@ -157,7 +156,7 @@ export default function CsvUploader<T extends CsvRow>({
           },
         });
       },
-      [onUploadSuccess, requiredColumns, toast]
+      [onUploadSuccess, requiredColumns, toast, handleUploadError]
     );
 
     const onDrop = useCallback(

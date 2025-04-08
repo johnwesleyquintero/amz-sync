@@ -9,8 +9,15 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 
+interface ChartData {
+  date: string;
+  impressions: number;
+  clicks: number;
+  conversions: number;
+}
+
 interface PerformanceChartProps {
-  data: any[];
+  data: ChartData[];
 }
 
 const PerformanceChart: React.FC<PerformanceChartProps> = ({ data }) => {
