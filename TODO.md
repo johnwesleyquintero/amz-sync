@@ -78,6 +78,11 @@ This document outlines the development roadmap for My Amazon Analytics, an enter
     - [ ] **Loading Indicator:** Add a loading indicator for tool components.
     - [ ] **Error Handling:** Display an error message if a tool component fails to load.
   - [ ] **Maintainability & Code Quality:**
+    - [ ] **UI Consistency Audit:**
+      - [ ] Create UI style guide document outlining spacing, typography and container requirements
+      - [ ] Standardize ToolLabel component usage across all tools
+      - [ ] Align container padding/margins in ToolCard components
+      - [ ] Unify beta badge positioning and styling in tool headers
     - [ ] **Component Decomposition:** Break down the `FeaturedToolsSection` component into smaller, more focused components (e.g., `ToolCard`, `ToolTabs`).
     - [ ] **Consistent Styling:** Use consistent styling across all tool components.
     - [ ] **Version Management:** Make the version number a variable or pull it from a configuration file.

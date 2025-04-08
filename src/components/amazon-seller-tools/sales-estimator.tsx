@@ -1,3 +1,4 @@
+// src/components/amazon-seller-tools/sales-estimator.tsx
 'use client';
 
 import React, { useState, useRef, useCallback, useEffect } from 'react';
@@ -28,6 +29,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 import Papa from 'papaparse';
 import SampleCsvButton from './sample-csv-button';
 import { cn } from '@/lib/utils';
+import ToolLabel from '../ui/tool-label'; // Import ToolLabel
 
 // --- Interfaces and Types ---
 
@@ -133,6 +135,7 @@ export default function SalesEstimator() {
         if (!isManualEntry) {
           setProducts([]);
         }
+        setIsLoading(false); // Ensure loading stops
         return;
       }
 
@@ -144,9 +147,15 @@ export default function SalesEstimator() {
           .map((item, index) => {
             const price = Number(item.price);
             const competitionStr = String(item.competition).trim();
+            // Validate competition level
             const competition = COMPETITION_LEVELS.includes(competitionStr as CompetitionLevel)
               ? (competitionStr as CompetitionLevel)
-              : DEFAULT_COMPETITION; // Default if invalid
+              : DEFAULT_COMPETITION;
+            if (!COMPETITION_LEVELS.includes(competitionStr as CompetitionLevel)) {
+              console.warn(
+                `Invalid competition level '${competitionStr}' for product '${item.product}'. Using default '${DEFAULT_COMPETITION}'.`
+              );
+            }
 
             // Basic validation
             if (!item.product || !item.category || isNaN(price) || price <= 0) {
@@ -340,15 +349,17 @@ export default function SalesEstimator() {
     processAndSetData([manualRawData], true); // Process as manual entry
 
     // Reset form only if processing was successful (no error remained)
-    // Note: processAndSetData clears error on success
-    if (!error) {
-      setManualProduct({
-        product: '',
-        category: '',
-        price: '',
-        competition: DEFAULT_COMPETITION,
-      });
-    }
+    // Use setTimeout to allow state update before checking error
+    setTimeout(() => {
+      if (!error) {
+        setManualProduct({
+          product: '',
+          category: '',
+          price: '',
+          competition: DEFAULT_COMPETITION,
+        });
+      }
+    }, 0);
   }, [manualProduct, processAndSetData, toast, error]); // Add dependencies
 
   const clearAllData = useCallback(() => {
@@ -392,9 +403,9 @@ export default function SalesEstimator() {
         description: 'Sales estimates exported successfully.',
         variant: 'default',
       });
-    } catch (error) {
+    } catch (exportError) {
       const errorMsg = `Error exporting data: ${
-        error instanceof Error ? error.message : 'Unknown error'
+        exportError instanceof Error ? error.message : 'Unknown error'
       }`;
       setError(errorMsg);
       toast({ title: 'Export Error', description: errorMsg, variant: 'destructive' });
@@ -426,11 +437,12 @@ export default function SalesEstimator() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Sales Estimator</CardTitle>
-        <CardDescription>
-          Estimate potential monthly sales and revenue based on product category, price, and
-          competition level.
-        </CardDescription>
+        {/* Use ToolLabel consistent with other tools */}
+        <ToolLabel
+          title="Sales Estimator"
+          description="Estimate potential monthly sales and revenue based on product category, price, and competition level."
+          status="beta" // Keep status if needed
+        />
       </CardHeader>
       <CardContent className="space-y-6">
         {/* CSV Format Info */}
@@ -499,7 +511,7 @@ export default function SalesEstimator() {
               />
               {/* Update dataType and fileName for SampleCsvButton */}
               <SampleCsvButton
-                dataType="competitor"
+                dataType="competitor" // Assuming 'competitor' type has the right columns
                 fileName="sample-sales-estimator.csv"
                 size="sm"
                 buttonText="Sample"
@@ -644,6 +656,8 @@ export default function SalesEstimator() {
         {/* Results Display */}
         {products.length > 0 && !isLoading && (
           <div className="mt-6 space-y-8">
+            {' '}
+            {/* Increased spacing */}
             {/* Summary Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <Card>
@@ -686,7 +700,6 @@ export default function SalesEstimator() {
                 </CardHeader>
               </Card>
             </div>
-
             {/* Data Table */}
             <div className="rounded-lg border">
               <h3 className="text-md font-semibold mb-0 px-4 py-3 border-b">Sales Estimates</h3>
@@ -720,10 +733,10 @@ export default function SalesEstimator() {
                           <Badge
                             variant={
                               product.competition === 'Low'
-                                ? 'default'
+                                ? 'default' // Use default (often green/blue) for Low
                                 : product.competition === 'Medium'
-                                  ? 'secondary'
-                                  : 'destructive'
+                                  ? 'secondary' // Use secondary (often gray/yellow) for Medium
+                                  : 'destructive' // Use destructive (red) for High
                             }
                           >
                             {product.competition}
@@ -742,7 +755,7 @@ export default function SalesEstimator() {
                                 ? 'default'
                                 : product.confidence === 'Medium'
                                   ? 'secondary'
-                                  : 'outline'
+                                  : 'outline' // Use outline for Low confidence
                             }
                           >
                             {product.confidence}
@@ -754,9 +767,10 @@ export default function SalesEstimator() {
                 </Table>
               </div>
             </div>
-
             {/* Methodology Note */}
             <div className="rounded-lg border bg-muted/50 p-4">
+              {' '}
+              {/* Consistent styling */}
               <h3 className="mb-2 text-sm font-medium">Estimation Methodology</h3>
               <p className="text-sm text-muted-foreground">
                 These estimates are generated using a simplified model based on category averages,
