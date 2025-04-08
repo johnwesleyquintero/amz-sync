@@ -374,26 +374,26 @@ Tracking of key financial metrics (Revenue, Costs, Margin, ROI) over time
 Customizable date ranges and filtering (by product, category, campaign)
 Visual charts for financial trends
 📦 Component Features Overview
-Tool	Status	Version
-FBA Calculator	✅ Active	2.0.0
-Keyword Analyzer	✅ Active	2.1.0
-Listing Quality Checker	✅ Active	1.5.0
-PPC Campaign Auditor	✅ Active	2.0.0
-Description Editor	✅ Active	1.5.0
-Keyword Deduplicator	✅ Active	1.5.0
-ACoS Calculator	✅ Active	1.5.0
-Sales Estimator	✅ Active	1.0.0
-Competitor Analyzer	✅ Active	1.0.0
-Keyword Trend Analyzer	✅ Active	1.0.0
-Profit Margin Calculator	✅ Active	1.0.0
-Product Niche Analyzer	⏳ Planned	0.1.0
-Competitor Product Tracker	⏳ Planned	0.1.0
-Seasonal Product Finder	⏳ Planned	0.1.0
-Listing Split Tester (A/B Tester)	⏳ Planned	0.1.0
-Image Optimization Analyzer	⏳ Planned	0.1.0
-PPC Keyword Bid Optimizer	⏳ Planned	0.1.0
-Negative Keyword Miner	⏳ Planned	0.1.0
-Profitability Dashboard	⏳ Planned	0.1.0
+Tool Status Version
+FBA Calculator ✅ Active 2.0.0
+Keyword Analyzer ✅ Active 2.1.0
+Listing Quality Checker ✅ Active 1.5.0
+PPC Campaign Auditor ✅ Active 2.0.0
+Description Editor ✅ Active 1.5.0
+Keyword Deduplicator ✅ Active 1.5.0
+ACoS Calculator ✅ Active 1.5.0
+Sales Estimator ✅ Active 1.0.0
+Competitor Analyzer ✅ Active 1.0.0
+Keyword Trend Analyzer ✅ Active 1.0.0
+Profit Margin Calculator ✅ Active 1.0.0
+Product Niche Analyzer ⏳ Planned 0.1.0
+Competitor Product Tracker ⏳ Planned 0.1.0
+Seasonal Product Finder ⏳ Planned 0.1.0
+Listing Split Tester (A/B Tester) ⏳ Planned 0.1.0
+Image Optimization Analyzer ⏳ Planned 0.1.0
+PPC Keyword Bid Optimizer ⏳ Planned 0.1.0
+Negative Keyword Miner ⏳ Planned 0.1.0
+Profitability Dashboard ⏳ Planned 0.1.0
 🛠️ Implementation Details
 Frontend: React with TypeScript UI Components: shadcn/ui Data Processing: Papa Parse for CSV State Management: React Hooks Styling: Tailwind CSS Charts: Recharts AI Integration: OpenAI API (or similar, for relevant tools) Data Visualization: D3.js (potentially, if needed beyond Recharts)
 

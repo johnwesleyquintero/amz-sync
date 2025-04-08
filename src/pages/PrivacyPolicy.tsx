@@ -26,10 +26,14 @@ const PrivacyPolicy = () => {
               Introduction
             </h2>
             <p className="text-gray-700 dark:text-gray-300">
-              Welcome to My Amazon Analytics. We are committed to protecting your personal information and your right to privacy. If you have any questions or concerns about this privacy notice, or our practices with regards to your personal information, please contact us.
+              Welcome to My Amazon Analytics. We are committed to protecting your personal
+              information and your right to privacy. If you have any questions or concerns about
+              this privacy notice, or our practices with regards to your personal information,
+              please contact us.
             </p>
             <p className="text-gray-700 dark:text-gray-300 mt-2">
-              This privacy notice describes how we might use your information if you visit our website, use our services, or otherwise communicate with us.
+              This privacy notice describes how we might use your information if you visit our
+              website, use our services, or otherwise communicate with us.
             </p>
           </section>
 
@@ -39,10 +43,15 @@ const PrivacyPolicy = () => {
               Information We Collect
             </h2>
             <p className="text-gray-700 dark:text-gray-300">
-              We collect personal information that you voluntarily provide to us when you register on the Services, express an interest in obtaining information about us or our products and Services, when you participate in activities on the Services, or otherwise when you contact us.
+              We collect personal information that you voluntarily provide to us when you register
+              on the Services, express an interest in obtaining information about us or our products
+              and Services, when you participate in activities on the Services, or otherwise when
+              you contact us.
             </p>
             <p className="text-gray-700 dark:text-gray-300 mt-2">
-              We also collect certain information automatically when you visit, use, or navigate the Services. This information does not reveal your specific identity but may include device and usage information.
+              We also collect certain information automatically when you visit, use, or navigate the
+              Services. This information does not reveal your specific identity but may include
+              device and usage information.
             </p>
             {/* Add more details about specific data collected */}
           </section>
@@ -53,47 +62,60 @@ const PrivacyPolicy = () => {
               How We Use Your Information
             </h2>
             <p className="text-gray-700 dark:text-gray-300">
-              We use personal information collected via our Services for a variety of business purposes described below. We process your personal information for these purposes in reliance on our legitimate business interests, in order to enter into or perform a contract with you, with your consent, and/or for compliance with our legal obligations.
+              We use personal information collected via our Services for a variety of business
+              purposes described below. We process your personal information for these purposes in
+              reliance on our legitimate business interests, in order to enter into or perform a
+              contract with you, with your consent, and/or for compliance with our legal
+              obligations.
             </p>
             {/* Add bullet points or details on usage */}
-             <ul className="list-disc list-inside text-gray-700 dark:text-gray-300 mt-2 space-y-1">
-                <li>To facilitate account creation and logon process.</li>
-                <li>To manage user accounts.</li>
-                <li>To send administrative information to you.</li>
-                <li>To protect our Services.</li>
-                <li>To respond to user inquiries/offer support to users.</li>
-                {/* Add more specific uses */}
-             </ul>
+            <ul className="list-disc list-inside text-gray-700 dark:text-gray-300 mt-2 space-y-1">
+              <li>To facilitate account creation and logon process.</li>
+              <li>To manage user accounts.</li>
+              <li>To send administrative information to you.</li>
+              <li>To protect our Services.</li>
+              <li>To respond to user inquiries/offer support to users.</li>
+              {/* Add more specific uses */}
+            </ul>
           </section>
 
           {/* Data Security Section */}
-           <section className="bg-white p-6 rounded-lg shadow-md dark:bg-gray-800 dark:border dark:border-gray-700">
+          <section className="bg-white p-6 rounded-lg shadow-md dark:bg-gray-800 dark:border dark:border-gray-700">
             <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">
               Data Security
             </h2>
             <p className="text-gray-700 dark:text-gray-300">
-              We have implemented appropriate technical and organizational security measures designed to protect the security of any personal information we process. However, despite our safeguards and efforts to secure your information, no electronic transmission over the Internet or information storage technology can be guaranteed to be 100% secure.
+              We have implemented appropriate technical and organizational security measures
+              designed to protect the security of any personal information we process. However,
+              despite our safeguards and efforts to secure your information, no electronic
+              transmission over the Internet or information storage technology can be guaranteed to
+              be 100% secure.
             </p>
           </section>
 
           {/* Your Privacy Rights Section */}
-           <section className="bg-white p-6 rounded-lg shadow-md dark:bg-gray-800 dark:border dark:border-gray-700">
+          <section className="bg-white p-6 rounded-lg shadow-md dark:bg-gray-800 dark:border dark:border-gray-700">
             <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">
               Your Privacy Rights
             </h2>
             <p className="text-gray-700 dark:text-gray-300">
-              In some regions (like the EEA, UK, and Canada), you have certain rights under applicable data protection laws. These may include the right (i) to request access and obtain a copy of your personal information, (ii) to request rectification or erasure; (iii) to restrict the processing of your personal information; and (iv) if applicable, to data portability.
+              In some regions (like the EEA, UK, and Canada), you have certain rights under
+              applicable data protection laws. These may include the right (i) to request access and
+              obtain a copy of your personal information, (ii) to request rectification or erasure;
+              (iii) to restrict the processing of your personal information; and (iv) if applicable,
+              to data portability.
             </p>
-             {/* Add details on how users can exercise rights */}
+            {/* Add details on how users can exercise rights */}
           </section>
 
           {/* Contact Us Section */}
-           <section className="bg-white p-6 rounded-lg shadow-md dark:bg-gray-800 dark:border dark:border-gray-700">
+          <section className="bg-white p-6 rounded-lg shadow-md dark:bg-gray-800 dark:border dark:border-gray-700">
             <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">
               Contact Us
             </h2>
             <p className="text-gray-700 dark:text-gray-300">
-              If you have questions or comments about this notice, you may email us at [Your Contact Email] or by post to: [Your Company Address].
+              If you have questions or comments about this notice, you may email us at [Your Contact
+              Email] or by post to: [Your Company Address].
             </p>
           </section>
 

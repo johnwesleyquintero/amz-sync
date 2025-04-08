@@ -8,10 +8,7 @@ const NotFound = () => {
 
   useEffect(() => {
     // Keep the console error logging for debugging
-    console.error(
-      '404 Error: User attempted to access non-existent route:',
-      location.pathname
-    );
+    console.error('404 Error: User attempted to access non-existent route:', location.pathname);
   }, [location.pathname]);
 
   return (
@@ -23,11 +20,10 @@ const NotFound = () => {
         {/* Icon with destructive color */}
         <h1 className="text-6xl font-bold text-primary mb-4">404</h1>{' '}
         {/* Larger heading with primary color */}
-        <p className="text-xl text-foreground mb-2">Page Not Found</p>{' '}
-        {/* Main message */}
+        <p className="text-xl text-foreground mb-2">Page Not Found</p> {/* Main message */}
         <p className="text-muted-foreground mb-8">
-          Sorry, the page you requested (<code>{location.pathname}</code>) could
-          not be found. It might have been removed or moved.
+          Sorry, the page you requested (<code>{location.pathname}</code>) could not be found. It
+          might have been removed or moved.
         </p>{' '}
         {/* Descriptive text using muted color */}
         <Button asChild>

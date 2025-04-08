@@ -78,7 +78,11 @@ export default function FbaCalculator() {
 
   // --- Calculation Logic ---
   const calculateMetrics = useCallback(
-    (cost: number, price: number, fees: number): { profit: number; roi: number; margin: number } => {
+    (
+      cost: number,
+      price: number,
+      fees: number
+    ): { profit: number; roi: number; margin: number } => {
       const profit = price - cost - fees;
       // Handle division by zero for ROI and Margin
       const roi = cost > 0 ? (profit / cost) * 100 : profit > 0 ? Infinity : 0;
@@ -698,7 +702,8 @@ export default function FbaCalculator() {
                               </TooltipTrigger>
                               <TooltipContent>
                                 <p className="text-xs">
-                                  Margin: {isFinite(item.margin) ? `${item.margin.toFixed(1)}%` : '∞'}
+                                  Margin:{' '}
+                                  {isFinite(item.margin) ? `${item.margin.toFixed(1)}%` : '∞'}
                                 </p>
                               </TooltipContent>
                             </Tooltip>

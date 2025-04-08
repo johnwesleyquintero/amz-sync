@@ -127,9 +127,7 @@ const calculateListingScore = (
   } else if (listing.description.length < MIN_DESCRIPTION_LENGTH) {
     score -= 10;
     issues.push(`Description is too short (less than ${MIN_DESCRIPTION_LENGTH} chars).`);
-    suggestions.push(
-      'Elaborate on product features, benefits, and use cases in the description.'
-    );
+    suggestions.push('Elaborate on product features, benefits, and use cases in the description.');
   } else {
     suggestions.push('Ensure description uses relevant keywords naturally.');
   }
@@ -583,8 +581,8 @@ export default function ListingQualityChecker() {
               <code>{OPTIONAL_COLUMNS.join(', ')}</code>.
             </p>
             <p>
-              <code>bullet_points</code> should be semicolon-separated (;).{' '}
-              <code>keywords</code> should be comma-separated (,).
+              <code>bullet_points</code> should be semicolon-separated (;). <code>keywords</code>{' '}
+              should be comma-separated (,).
             </p>
             <p className="mt-1">
               Example: <code>product,title,description,bullet_points,images,keywords</code>

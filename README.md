@@ -115,3 +115,5 @@ Distributed under the MIT License. See `LICENSE` for more information.
 John Wesley Quintero - [@wescode](https://twitter.com/wescode) - info.wescode@gmail.com
 
 Project Link: https://github.com/johnwesleyquintero/my-amazon-analytics
+
+---

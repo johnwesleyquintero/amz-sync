@@ -170,9 +170,7 @@ const TODODashboard: React.FC = () => {
         {/* Iterate over the state data (tasksData) instead of the static import */}
         {tasksData.phases.map((phase: Phase) => {
           // Recalculate progress based on the current state
-          const phaseProgress = calculateProgress(
-            phase.sections.flatMap(section => section.tasks)
-          );
+          const phaseProgress = calculateProgress(phase.sections.flatMap(section => section.tasks));
           return (
             <Card key={phase.id} className="phase">
               <CardHeader>

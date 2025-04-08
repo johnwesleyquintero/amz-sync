@@ -26,10 +26,12 @@ const Documentation = () => {
               Coming Soon
             </h2>
             <p className="text-gray-700 dark:text-gray-300">
-              We are currently preparing comprehensive documentation for our platform, including setup guides, tool explanations, API details, and integration instructions.
+              We are currently preparing comprehensive documentation for our platform, including
+              setup guides, tool explanations, API details, and integration instructions.
             </p>
             <p className="text-gray-700 dark:text-gray-300 mt-2">
-              Please check back soon for detailed resources to help you get the most out of My Amazon Analytics.
+              Please check back soon for detailed resources to help you get the most out of My
+              Amazon Analytics.
             </p>
           </section>
 

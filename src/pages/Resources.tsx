@@ -26,10 +26,13 @@ const Resources = () => {
               Curated Resources Coming Soon
             </h2>
             <p className="text-gray-700 dark:text-gray-300">
-              We are compiling a collection of valuable resources to help you succeed on Amazon. This section will include links to official Amazon documentation, helpful third-party tools, insightful articles, case studies, and best practice guides.
+              We are compiling a collection of valuable resources to help you succeed on Amazon.
+              This section will include links to official Amazon documentation, helpful third-party
+              tools, insightful articles, case studies, and best practice guides.
             </p>
             <p className="text-gray-700 dark:text-gray-300 mt-2">
-              Stay tuned for curated content designed to support your e-commerce journey. Check back soon!
+              Stay tuned for curated content designed to support your e-commerce journey. Check back
+              soon!
             </p>
           </section>
 

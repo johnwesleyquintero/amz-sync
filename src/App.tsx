@@ -67,7 +67,6 @@ const App = () => (
           <Route path="/todo-dashboard" element={<TODODashboard />} />
           {/* --- End TODO Dashboard Route --- */}
 
-
           {/* Placeholder Routes - Currently point to the main dashboard (Index) */}
           {/* These can be updated later to point to specific components or pages */}
           <Route path="/search-analytics" element={<Index />} />

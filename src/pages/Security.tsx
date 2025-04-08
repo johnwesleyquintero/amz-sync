@@ -26,10 +26,13 @@ const Security = () => {
               Our Commitment to Security
             </h2>
             <p className="text-gray-700 dark:text-gray-300">
-              At My Amazon Analytics, the security of your data is a top priority. We understand the sensitivity of your business information and are committed to implementing robust security measures to protect it.
+              At My Amazon Analytics, the security of your data is a top priority. We understand the
+              sensitivity of your business information and are committed to implementing robust
+              security measures to protect it.
             </p>
             <p className="text-gray-700 dark:text-gray-300 mt-2">
-              This page outlines some of the key practices and technologies we employ to safeguard your account and data integrity.
+              This page outlines some of the key practices and technologies we employ to safeguard
+              your account and data integrity.
             </p>
           </section>
 
@@ -39,7 +42,10 @@ const Security = () => {
               Data Encryption
             </h2>
             <p className="text-gray-700 dark:text-gray-300">
-              We utilize industry-standard encryption protocols to protect your data. Information is encrypted both in transit (using TLS/SSL between your browser and our servers) and at rest (when stored in our databases). Sensitive credentials, like API keys, are handled with additional layers of security.
+              We utilize industry-standard encryption protocols to protect your data. Information is
+              encrypted both in transit (using TLS/SSL between your browser and our servers) and at
+              rest (when stored in our databases). Sensitive credentials, like API keys, are handled
+              with additional layers of security.
             </p>
           </section>
 
@@ -49,7 +55,10 @@ const Security = () => {
               Infrastructure Security
             </h2>
             <p className="text-gray-700 dark:text-gray-300">
-              Our platform is hosted on secure, reliable cloud infrastructure (e.g., AWS, Google Cloud, Azure - *specify if known*) that provides robust physical security, network security, and redundancy. We employ firewalls, intrusion detection systems, and regular vulnerability scanning to protect our systems.
+              Our platform is hosted on secure, reliable cloud infrastructure (e.g., AWS, Google
+              Cloud, Azure - *specify if known*) that provides robust physical security, network
+              security, and redundancy. We employ firewalls, intrusion detection systems, and
+              regular vulnerability scanning to protect our systems.
             </p>
           </section>
 
@@ -59,7 +68,10 @@ const Security = () => {
               Access Control & Authentication
             </h2>
             <p className="text-gray-700 dark:text-gray-300">
-              Access to user data within our systems is strictly limited based on the principle of least privilege. We enforce strong password policies and recommend enabling multi-factor authentication (MFA) for your account (*if applicable*). Internal access requires secure authentication and is logged.
+              Access to user data within our systems is strictly limited based on the principle of
+              least privilege. We enforce strong password policies and recommend enabling
+              multi-factor authentication (MFA) for your account (*if applicable*). Internal access
+              requires secure authentication and is logged.
             </p>
           </section>
 
@@ -69,7 +81,10 @@ const Security = () => {
               Compliance and Best Practices
             </h2>
             <p className="text-gray-700 dark:text-gray-300">
-              We strive to adhere to industry best practices for security and data privacy. Our development lifecycle includes security reviews, and we regularly assess and update our security posture to address emerging threats. (*Mention specific compliance if applicable, e.g., GDPR, SOC 2*).
+              We strive to adhere to industry best practices for security and data privacy. Our
+              development lifecycle includes security reviews, and we regularly assess and update
+              our security posture to address emerging threats. (*Mention specific compliance if
+              applicable, e.g., GDPR, SOC 2*).
             </p>
           </section>
 
@@ -79,7 +94,8 @@ const Security = () => {
               Reporting Vulnerabilities
             </h2>
             <p className="text-gray-700 dark:text-gray-300">
-              We value the security community. If you believe you have discovered a security vulnerability in our platform, please report it responsibly to us at{' '}
+              We value the security community. If you believe you have discovered a security
+              vulnerability in our platform, please report it responsibly to us at{' '}
               <a href="mailto:info.wescode@gmail.com" className="text-primary hover:underline">
                 info.wescode@gmail.com
               </a>

@@ -7,11 +7,14 @@
     "dev": "vite",
     "build": "vite build",
     "build:dev": "vite build --mode development",
-    "lint": "eslint .",
+    "lint": "eslint . --max-warnings=0",
     "preview": "vite preview",
     "test": "vitest",
     "test:watch": "vitest watch",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "format": "prettier --write .",
+    "ci": "npm run format && npm run lint && npm run typecheck && npm run build",
+    "cq": "node scripts/code-quality.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

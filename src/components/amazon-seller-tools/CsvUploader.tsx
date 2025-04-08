@@ -60,22 +60,25 @@ export default function CsvUploader<T extends CsvRow>({
           skipEmptyLines: true,
           transformHeader: header => header.trim().toLowerCase(),
           dynamicTyping: true,
-          step: (results) => {
+          step: results => {
             setParsingProgress(Math.floor((results.meta.cursor / file.size) * 100));
           },
-          complete: (results) => {
+          complete: results => {
             try {
               validateCSV(results);
               onUploadComplete(results.data);
               setValidationErrors([]);
-              toast({ title: 'Upload successful', description: `${results.data.length} records processed` });
+              toast({
+                title: 'Upload successful',
+                description: `${results.data.length} records processed`,
+              });
             } catch (error) {
               handleUploadError(error);
             }
           },
           error: (error: Papa.ParseError) => {
             handleUploadError(error);
-          }
+          },
         });
       },
       [onUploadComplete, toast]
@@ -86,13 +89,13 @@ export default function CsvUploader<T extends CsvRow>({
         toast({
           title: 'Validation Failed',
           description: error.formattedErrors,
-          variant: 'destructive'
+          variant: 'destructive',
         });
       } else {
         toast({
           title: 'Upload Failed',
           description: (error as Error).message || 'Unknown error occurred',
-          variant: 'destructive'
+          variant: 'destructive',
         });
       }
       setValidationErrors([]);
@@ -112,7 +115,9 @@ export default function CsvUploader<T extends CsvRow>({
           complete: results => {
             setIsParsing(false);
             if (results.errors.length > 0) {
-              setParsingError(`CSV parsing errors: ${results.errors.map(e => e.message).join(', ')}`);
+              setParsingError(
+                `CSV parsing errors: ${results.errors.map(e => e.message).join(', ')}`
+              );
               toast({
                 title: 'Error',
                 description: `CSV parsing errors: ${results.errors.map(e => e.message).join(', ')}`,
@@ -121,7 +126,9 @@ export default function CsvUploader<T extends CsvRow>({
               return;
             }
 
-            const missingColumns = requiredColumns.filter(col => !results.meta.fields.includes(col));
+            const missingColumns = requiredColumns.filter(
+              col => !results.meta.fields.includes(col)
+            );
             if (missingColumns.length > 0) {
               setParsingError(`Missing required columns: ${missingColumns.join(', ')}`);
               toast({
@@ -248,4 +255,4 @@ export default function CsvUploader<T extends CsvRow>({
       </div>
     );
   };
-};
+}

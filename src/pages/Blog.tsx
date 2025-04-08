@@ -32,13 +32,15 @@ const Blog = () => {
         {/* Page Header */}
         <div className="mb-6">
           <h1 className="text-2xl font-bold">Blog</h1>
-          <p className="text-muted-foreground">Latest updates, tips, and industry insights for Amazon sellers</p>
+          <p className="text-muted-foreground">
+            Latest updates, tips, and industry insights for Amazon sellers
+          </p>
         </div>
 
         {/* Content Area - Blog Post Listing */}
         <div className="space-y-6">
           {blogPosts.length > 0 ? (
-            blogPosts.map((post) => (
+            blogPosts.map(post => (
               // Example using Card component for each post preview (uncomment imports if using)
               /*
               <Card key={post.id} className="hover:shadow-lg transition-shadow duration-200">
@@ -63,20 +65,28 @@ const Blog = () => {
                 </CardContent>
               </Card>
               */
-             // Placeholder rendering until Card structure is used
-             <section key={post.id} className="bg-white p-6 rounded-lg shadow-md dark:bg-gray-800 dark:border dark:border-gray-700">
-                <h2 className="text-xl font-semibold mb-2 text-gray-900 dark:text-gray-100">{post.title}</h2>
+              // Placeholder rendering until Card structure is used
+              <section
+                key={post.id}
+                className="bg-white p-6 rounded-lg shadow-md dark:bg-gray-800 dark:border dark:border-gray-700"
+              >
+                <h2 className="text-xl font-semibold mb-2 text-gray-900 dark:text-gray-100">
+                  {post.title}
+                </h2>
                 <p className="text-sm text-muted-foreground mb-3">Published on {post.date}</p>
                 <p className="text-gray-700 dark:text-gray-300 mb-3">{post.excerpt}</p>
                 {/* Add tags and read more link here if needed */}
-             </section>
+              </section>
             ))
           ) : (
             // Placeholder Section if no posts are available yet
             <section className="bg-white p-6 rounded-lg shadow-md dark:bg-gray-800 dark:border dark:border-gray-700">
-              <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Coming Soon</h2>
+              <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">
+                Coming Soon
+              </h2>
               <p className="text-gray-700 dark:text-gray-300">
-                We're working on bringing you valuable content. Check back soon for our latest articles, tips, and industry news related to selling on Amazon!
+                We're working on bringing you valuable content. Check back soon for our latest
+                articles, tips, and industry news related to selling on Amazon!
               </p>
             </section>
           )}

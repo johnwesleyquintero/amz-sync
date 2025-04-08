@@ -210,7 +210,8 @@ const calculateScore = (text: string, targetKeywords: string[]): number => {
   // --- Keyword Density Score (0-30 points) ---
   const keywordCount = countKeywords(text, targetKeywords);
   const keywordDensity = wordCount > 0 ? keywordCount / wordCount : 0;
-  if (keywordDensity >= 0.015 && keywordDensity <= 0.04) score += 30; // Optimal range
+  if (keywordDensity >= 0.015 && keywordDensity <= 0.04)
+    score += 30; // Optimal range
   else if (keywordDensity >= 0.005 && keywordDensity < 0.06) score += 15; // Acceptable range
 
   // --- Keyword Placement Score (0-20 points) ---
@@ -230,7 +231,8 @@ const calculateScore = (text: string, targetKeywords: string[]): number => {
     const avgSyllablesPerWord = syllables / wordCount;
     const fleschScore = 206.835 - 1.015 * avgSentenceLength - 84.6 * avgSyllablesPerWord;
 
-    if (fleschScore >= 60) score += 30; // Fairly easy to read or better
+    if (fleschScore >= 60)
+      score += 30; // Fairly easy to read or better
     else if (fleschScore >= 30) score += 15; // Standard/Difficult
     // else score += 0; // Very difficult
   }
@@ -279,9 +281,7 @@ export default function DescriptionEditor() {
       };
       setActiveProduct(updatedProduct);
       // Update in the main list as well
-      setProducts(prev =>
-        prev.map(p => (p.id === updatedProduct.id ? updatedProduct : p))
-      );
+      setProducts(prev => prev.map(p => (p.id === updatedProduct.id ? updatedProduct : p)));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [targetKeywords]); // Only run when targetKeywords change
@@ -573,7 +573,8 @@ export default function DescriptionEditor() {
                   </TooltipTrigger>
                   <TooltipContent>
                     <p className="text-xs max-w-xs">
-                      Required: {REQUIRED_COLUMNS.join(', ')}. Optional: {OPTIONAL_COLUMNS.join(', ')}.
+                      Required: {REQUIRED_COLUMNS.join(', ')}. Optional:{' '}
+                      {OPTIONAL_COLUMNS.join(', ')}.
                     </p>
                   </TooltipContent>
                 </Tooltip>

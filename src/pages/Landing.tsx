@@ -119,13 +119,22 @@ const Landing = () => {
             <div className="space-y-4">
               <h4 className="text-lg font-semibold text-burnt-sienna">Resources</h4>
               <nav className="space-y-2">
-                <Link to="/about" className="block text-gray-600 hover:text-burnt-sienna transition-colors">
+                <Link
+                  to="/about"
+                  className="block text-gray-600 hover:text-burnt-sienna transition-colors"
+                >
                   About Us
                 </Link>
-                <Link to="/documentation" className="block text-gray-600 hover:text-burnt-sienna transition-colors">
+                <Link
+                  to="/documentation"
+                  className="block text-gray-600 hover:text-burnt-sienna transition-colors"
+                >
                   Documentation
                 </Link>
-                <Link to="/blog" className="block text-gray-600 hover:text-burnt-sienna transition-colors">
+                <Link
+                  to="/blog"
+                  className="block text-gray-600 hover:text-burnt-sienna transition-colors"
+                >
                   Blog
                 </Link>
               </nav>
@@ -134,13 +143,28 @@ const Landing = () => {
             <div className="space-y-4">
               <h4 className="text-lg font-semibold text-shakespeare">Connect</h4>
               <div className="flex space-x-4">
-                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-shakespeare transition-colors">
+                <a
+                  href="https://twitter.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-600 hover:text-shakespeare transition-colors"
+                >
                   <Twitter className="h-5 w-5" />
                 </a>
-                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-shakespeare transition-colors">
+                <a
+                  href="https://linkedin.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-600 hover:text-shakespeare transition-colors"
+                >
                   <Linkedin className="h-5 w-5" />
                 </a>
-                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-shakespeare transition-colors">
+                <a
+                  href="https://facebook.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-600 hover:text-shakespeare transition-colors"
+                >
                   <Facebook className="h-5 w-5" />
                 </a>
               </div>
@@ -149,13 +173,22 @@ const Landing = () => {
             <div className="space-y-4">
               <h4 className="text-lg font-semibold text-jaffa">Legal</h4>
               <nav className="space-y-2">
-                <Link to="/privacy-policy" className="block text-gray-600 hover:text-jaffa transition-colors">
+                <Link
+                  to="/privacy-policy"
+                  className="block text-gray-600 hover:text-jaffa transition-colors"
+                >
                   Privacy Policy
                 </Link>
-                <Link to="/terms-of-service" className="block text-gray-600 hover:text-jaffa transition-colors">
+                <Link
+                  to="/terms-of-service"
+                  className="block text-gray-600 hover:text-jaffa transition-colors"
+                >
                   Terms of Service
                 </Link>
-                <Link to="/security" className="block text-gray-600 hover:text-jaffa transition-colors">
+                <Link
+                  to="/security"
+                  className="block text-gray-600 hover:text-jaffa transition-colors"
+                >
                   Security
                 </Link>
               </nav>
