@@ -16,7 +16,9 @@ const TopBar = () => {
       {/* Right Section - Search, Actions, User */}
       <div className="flex items-center gap-4">
         {/* Search Input */}
-        <div className="relative hidden md:block"> {/* Hide search on small screens */}
+        <div className="relative hidden md:block">
+          {' '}
+          {/* Hide search on small screens */}
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground pointer-events-none" />
           <Input
             type="search"

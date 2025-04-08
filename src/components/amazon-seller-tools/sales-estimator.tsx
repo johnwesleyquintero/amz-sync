@@ -14,7 +14,14 @@ import {
 } from '@/components/ui/select'; // Import Select components
 import { useToast } from '../ui/use-toast';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
-import { Info, Upload, AlertCircle, TrendingUp, Download, BarChartHorizontalBig } from 'lucide-react';
+import {
+  Info,
+  Upload,
+  AlertCircle,
+  TrendingUp,
+  Download,
+  BarChartHorizontalBig,
+} from 'lucide-react';
 import { Progress } from '../ui/progress';
 import { Badge } from '../ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
@@ -50,12 +57,7 @@ type ProcessedProductData = {
 
 // --- Constants ---
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-const REQUIRED_COLUMNS: (keyof RawProductData)[] = [
-  'product',
-  'category',
-  'price',
-  'competition',
-];
+const REQUIRED_COLUMNS: (keyof RawProductData)[] = ['product', 'category', 'price', 'competition'];
 
 // --- Component ---
 
@@ -97,9 +99,11 @@ export default function SalesEstimator() {
       // Adjust base sales by category (simple example)
       const categoryLower = category.toLowerCase();
       if (categoryLower.includes('electronic')) baseSales = 150;
-      else if (categoryLower.includes('phone') || categoryLower.includes('accessory')) baseSales = 200;
+      else if (categoryLower.includes('phone') || categoryLower.includes('accessory'))
+        baseSales = 200;
       else if (categoryLower.includes('home') || categoryLower.includes('kitchen')) baseSales = 120;
-      else if (categoryLower.includes('clothing') || categoryLower.includes('apparel')) baseSales = 80;
+      else if (categoryLower.includes('clothing') || categoryLower.includes('apparel'))
+        baseSales = 80;
 
       // Adjust based on price point
       const priceFactor = price < 20 ? 1.5 : price < 50 ? 1.0 : 0.7;
@@ -338,12 +342,12 @@ export default function SalesEstimator() {
     // Reset form only if processing was successful (no error remained)
     // Note: processAndSetData clears error on success
     if (!error) {
-        setManualProduct({
-          product: '',
-          category: '',
-          price: '',
-          competition: DEFAULT_COMPETITION,
-        });
+      setManualProduct({
+        product: '',
+        category: '',
+        price: '',
+        competition: DEFAULT_COMPETITION,
+      });
     }
   }, [manualProduct, processAndSetData, toast, error]); // Add dependencies
 
@@ -383,7 +387,11 @@ export default function SalesEstimator() {
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
-      toast({ title: 'Export Success', description: 'Sales estimates exported successfully.', variant: 'default' });
+      toast({
+        title: 'Export Success',
+        description: 'Sales estimates exported successfully.',
+        variant: 'default',
+      });
     } catch (error) {
       const errorMsg = `Error exporting data: ${
         error instanceof Error ? error.message : 'Unknown error'
@@ -400,14 +408,16 @@ export default function SalesEstimator() {
       acc.totalSalesUnits += product.estimatedSales;
       acc.productCount += 1;
       // Simple average confidence (could be weighted)
-      const confidenceValue = product.confidence === 'High' ? 3 : product.confidence === 'Medium' ? 2 : 1;
+      const confidenceValue =
+        product.confidence === 'High' ? 3 : product.confidence === 'Medium' ? 2 : 1;
       acc.confidenceSum += confidenceValue;
       return acc;
     },
     { totalRevenue: 0, totalSalesUnits: 0, productCount: 0, confidenceSum: 0 }
   );
 
-  const averageConfidenceValue = summary.productCount > 0 ? summary.confidenceSum / summary.productCount : 0;
+  const averageConfidenceValue =
+    summary.productCount > 0 ? summary.confidenceSum / summary.productCount : 0;
   const averageConfidenceLabel: 'Low' | 'Medium' | 'High' =
     averageConfidenceValue >= 2.5 ? 'High' : averageConfidenceValue >= 1.5 ? 'Medium' : 'Low';
 
@@ -418,7 +428,8 @@ export default function SalesEstimator() {
       <CardHeader>
         <CardTitle>Sales Estimator</CardTitle>
         <CardDescription>
-          Estimate potential monthly sales and revenue based on product category, price, and competition level.
+          Estimate potential monthly sales and revenue based on product category, price, and
+          competition level.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -446,7 +457,10 @@ export default function SalesEstimator() {
           {/* CSV Upload */}
           <div className="space-y-4 rounded-lg border p-4">
             <h3 className="text-md font-semibold mb-2">1. Upload CSV Data</h3>
-            <Label htmlFor="csv-upload" className="flex items-center gap-1 mb-1 text-sm font-medium">
+            <Label
+              htmlFor="csv-upload"
+              className="flex items-center gap-1 mb-1 text-sm font-medium"
+            >
               Product Data (CSV)
               <TooltipProvider delayDuration={100}>
                 <Tooltip>
@@ -470,7 +484,9 @@ export default function SalesEstimator() {
                 className="flex-grow justify-start text-left"
               >
                 <Upload className="mr-2 h-4 w-4" />
-                {products.length > 0 ? `${products.length} Product(s) Loaded` : 'Choose CSV File...'}
+                {products.length > 0
+                  ? `${products.length} Product(s) Loaded`
+                  : 'Choose CSV File...'}
               </Button>
               <Input
                 id="csv-upload"
@@ -482,15 +498,26 @@ export default function SalesEstimator() {
                 disabled={isLoading}
               />
               {/* Update dataType and fileName for SampleCsvButton */}
-              <SampleCsvButton dataType="competitor" fileName="sample-sales-estimator.csv" size="sm" buttonText="Sample" />
+              <SampleCsvButton
+                dataType="competitor"
+                fileName="sample-sales-estimator.csv"
+                size="sm"
+                buttonText="Sample"
+              />
             </div>
             {isLoading && uploadProgress !== null && (
               <div className="mt-2 space-y-1">
                 <Progress value={uploadProgress} className="h-2 w-full" />
-                <p className="text-xs text-muted-foreground text-center">Processing file... {uploadProgress.toFixed(0)}%</p>
+                <p className="text-xs text-muted-foreground text-center">
+                  Processing file... {uploadProgress.toFixed(0)}%
+                </p>
               </div>
             )}
-            {products.length > 0 && !isLoading && <p className="text-xs text-green-600 mt-1">{products.length} product(s) loaded from file.</p>}
+            {products.length > 0 && !isLoading && (
+              <p className="text-xs text-green-600 mt-1">
+                {products.length} product(s) loaded from file.
+              </p>
+            )}
           </div>
 
           {/* Manual Input */}
@@ -498,7 +525,9 @@ export default function SalesEstimator() {
             <h3 className="text-md font-semibold mb-2">2. Or Enter Manually</h3>
             <div className="space-y-3">
               <div>
-                <Label htmlFor="manual-product" className="text-sm">Product Name</Label>
+                <Label htmlFor="manual-product" className="text-sm">
+                  Product Name
+                </Label>
                 <Input
                   id="manual-product"
                   value={manualProduct.product}
@@ -509,7 +538,9 @@ export default function SalesEstimator() {
                 />
               </div>
               <div>
-                <Label htmlFor="manual-category" className="text-sm">Category</Label>
+                <Label htmlFor="manual-category" className="text-sm">
+                  Category
+                </Label>
                 <Input
                   id="manual-category"
                   value={manualProduct.category}
@@ -521,10 +552,14 @@ export default function SalesEstimator() {
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <Label htmlFor="manual-price" className="text-sm">Price ($)</Label>
+                  <Label htmlFor="manual-price" className="text-sm">
+                    Price ($)
+                  </Label>
                   <Input
                     id="manual-price"
-                    type="number" min="0.01" step="0.01"
+                    type="number"
+                    min="0.01"
+                    step="0.01"
                     value={manualProduct.price}
                     onChange={e => setManualProduct({ ...manualProduct, price: e.target.value })}
                     placeholder="0.00"
@@ -533,10 +568,14 @@ export default function SalesEstimator() {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="manual-competition" className="text-sm">Competition</Label>
+                  <Label htmlFor="manual-competition" className="text-sm">
+                    Competition
+                  </Label>
                   <Select
                     value={manualProduct.competition}
-                    onValueChange={(value: CompetitionLevel) => setManualProduct({ ...manualProduct, competition: value })}
+                    onValueChange={(value: CompetitionLevel) =>
+                      setManualProduct({ ...manualProduct, competition: value })
+                    }
                     disabled={isLoading}
                   >
                     <SelectTrigger id="manual-competition" className="text-sm">
@@ -552,7 +591,12 @@ export default function SalesEstimator() {
                   </Select>
                 </div>
               </div>
-              <Button onClick={handleManualEstimate} disabled={isLoading} size="sm" className="w-full">
+              <Button
+                onClick={handleManualEstimate}
+                disabled={isLoading}
+                size="sm"
+                className="w-full"
+              >
                 <TrendingUp className="mr-2 h-4 w-4" />
                 Estimate Sales
               </Button>
@@ -600,44 +644,47 @@ export default function SalesEstimator() {
         {/* Results Display */}
         {products.length > 0 && !isLoading && (
           <div className="mt-6 space-y-8">
-
             {/* Summary Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <Card>
-                    <CardHeader className="pb-2">
-                        <CardDescription>Total Products</CardDescription>
-                        <CardTitle className="text-2xl">{summary.productCount}</CardTitle>
-                    </CardHeader>
-                </Card>
-                 <Card>
-                    <CardHeader className="pb-2">
-                        <CardDescription>Total Est. Revenue</CardDescription>
-                        <CardTitle className="text-2xl">${summary.totalRevenue.toFixed(2)}</CardTitle>
-                    </CardHeader>
-                </Card>
-                 <Card>
-                    <CardHeader className="pb-2">
-                        <CardDescription>Total Est. Sales</CardDescription>
-                        <CardTitle className="text-2xl">{summary.totalSalesUnits.toLocaleString()} units</CardTitle>
-                    </CardHeader>
-                </Card>
-                 <Card>
-                    <CardHeader className="pb-2">
-                        <CardDescription>Avg. Confidence</CardDescription>
-                        <CardTitle className="text-2xl">
-                            <Badge
-                                variant={
-                                    averageConfidenceLabel === 'High' ? 'default'
-                                    : averageConfidenceLabel === 'Medium' ? 'secondary'
-                                    : 'outline'
-                                }
-                                className="text-lg" // Make badge text larger
-                            >
-                                {averageConfidenceLabel}
-                            </Badge>
-                        </CardTitle>
-                    </CardHeader>
-                </Card>
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardDescription>Total Products</CardDescription>
+                  <CardTitle className="text-2xl">{summary.productCount}</CardTitle>
+                </CardHeader>
+              </Card>
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardDescription>Total Est. Revenue</CardDescription>
+                  <CardTitle className="text-2xl">${summary.totalRevenue.toFixed(2)}</CardTitle>
+                </CardHeader>
+              </Card>
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardDescription>Total Est. Sales</CardDescription>
+                  <CardTitle className="text-2xl">
+                    {summary.totalSalesUnits.toLocaleString()} units
+                  </CardTitle>
+                </CardHeader>
+              </Card>
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardDescription>Avg. Confidence</CardDescription>
+                  <CardTitle className="text-2xl">
+                    <Badge
+                      variant={
+                        averageConfidenceLabel === 'High'
+                          ? 'default'
+                          : averageConfidenceLabel === 'Medium'
+                            ? 'secondary'
+                            : 'outline'
+                      }
+                      className="text-lg" // Make badge text larger
+                    >
+                      {averageConfidenceLabel}
+                    </Badge>
+                  </CardTitle>
+                </CardHeader>
+              </Card>
             </div>
 
             {/* Data Table */}
@@ -657,17 +704,26 @@ export default function SalesEstimator() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {products.map((product) => (
+                    {products.map(product => (
                       <TableRow key={product.id}>
-                        <TableCell className="font-medium max-w-xs truncate" title={product.product}>{product.product}</TableCell>
-                        <TableCell className="max-w-xs truncate" title={product.category}>{product.category}</TableCell>
+                        <TableCell
+                          className="font-medium max-w-xs truncate"
+                          title={product.product}
+                        >
+                          {product.product}
+                        </TableCell>
+                        <TableCell className="max-w-xs truncate" title={product.category}>
+                          {product.category}
+                        </TableCell>
                         <TableCell className="text-right">${product.price.toFixed(2)}</TableCell>
                         <TableCell className="text-center">
                           <Badge
                             variant={
-                              product.competition === 'Low' ? 'default'
-                              : product.competition === 'Medium' ? 'secondary'
-                              : 'destructive'
+                              product.competition === 'Low'
+                                ? 'default'
+                                : product.competition === 'Medium'
+                                  ? 'secondary'
+                                  : 'destructive'
                             }
                           >
                             {product.competition}
@@ -682,9 +738,11 @@ export default function SalesEstimator() {
                         <TableCell className="text-center">
                           <Badge
                             variant={
-                              product.confidence === 'High' ? 'default'
-                              : product.confidence === 'Medium' ? 'secondary'
-                              : 'outline'
+                              product.confidence === 'High'
+                                ? 'default'
+                                : product.confidence === 'Medium'
+                                  ? 'secondary'
+                                  : 'outline'
                             }
                           >
                             {product.confidence}
@@ -701,9 +759,12 @@ export default function SalesEstimator() {
             <div className="rounded-lg border bg-muted/50 p-4">
               <h3 className="mb-2 text-sm font-medium">Estimation Methodology</h3>
               <p className="text-sm text-muted-foreground">
-                These estimates are generated using a simplified model based on category averages, price points, and competition levels provided.
-                Actual sales can vary significantly due to factors like listing quality, reviews, advertising effectiveness, seasonality, and specific market dynamics not captured here.
-                Use these estimates as a directional guide, not a guarantee. High confidence indicates factors generally favorable for sales within this model.
+                These estimates are generated using a simplified model based on category averages,
+                price points, and competition levels provided. Actual sales can vary significantly
+                due to factors like listing quality, reviews, advertising effectiveness,
+                seasonality, and specific market dynamics not captured here. Use these estimates as
+                a directional guide, not a guarantee. High confidence indicates factors generally
+                favorable for sales within this model.
               </p>
             </div>
           </div>

@@ -6,7 +6,14 @@ import { downloadSampleCsv } from '@/lib/generate-sample-csv';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 
-type SampleDataType = 'fba' | 'keyword' | 'ppc' | 'keyword-dedup' | 'acos' | 'competitor' | 'keyword-trend';
+type SampleDataType =
+  | 'fba'
+  | 'keyword'
+  | 'ppc'
+  | 'keyword-dedup'
+  | 'acos'
+  | 'competitor'
+  | 'keyword-trend';
 
 interface SampleCsvButtonProps {
   dataType: SampleDataType;
@@ -44,7 +51,7 @@ export default function SampleCsvButton({
     <Button
       variant={variant}
       size={size}
-      className={cn("flex items-center", className)} // Added flex items center for icon alignment
+      className={cn('flex items-center', className)} // Added flex items center for icon alignment
       onClick={handleDownload}
     >
       <Download className="mr-2 h-4 w-4" />

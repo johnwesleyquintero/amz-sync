@@ -79,79 +79,86 @@ export default function KeywordTrendAnalyzer() {
   }, [chartData]);
 
   // --- Data Processing Logic ---
-  const processAndSetData = useCallback((rawData: RawTrendData[]) => {
-    if (!rawData || rawData.length === 0) {
-      setError('No valid trend data to process.');
-      setChartData([]);
-      setKeywords([]);
-      return;
-    }
-
-    setIsLoading(true); // Indicate processing state
-
-    try {
-      // Identify keyword columns (all columns except 'date')
-      const identifiedKeywords = Object.keys(rawData[0] || {}).filter(key => key.toLowerCase() !== 'date');
-      if (identifiedKeywords.length === 0) {
-        throw new Error("No keyword columns found in the CSV. Ensure columns other than 'date' exist.");
+  const processAndSetData = useCallback(
+    (rawData: RawTrendData[]) => {
+      if (!rawData || rawData.length === 0) {
+        setError('No valid trend data to process.');
+        setChartData([]);
+        setKeywords([]);
+        return;
       }
-      setKeywords(identifiedKeywords);
 
-      const processedChartData: ChartDataPoint[] = rawData
-        .map((row, index) => {
-          // Validate date
-          const dateStr = String(row.date);
-          const dateObj = new Date(dateStr);
-          if (isNaN(dateObj.getTime())) {
-            console.warn(`Invalid date format in row ${index + 1}: '${dateStr}'. Skipping row.`);
-            return null; // Skip rows with invalid dates
-          }
-          // Format date for display (e.g., 'YYYY-MM-DD' or 'MM/DD')
-          const formattedDate = dateObj.toLocaleDateString('en-CA'); // Example: 'YYYY-MM-DD'
+      setIsLoading(true); // Indicate processing state
 
-          const dataPoint: ChartDataPoint = { name: formattedDate };
+      try {
+        // Identify keyword columns (all columns except 'date')
+        const identifiedKeywords = Object.keys(rawData[0] || {}).filter(
+          key => key.toLowerCase() !== 'date'
+        );
+        if (identifiedKeywords.length === 0) {
+          throw new Error(
+            "No keyword columns found in the CSV. Ensure columns other than 'date' exist."
+          );
+        }
+        setKeywords(identifiedKeywords);
 
-          identifiedKeywords.forEach(keyword => {
-            const value = row[keyword];
-            const numValue = Number(value);
-            if (value === '' || value === null || value === undefined || isNaN(numValue)) {
-              // Handle missing or invalid numeric data - set to null or 0? Let's use null for gaps.
-              dataPoint[keyword] = null;
-               console.warn(`Invalid or missing value for keyword '${keyword}' in row ${index + 1}. Setting to null.`);
-            } else {
-              dataPoint[keyword] = numValue;
+        const processedChartData: ChartDataPoint[] = rawData
+          .map((row, index) => {
+            // Validate date
+            const dateStr = String(row.date);
+            const dateObj = new Date(dateStr);
+            if (isNaN(dateObj.getTime())) {
+              console.warn(`Invalid date format in row ${index + 1}: '${dateStr}'. Skipping row.`);
+              return null; // Skip rows with invalid dates
             }
-          });
-          return dataPoint;
-        })
-        .filter((item): item is ChartDataPoint => item !== null) // Remove skipped rows
-        .sort((a, b) => new Date(a.name).getTime() - new Date(b.name).getTime()); // Sort by date ascending
+            // Format date for display (e.g., 'YYYY-MM-DD' or 'MM/DD')
+            const formattedDate = dateObj.toLocaleDateString('en-CA'); // Example: 'YYYY-MM-DD'
 
-      if (processedChartData.length === 0) {
-        throw new Error('No valid data points could be processed after validation.');
+            const dataPoint: ChartDataPoint = { name: formattedDate };
+
+            identifiedKeywords.forEach(keyword => {
+              const value = row[keyword];
+              const numValue = Number(value);
+              if (value === '' || value === null || value === undefined || isNaN(numValue)) {
+                // Handle missing or invalid numeric data - set to null or 0? Let's use null for gaps.
+                dataPoint[keyword] = null;
+                console.warn(
+                  `Invalid or missing value for keyword '${keyword}' in row ${index + 1}. Setting to null.`
+                );
+              } else {
+                dataPoint[keyword] = numValue;
+              }
+            });
+            return dataPoint;
+          })
+          .filter((item): item is ChartDataPoint => item !== null) // Remove skipped rows
+          .sort((a, b) => new Date(a.name).getTime() - new Date(b.name).getTime()); // Sort by date ascending
+
+        if (processedChartData.length === 0) {
+          throw new Error('No valid data points could be processed after validation.');
+        }
+
+        setChartData(processedChartData);
+
+        toast({
+          title: 'Analysis Complete',
+          description: `Trend data for ${identifiedKeywords.length} keyword(s) processed successfully.`,
+          variant: 'default',
+        });
+        setError(null); // Clear any previous error
+      } catch (err) {
+        const errorMsg = `Failed to process trend data: ${err instanceof Error ? err.message : 'Unknown error'}`;
+        setError(errorMsg);
+        toast({ title: 'Processing Error', description: errorMsg, variant: 'destructive' });
+        setChartData([]); // Clear data on error
+        setKeywords([]);
+      } finally {
+        setIsLoading(false); // End processing state
+        setUploadProgress(null); // Reset progress if it was an upload
       }
-
-      setChartData(processedChartData);
-
-      toast({
-        title: 'Analysis Complete',
-        description: `Trend data for ${identifiedKeywords.length} keyword(s) processed successfully.`,
-        variant: 'default',
-      });
-      setError(null); // Clear any previous error
-
-    } catch (err) {
-      const errorMsg = `Failed to process trend data: ${err instanceof Error ? err.message : 'Unknown error'}`;
-      setError(errorMsg);
-      toast({ title: 'Processing Error', description: errorMsg, variant: 'destructive' });
-      setChartData([]); // Clear data on error
-      setKeywords([]);
-    } finally {
-      setIsLoading(false); // End processing state
-      setUploadProgress(null); // Reset progress if it was an upload
-    }
-  }, [toast]);
-
+    },
+    [toast]
+  );
 
   // --- Event Handlers ---
 
@@ -163,11 +170,19 @@ export default function KeywordTrendAnalyzer() {
       if (!file) return;
 
       if (file.size > MAX_FILE_SIZE) {
-        toast({ title: 'Error', description: `File size exceeds ${MAX_FILE_SIZE / (1024 * 1024)}MB`, variant: 'destructive' });
+        toast({
+          title: 'Error',
+          description: `File size exceeds ${MAX_FILE_SIZE / (1024 * 1024)}MB`,
+          variant: 'destructive',
+        });
         return;
       }
       if (!file.name.toLowerCase().endsWith('.csv')) {
-        toast({ title: 'Error', description: 'Invalid file type. Please upload a CSV.', variant: 'destructive' });
+        toast({
+          title: 'Error',
+          description: 'Invalid file type. Please upload a CSV.',
+          variant: 'destructive',
+        });
         return;
       }
 
@@ -184,40 +199,51 @@ export default function KeywordTrendAnalyzer() {
         dynamicTyping: false, // Keep values as strings initially for better validation control
         // Simulate progress
         chunk: (results, parser) => {
-             if (file.size > 0) {
-                // Estimate progress based on bytes processed
-                // Note: PapaParse chunk size isn't directly related to file size progress
-                // This provides a basic indication rather than precise percentage.
-                const approxProgress = (parser.streamer.bytesRead / file.size) * 100;
-                setUploadProgress(Math.min(approxProgress, 99)); // Cap at 99 until complete
-             }
+          if (file.size > 0) {
+            // Estimate progress based on bytes processed
+            // Note: PapaParse chunk size isn't directly related to file size progress
+            // This provides a basic indication rather than precise percentage.
+            const approxProgress = (parser.streamer.bytesRead / file.size) * 100;
+            setUploadProgress(Math.min(approxProgress, 99)); // Cap at 99 until complete
+          }
         },
-        complete: (result) => {
+        complete: result => {
           setUploadProgress(100); // Mark parsing as complete
 
           if (result.errors.length > 0) {
-            const errorMsg = `CSV parsing completed with errors: ${result.errors.slice(0, 3).map(e => `Row ${e.row}: ${e.message}`).join('; ')}...`;
+            const errorMsg = `CSV parsing completed with errors: ${result.errors
+              .slice(0, 3)
+              .map(e => `Row ${e.row}: ${e.message}`)
+              .join('; ')}...`;
             console.warn('CSV Parsing Errors:', result.errors);
             setError(errorMsg);
-            toast({ title: 'CSV Warning', description: 'Some rows had parsing errors. Check console.', variant: 'default' });
+            toast({
+              title: 'CSV Warning',
+              description: 'Some rows had parsing errors. Check console.',
+              variant: 'default',
+            });
           }
 
           // Basic validation: Check for 'date' column and at least one other column
           const headers = result.meta.fields;
           if (!headers || !headers.includes('date') || headers.length < 2) {
-             const errMsg = "CSV must contain a 'date' column and at least one keyword column.";
-             setError(errMsg);
-             toast({ title: 'Upload Error', description: errMsg, variant: 'destructive' });
-             setIsLoading(false);
-             setUploadProgress(null);
-             return;
+            const errMsg = "CSV must contain a 'date' column and at least one keyword column.";
+            setError(errMsg);
+            toast({ title: 'Upload Error', description: errMsg, variant: 'destructive' });
+            setIsLoading(false);
+            setUploadProgress(null);
+            return;
           }
 
           const validData = result.data.filter(row => row.date); // Basic filter for rows with a date
 
           if (validData.length === 0) {
             setError('No valid data rows (with dates) found in the CSV file.');
-            toast({ title: 'Upload Error', description: 'No valid data rows found.', variant: 'destructive' });
+            toast({
+              title: 'Upload Error',
+              description: 'No valid data rows found.',
+              variant: 'destructive',
+            });
             setIsLoading(false);
             setUploadProgress(null);
             return;
@@ -225,9 +251,8 @@ export default function KeywordTrendAnalyzer() {
 
           // Process the valid data using the centralized function
           processAndSetData(validData);
-
         },
-        error: (error) => {
+        error: error => {
           const errorMsg = `Failed to parse CSV: ${error.message}`;
           setError(errorMsg);
           toast({ title: 'Upload Error', description: errorMsg, variant: 'destructive' });
@@ -268,7 +293,11 @@ export default function KeywordTrendAnalyzer() {
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
-      toast({ title: 'Export Success', description: 'Keyword trend data exported successfully.', variant: 'default' });
+      toast({
+        title: 'Export Success',
+        description: 'Keyword trend data exported successfully.',
+        variant: 'default',
+      });
     } catch (error) {
       const errorMsg = `Error exporting data: ${error instanceof Error ? error.message : 'Unknown error'}`;
       setError(errorMsg);
@@ -283,7 +312,8 @@ export default function KeywordTrendAnalyzer() {
       <CardHeader>
         <CardTitle>Keyword Trend Analyzer</CardTitle>
         <CardDescription>
-          Upload a CSV file with dates and keyword metrics (e.g., search volume, rank) to visualize trends over time.
+          Upload a CSV file with dates and keyword metrics (e.g., search volume, rank) to visualize
+          trends over time.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -296,7 +326,8 @@ export default function KeywordTrendAnalyzer() {
               Required column: <code>date</code> (e.g., YYYY-MM-DD, MM/DD/YYYY).
             </p>
             <p>
-              Additional columns represent keywords, with numeric values (e.g., search volume, rank).
+              Additional columns represent keywords, with numeric values (e.g., search volume,
+              rank).
             </p>
             <p className="mt-1">
               Example: <code>date,wireless earbuds,bluetooth speaker</code>
@@ -346,15 +377,26 @@ export default function KeywordTrendAnalyzer() {
               className="hidden"
               disabled={isLoading}
             />
-            <SampleCsvButton dataType="keyword" fileName="sample-keyword-trend.csv" size="sm" buttonText="Sample" />
+            <SampleCsvButton
+              dataType="keyword"
+              fileName="sample-keyword-trend.csv"
+              size="sm"
+              buttonText="Sample"
+            />
           </div>
           {isLoading && uploadProgress !== null && (
             <div className="mt-2 space-y-1">
               <Progress value={uploadProgress} className="h-2 w-full" />
-              <p className="text-xs text-muted-foreground text-center">Processing file... {uploadProgress.toFixed(0)}%</p>
+              <p className="text-xs text-muted-foreground text-center">
+                Processing file... {uploadProgress.toFixed(0)}%
+              </p>
             </div>
           )}
-           {chartData.length > 0 && !isLoading && <p className="text-xs text-green-600 mt-1">{keywords.length} keyword(s) loaded with {chartData.length} data points.</p>}
+          {chartData.length > 0 && !isLoading && (
+            <p className="text-xs text-green-600 mt-1">
+              {keywords.length} keyword(s) loaded with {chartData.length} data points.
+            </p>
+          )}
         </div>
 
         {/* Action Buttons */}
@@ -367,7 +409,7 @@ export default function KeywordTrendAnalyzer() {
           >
             Clear All Data
           </Button>
-           <Button
+          <Button
             variant="outline"
             size="sm"
             onClick={handleExport}
@@ -388,10 +430,10 @@ export default function KeywordTrendAnalyzer() {
 
         {/* Loading Indicator (for processing state) */}
         {isLoading && uploadProgress === null && (
-             <div className="mt-2 space-y-1 text-center">
-                <LineChartIcon className="mx-auto h-6 w-6 animate-pulse text-primary" />
-                <p className="text-sm text-muted-foreground">Analyzing trends...</p>
-             </div>
+          <div className="mt-2 space-y-1 text-center">
+            <LineChartIcon className="mx-auto h-6 w-6 animate-pulse text-primary" />
+            <p className="text-sm text-muted-foreground">Analyzing trends...</p>
+          </div>
         )}
 
         {/* Results Display */}
@@ -402,13 +444,13 @@ export default function KeywordTrendAnalyzer() {
               <div className="h-[400px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart
-                     data={chartData}
-                     margin={{
-                       top: 5,
-                       right: isMobile ? 5 : 20,
-                       left: isMobile ? -15 : 5, // Adjust left margin for smaller screens
-                       bottom: isMobile ? 40 : 20, // More bottom margin for angled labels if needed
-                     }}
+                    data={chartData}
+                    margin={{
+                      top: 5,
+                      right: isMobile ? 5 : 20,
+                      left: isMobile ? -15 : 5, // Adjust left margin for smaller screens
+                      bottom: isMobile ? 40 : 20, // More bottom margin for angled labels if needed
+                    }}
                   >
                     <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.5} />
                     <XAxis
@@ -427,7 +469,7 @@ export default function KeywordTrendAnalyzer() {
                       itemStyle={{ padding: '2px 0' }}
                     />
                     <Legend wrapperStyle={{ paddingTop: isMobile ? 10 : 20, fontSize: '12px' }} />
-                    {keywords.map((key) => (
+                    {keywords.map(key => (
                       <Line
                         key={key}
                         type="monotone"
@@ -444,7 +486,7 @@ export default function KeywordTrendAnalyzer() {
                 </ResponsiveContainer>
               </div>
             </div>
-             {/* Optional: Add a table view of the data here if desired */}
+            {/* Optional: Add a table view of the data here if desired */}
           </div>
         )}
       </CardContent>

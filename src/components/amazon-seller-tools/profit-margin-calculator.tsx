@@ -421,9 +421,7 @@ export default function ProfitMarginCalculator() {
     <Card>
       <CardHeader>
         <CardTitle>Profit Margin Calculator</CardTitle>
-        <CardDescription>
-          Calculate and analyze your product's profitability.
-        </CardDescription>
+        <CardDescription>Calculate and analyze your product's profitability.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         {/* CSV Format Info */}
@@ -432,8 +430,8 @@ export default function ProfitMarginCalculator() {
           <div className="text-sm text-blue-700 dark:text-blue-300">
             <p className="font-medium">CSV Format Requirements:</p>
             <p>
-              Your CSV file should have the following columns: <code>product</code>, <code>cost</code>
-              , <code>price</code>, <code>fees</code>
+              Your CSV file should have the following columns: <code>product</code>,{' '}
+              <code>cost</code>, <code>price</code>, <code>fees</code>
             </p>
             <p className="mt-1">
               Example: <code>product,cost,price,fees</code>
@@ -448,7 +446,10 @@ export default function ProfitMarginCalculator() {
           {/* CSV Upload */}
           <div className="space-y-4 rounded-lg border p-4">
             <h3 className="text-md font-semibold mb-2">1. Upload CSV Data</h3>
-            <Label htmlFor="csv-upload" className="flex items-center gap-1 mb-1 text-sm font-medium">
+            <Label
+              htmlFor="csv-upload"
+              className="flex items-center gap-1 mb-1 text-sm font-medium"
+            >
               Product Data (CSV)
             </Label>
             <div className="flex items-center gap-2">
@@ -471,15 +472,26 @@ export default function ProfitMarginCalculator() {
                 className="hidden"
                 disabled={isLoading}
               />
-              <SampleCsvButton dataType="fba" fileName="sample-fba-calculator.csv" size="sm" buttonText="Sample" />
+              <SampleCsvButton
+                dataType="fba"
+                fileName="sample-fba-calculator.csv"
+                size="sm"
+                buttonText="Sample"
+              />
             </div>
             {isLoading && uploadProgress !== null && (
               <div className="mt-2 space-y-1">
                 <Progress value={uploadProgress} className="h-2 w-full" />
-                <p className="text-xs text-muted-foreground text-center">Processing file... {uploadProgress.toFixed(0)}%</p>
+                <p className="text-xs text-muted-foreground text-center">
+                  Processing file... {uploadProgress.toFixed(0)}%
+                </p>
               </div>
             )}
-            {results.length > 0 && !isLoading && <p className="text-xs text-green-600 mt-1">{results.length} product(s) loaded from file.</p>}
+            {results.length > 0 && !isLoading && (
+              <p className="text-xs text-green-600 mt-1">
+                {results.length} product(s) loaded from file.
+              </p>
+            )}
           </div>
 
           {/* Manual Input */}
@@ -631,7 +643,9 @@ export default function ProfitMarginCalculator() {
 
             {/* Table */}
             <div className="rounded-lg border">
-              <h3 className="text-md font-semibold mb-0 px-4 py-3 border-b">Profit Margin Results</h3>
+              <h3 className="text-md font-semibold mb-0 px-4 py-3 border-b">
+                Profit Margin Results
+              </h3>
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>

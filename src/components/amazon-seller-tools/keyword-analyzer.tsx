@@ -96,25 +96,33 @@ export default function KeywordAnalyzer() {
             // 1. Parse Keywords (handle string or array)
             const keywordArray =
               typeof item.keywords === 'string'
-                ? item.keywords.split(',').map((k: string) => k.trim()).filter(Boolean) // Filter out empty strings
+                ? item.keywords
+                    .split(',')
+                    .map((k: string) => k.trim())
+                    .filter(Boolean) // Filter out empty strings
                 : Array.isArray(item.keywords)
                   ? item.keywords.map(k => String(k).trim()).filter(Boolean) // Ensure strings and filter empty
                   : [];
 
             // Skip if no keywords after parsing
             if (keywordArray.length === 0) {
-                console.warn(`Skipping product '${item.product || `Row ${index + 1}`}' due to missing or empty keywords.`);
-                return null; // Mark as invalid for filtering later
+              console.warn(
+                `Skipping product '${item.product || `Row ${index + 1}`}' due to missing or empty keywords.`
+              );
+              return null; // Mark as invalid for filtering later
             }
 
             // 2. Parse Search Volume (optional)
             let searchVolume: number | undefined = undefined;
             if (item.searchVolume !== undefined && item.searchVolume !== '') {
               const vol = Number(item.searchVolume);
-              if (!isNaN(vol) && vol >= 0) { // Ensure it's a non-negative number
+              if (!isNaN(vol) && vol >= 0) {
+                // Ensure it's a non-negative number
                 searchVolume = vol;
               } else {
-                 console.warn(`Invalid search volume '${item.searchVolume}' for product '${item.product}'. Ignoring.`);
+                console.warn(
+                  `Invalid search volume '${item.searchVolume}' for product '${item.product}'. Ignoring.`
+                );
               }
             }
 
@@ -123,11 +131,15 @@ export default function KeywordAnalyzer() {
             if (item.competition) {
               const compStr = String(item.competition).trim();
               const compStrLower = compStr.toLowerCase();
-              const matchedLevel = COMPETITION_LEVELS.find(level => level.toLowerCase() === compStrLower);
+              const matchedLevel = COMPETITION_LEVELS.find(
+                level => level.toLowerCase() === compStrLower
+              );
               if (matchedLevel) {
                 competition = matchedLevel;
               } else {
-                console.warn(`Invalid competition level '${compStr}' for product '${item.product}'. Using default '${DEFAULT_COMPETITION}'.`);
+                console.warn(
+                  `Invalid competition level '${compStr}' for product '${item.product}'. Using default '${DEFAULT_COMPETITION}'.`
+                );
                 competition = DEFAULT_COMPETITION; // Assign default if invalid
               }
             }
@@ -138,24 +150,26 @@ export default function KeywordAnalyzer() {
             let suggestions: string[] = [];
 
             try {
-                analysis = await KeywordIntelligence.analyzeBatch(keywordArray);
-                if (analysis.length > 0) {
-                    avgScore = analysis.reduce((sum, a) => sum + a.score, 0) / analysis.length;
-                    // Generate suggestions based on score
-                    suggestions = analysis
-                        .sort((a, b) => b.score - a.score) // Sort by score descending
-                        .map(a => a.keyword)
-                        .slice(0, MAX_SUGGESTIONS);
-                } else {
-                    // Fallback suggestions if analysis returns empty (e.g., simple related terms)
-                    suggestions = keywordArray.slice(0, MAX_SUGGESTIONS).map(k => `related:${k}`);
-                }
+              analysis = await KeywordIntelligence.analyzeBatch(keywordArray);
+              if (analysis.length > 0) {
+                avgScore = analysis.reduce((sum, a) => sum + a.score, 0) / analysis.length;
+                // Generate suggestions based on score
+                suggestions = analysis
+                  .sort((a, b) => b.score - a.score) // Sort by score descending
+                  .map(a => a.keyword)
+                  .slice(0, MAX_SUGGESTIONS);
+              } else {
+                // Fallback suggestions if analysis returns empty (e.g., simple related terms)
+                suggestions = keywordArray.slice(0, MAX_SUGGESTIONS).map(k => `related:${k}`);
+              }
             } catch (analysisError) {
-                console.error(`Error analyzing keywords for product '${item.product}':`, analysisError);
-                // Optionally add an issue/note to the product data
-                // suggestions = ['Analysis failed']; // Indicate failure
+              console.error(
+                `Error analyzing keywords for product '${item.product}':`,
+                analysisError
+              );
+              // Optionally add an issue/note to the product data
+              // suggestions = ['Analysis failed']; // Indicate failure
             }
-
 
             // 5. Construct Processed Data Object
             return {
@@ -172,7 +186,9 @@ export default function KeywordAnalyzer() {
         );
 
         // Filter out any items marked as null during mapping (e.g., due to no keywords)
-        const validItems = processedItems.filter((item): item is ProcessedKeywordData => item !== null);
+        const validItems = processedItems.filter(
+          (item): item is ProcessedKeywordData => item !== null
+        );
 
         if (validItems.length === 0) {
           // This means even after processing, no items had valid keywords or other required data
@@ -180,14 +196,13 @@ export default function KeywordAnalyzer() {
         }
 
         // Update state: Add to existing if manual, otherwise replace
-        setProducts(prev => isManualEntry ? [...prev, ...validItems] : validItems);
+        setProducts(prev => (isManualEntry ? [...prev, ...validItems] : validItems));
 
         toast({
           title: 'Analysis Complete',
           description: `${validItems.length} product(s) analyzed successfully.`,
           variant: 'default',
         });
-
       } catch (err) {
         // Catch errors from Promise.all or processing logic
         const errorMsg = `Failed to process keyword data: ${err instanceof Error ? err.message : 'Unknown error'}`;
@@ -208,7 +223,8 @@ export default function KeywordAnalyzer() {
   // --- Event Handlers ---
 
   const handleFileUpload = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => { // Removed async as Papa.parse handles async internally via callbacks
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      // Removed async as Papa.parse handles async internally via callbacks
       const file = event.target.files?.[0];
       if (event.target) event.target.value = ''; // Allow re-uploading the same file
 
@@ -216,11 +232,19 @@ export default function KeywordAnalyzer() {
 
       // File validation
       if (file.size > MAX_FILE_SIZE) {
-        toast({ title: 'Error', description: `File size exceeds ${MAX_FILE_SIZE / (1024 * 1024)}MB`, variant: 'destructive' });
+        toast({
+          title: 'Error',
+          description: `File size exceeds ${MAX_FILE_SIZE / (1024 * 1024)}MB`,
+          variant: 'destructive',
+        });
         return;
       }
       if (!file.name.toLowerCase().endsWith('.csv')) {
-        toast({ title: 'Error', description: 'Invalid file type. Please upload a CSV.', variant: 'destructive' });
+        toast({
+          title: 'Error',
+          description: 'Invalid file type. Please upload a CSV.',
+          variant: 'destructive',
+        });
         return;
       }
 
@@ -243,15 +267,22 @@ export default function KeywordAnalyzer() {
           }
         },
         // Completion callback
-        complete: (result) => {
+        complete: result => {
           setUploadProgress(100); // Mark parsing as complete
 
           if (result.errors.length > 0) {
             // Handle non-fatal parsing errors (e.g., malformed rows)
-            const errorMsg = `CSV parsing completed with errors: ${result.errors.slice(0, 3).map(e => `Row ${e.row}: ${e.message}`).join('; ')}...`;
+            const errorMsg = `CSV parsing completed with errors: ${result.errors
+              .slice(0, 3)
+              .map(e => `Row ${e.row}: ${e.message}`)
+              .join('; ')}...`;
             console.warn('CSV Parsing Errors:', result.errors);
             setError(errorMsg); // Show error in UI
-            toast({ title: 'CSV Warning', description: 'Some rows had parsing errors. Check console.', variant: 'default' });
+            toast({
+              title: 'CSV Warning',
+              description: 'Some rows had parsing errors. Check console.',
+              variant: 'default',
+            });
             // Continue processing potentially valid data
           }
 
@@ -271,8 +302,14 @@ export default function KeywordAnalyzer() {
           const validData = result.data.filter(item => item.product && item.keywords);
 
           if (validData.length === 0) {
-            setError('No data rows with required fields (product, keywords) found in the CSV file.');
-            toast({ title: 'Upload Error', description: 'No valid data rows found.', variant: 'destructive' });
+            setError(
+              'No data rows with required fields (product, keywords) found in the CSV file.'
+            );
+            toast({
+              title: 'Upload Error',
+              description: 'No valid data rows found.',
+              variant: 'destructive',
+            });
             setIsLoading(false);
             setUploadProgress(null);
             return; // Stop processing
@@ -280,10 +317,9 @@ export default function KeywordAnalyzer() {
 
           // Process the valid data using the centralized async function
           processAndSetData(validData, false); // processAndSetData will handle final loading state
-
         },
         // Error callback for critical parsing failures
-        error: (error) => {
+        error: error => {
           const errorMsg = `Failed to parse CSV: ${error.message}`;
           setError(errorMsg);
           toast({ title: 'Upload Error', description: errorMsg, variant: 'destructive' });
@@ -323,12 +359,12 @@ export default function KeywordAnalyzer() {
     // Note: This check might be slightly delayed if state updates haven't fully propagated.
     // A more robust way might involve processAndSetData returning a success boolean.
     // For now, let's assume the error state check is sufficient.
-    setTimeout(() => { // Use setTimeout to allow state update
-        if (!error) {
-             setManualInput({ product: '', keywords: '' });
-        }
+    setTimeout(() => {
+      // Use setTimeout to allow state update
+      if (!error) {
+        setManualInput({ product: '', keywords: '' });
+      }
     }, 0);
-
   }, [manualInput, processAndSetData, toast, error]); // Include error in dependencies
 
   const clearAllData = useCallback(() => {
@@ -336,7 +372,10 @@ export default function KeywordAnalyzer() {
     setError(null);
     setManualInput({ product: '', keywords: '' });
     if (fileInputRef.current) fileInputRef.current.value = ''; // Clear file input visually
-    toast({ title: 'Data Cleared', description: 'All keyword data and results have been cleared.' });
+    toast({
+      title: 'Data Cleared',
+      description: 'All keyword data and results have been cleared.',
+    });
   }, [toast]);
 
   const handleExport = useCallback(() => {
@@ -369,7 +408,11 @@ export default function KeywordAnalyzer() {
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(url); // Clean up blob URL
-      toast({ title: 'Export Success', description: 'Keyword analysis exported successfully.', variant: 'default' });
+      toast({
+        title: 'Export Success',
+        description: 'Keyword analysis exported successfully.',
+        variant: 'default',
+      });
     } catch (exportError) {
       const errorMsg = `Error exporting data: ${exportError instanceof Error ? exportError.message : 'Unknown error'}`;
       setError(errorMsg);
@@ -385,7 +428,8 @@ export default function KeywordAnalyzer() {
       <CardHeader>
         <CardTitle>Keyword Analyzer</CardTitle>
         <CardDescription>
-          Analyze keywords via CSV upload or manual entry to understand search volume, competition, and relevance score.
+          Analyze keywords via CSV upload or manual entry to understand search volume, competition,
+          and relevance score.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -395,16 +439,19 @@ export default function KeywordAnalyzer() {
           <div className="text-sm text-blue-700 dark:text-blue-300">
             <p className="font-medium">CSV Format Requirements:</p>
             <p>
-              Required columns: <code>{REQUIRED_COLUMNS.join(', ')}</code> (keywords should be comma-separated within their cell).
+              Required columns: <code>{REQUIRED_COLUMNS.join(', ')}</code> (keywords should be
+              comma-separated within their cell).
             </p>
             <p>
-              Optional columns: <code>{OPTIONAL_COLUMNS.join(', ')}</code> (Competition values: Low, Medium, High).
+              Optional columns: <code>{OPTIONAL_COLUMNS.join(', ')}</code> (Competition values: Low,
+              Medium, High).
             </p>
             <p className="mt-1">
               Example: <code>product,keywords,searchVolume,competition</code>
               <br />
               <code>
-                Wireless Earbuds,&quot;bluetooth earbuds, wireless headphones, noise cancelling&quot;,135000,High
+                Wireless Earbuds,&quot;bluetooth earbuds, wireless headphones, noise
+                cancelling&quot;,135000,High
               </code>
             </p>
           </div>
@@ -415,7 +462,10 @@ export default function KeywordAnalyzer() {
           {/* CSV Upload */}
           <div className="space-y-4 rounded-lg border p-4">
             <h3 className="text-md font-semibold mb-2">1. Upload CSV Data</h3>
-            <Label htmlFor="csv-upload" className="flex items-center gap-1 mb-1 text-sm font-medium">
+            <Label
+              htmlFor="csv-upload"
+              className="flex items-center gap-1 mb-1 text-sm font-medium"
+            >
               Keyword Data (CSV)
               <TooltipProvider delayDuration={100}>
                 <Tooltip>
@@ -424,7 +474,8 @@ export default function KeywordAnalyzer() {
                   </TooltipTrigger>
                   <TooltipContent>
                     <p className="text-xs max-w-xs">
-                      Required: {REQUIRED_COLUMNS.join(', ')}. Optional: {OPTIONAL_COLUMNS.join(', ')}.
+                      Required: {REQUIRED_COLUMNS.join(', ')}. Optional:{' '}
+                      {OPTIONAL_COLUMNS.join(', ')}.
                     </p>
                   </TooltipContent>
                 </Tooltip>
@@ -440,7 +491,9 @@ export default function KeywordAnalyzer() {
               >
                 <Upload className="mr-2 h-4 w-4" />
                 {/* Display number of products loaded from the last successful operation */}
-                {products.length > 0 ? `${products.length} Product(s) Loaded` : 'Choose CSV File...'}
+                {products.length > 0
+                  ? `${products.length} Product(s) Loaded`
+                  : 'Choose CSV File...'}
               </Button>
               <Input
                 id="csv-upload"
@@ -452,17 +505,28 @@ export default function KeywordAnalyzer() {
                 disabled={isLoading}
               />
               {/* Ensure dataType and fileName are correct for the sample */}
-              <SampleCsvButton dataType="keyword" fileName="sample-keyword-analyzer.csv" size="sm" buttonText="Sample" />
+              <SampleCsvButton
+                dataType="keyword"
+                fileName="sample-keyword-analyzer.csv"
+                size="sm"
+                buttonText="Sample"
+              />
             </div>
             {/* Upload Progress Indicator */}
             {isLoading && uploadProgress !== null && (
               <div className="mt-2 space-y-1">
                 <Progress value={uploadProgress} className="h-2 w-full" />
-                <p className="text-xs text-muted-foreground text-center">Processing file... {uploadProgress.toFixed(0)}%</p>
+                <p className="text-xs text-muted-foreground text-center">
+                  Processing file... {uploadProgress.toFixed(0)}%
+                </p>
               </div>
             )}
             {/* Success message after loading */}
-            {products.length > 0 && !isLoading && <p className="text-xs text-green-600 mt-1">{products.length} product(s) loaded and analyzed.</p>}
+            {products.length > 0 && !isLoading && (
+              <p className="text-xs text-green-600 mt-1">
+                {products.length} product(s) loaded and analyzed.
+              </p>
+            )}
           </div>
 
           {/* Manual Input */}
@@ -470,7 +534,9 @@ export default function KeywordAnalyzer() {
             <h3 className="text-md font-semibold mb-2">2. Or Enter Manually</h3>
             <div className="space-y-3">
               <div>
-                <Label htmlFor="manual-product" className="text-sm">Product Name (Optional)</Label>
+                <Label htmlFor="manual-product" className="text-sm">
+                  Product Name (Optional)
+                </Label>
                 <Input
                   id="manual-product"
                   value={manualInput.product}
@@ -481,7 +547,9 @@ export default function KeywordAnalyzer() {
                 />
               </div>
               <div>
-                <Label htmlFor="manual-keywords" className="text-sm">Keywords (comma-separated)</Label>
+                <Label htmlFor="manual-keywords" className="text-sm">
+                  Keywords (comma-separated)
+                </Label>
                 <Textarea
                   id="manual-keywords"
                   value={manualInput.keywords}
@@ -495,7 +563,12 @@ export default function KeywordAnalyzer() {
                   Enter keywords separated by commas.
                 </p>
               </div>
-              <Button onClick={handleManualAnalyze} disabled={isLoading} size="sm" className="w-full">
+              <Button
+                onClick={handleManualAnalyze}
+                disabled={isLoading}
+                size="sm"
+                className="w-full"
+              >
                 <Search className="mr-2 h-4 w-4" />
                 Analyze Keywords
               </Button>
@@ -543,9 +616,16 @@ export default function KeywordAnalyzer() {
         {/* Results Display Table */}
         {products.length > 0 && !isLoading && (
           <div className="mt-6 space-y-6">
-            <div className="rounded-lg border"> {/* Added border around the table container */}
-              <h3 className="text-md font-semibold mb-0 px-4 py-3 border-b">Keyword Analysis Results</h3> {/* Title inside the container */}
-              <div className="overflow-x-auto"> {/* Ensure table is scrollable on small screens */}
+            <div className="rounded-lg border">
+              {' '}
+              {/* Added border around the table container */}
+              <h3 className="text-md font-semibold mb-0 px-4 py-3 border-b">
+                Keyword Analysis Results
+              </h3>{' '}
+              {/* Title inside the container */}
+              <div className="overflow-x-auto">
+                {' '}
+                {/* Ensure table is scrollable on small screens */}
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -558,9 +638,11 @@ export default function KeywordAnalyzer() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {products.map((p) => (
+                    {products.map(p => (
                       <TableRow key={p.id}>
-                        <TableCell className="font-medium max-w-xs truncate" title={p.product}>{p.product}</TableCell>
+                        <TableCell className="font-medium max-w-xs truncate" title={p.product}>
+                          {p.product}
+                        </TableCell>
                         <TableCell>
                           {/* Tooltip to show full list of keywords */}
                           <TooltipProvider delayDuration={100}>
@@ -583,8 +665,10 @@ export default function KeywordAnalyzer() {
                           {p.competition ? (
                             <Badge
                               variant={
-                                p.competition === 'High' ? 'destructive'
-                                  : p.competition === 'Medium' ? 'secondary' // Changed Medium to secondary for better contrast
+                                p.competition === 'High'
+                                  ? 'destructive'
+                                  : p.competition === 'Medium'
+                                    ? 'secondary' // Changed Medium to secondary for better contrast
                                     : 'default' // Changed Low to default (often green/blue)
                               }
                             >
@@ -594,14 +678,19 @@ export default function KeywordAnalyzer() {
                             'N/A'
                           )}
                         </TableCell>
-                        <TableCell className={cn(
-                          "text-right font-medium",
-                          // Conditional coloring based on score
-                          p.avgScore === undefined ? '' : // No color if undefined
-                            p.avgScore >= 70 ? 'text-green-600 dark:text-green-400' : // Good score
-                              p.avgScore >= 40 ? 'text-yellow-600 dark:text-yellow-400' : // Medium score
-                                'text-red-600 dark:text-red-400' // Low score
-                        )}>
+                        <TableCell
+                          className={cn(
+                            'text-right font-medium',
+                            // Conditional coloring based on score
+                            p.avgScore === undefined
+                              ? '' // No color if undefined
+                              : p.avgScore >= 70
+                                ? 'text-green-600 dark:text-green-400' // Good score
+                                : p.avgScore >= 40
+                                  ? 'text-yellow-600 dark:text-yellow-400' // Medium score
+                                  : 'text-red-600 dark:text-red-400' // Low score
+                          )}
+                        >
                           {p.avgScore?.toFixed(1) ?? 'N/A'} {/* Show score or N/A */}
                         </TableCell>
                         <TableCell>

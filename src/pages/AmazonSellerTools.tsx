@@ -206,7 +206,10 @@ export default function AmazonSellerTools() {
   }, []); // Empty dependency array means this runs only once
 
   const categories = Object.keys(categorizedTools);
-  const activeTool = useMemo(() => ALL_TOOLS.find(tool => tool.id === activeToolId), [activeToolId]);
+  const activeTool = useMemo(
+    () => ALL_TOOLS.find(tool => tool.id === activeToolId),
+    [activeToolId]
+  );
 
   return (
     <section
@@ -220,7 +223,8 @@ export default function AmazonSellerTools() {
             <Wrench className="h-7 w-7 text-primary" /> Amazon Seller Tools
           </h2>
           <p className="mt-3 text-lg text-muted-foreground max-w-3xl mx-auto">
-            A comprehensive suite of specialized tools designed to help you analyze data, optimize listings, manage PPC, and maximize profitability on Amazon.
+            A comprehensive suite of specialized tools designed to help you analyze data, optimize
+            listings, manage PPC, and maximize profitability on Amazon.
           </p>
         </div>
 
@@ -229,7 +233,9 @@ export default function AmazonSellerTools() {
           {/* Sidebar Navigation */}
           <aside className="w-full md:w-64 lg:w-72 flex-shrink-0">
             {/* Sticky container for the sidebar content */}
-            <div className="sticky top-20 space-y-6 p-4 bg-card rounded-lg shadow-sm border dark:border-border"> {/* Consistent card styling */}
+            <div className="sticky top-20 space-y-6 p-4 bg-card rounded-lg shadow-sm border dark:border-border">
+              {' '}
+              {/* Consistent card styling */}
               {categories.map(category => (
                 <div key={category}>
                   {/* Category Title */}
@@ -251,7 +257,9 @@ export default function AmazonSellerTools() {
                         )}
                       >
                         {/* Icon wrapper */}
-                        <span className={cn(activeToolId === tool.id ? 'text-primary' : '')}>{tool.icon}</span>
+                        <span className={cn(activeToolId === tool.id ? 'text-primary' : '')}>
+                          {tool.icon}
+                        </span>
                         {/* Tool Name (truncated if long) */}
                         <span className="flex-1 text-left truncate">{tool.name}</span>
                         {/* Beta Badge (if applicable) */}
@@ -275,7 +283,9 @@ export default function AmazonSellerTools() {
           <main className="flex-1 min-w-0">
             {/* Render the active tool's component */}
             {/* The individual tool components already contain their own <Card> wrapper */}
-            {activeTool ? activeTool.component : (
+            {activeTool ? (
+              activeTool.component
+            ) : (
               <Card>
                 <CardContent className="p-6 text-center text-muted-foreground">
                   Select a tool from the sidebar to get started.
@@ -286,12 +296,21 @@ export default function AmazonSellerTools() {
             {/* Footer Section (Provides context about the tools) */}
             <div className="mt-8 p-6 bg-muted/50 dark:bg-muted/30 rounded-lg border dark:border-border">
               <div className="text-sm text-muted-foreground">
-                <p className="font-medium mb-2 text-foreground dark:text-gray-200">About These Tools:</p>
+                <p className="font-medium mb-2 text-foreground dark:text-gray-200">
+                  About These Tools:
+                </p>
                 <p>
-                  This suite helps Amazon sellers optimize listings, analyze performance, and maximize profitability. Most tools support CSV uploads for bulk processing and provide detailed analysis with actionable insights.
+                  This suite helps Amazon sellers optimize listings, analyze performance, and
+                  maximize profitability. Most tools support CSV uploads for bulk processing and
+                  provide detailed analysis with actionable insights.
                 </p>
                 <p className="mt-2">
-                  Use the <Badge variant="outline" size="sm" className="px-1.5 py-0.5 text-xs">Sample</Badge> buttons within each tool to download example CSV files and understand the required format. You can upload your own data or use manual entry options where available.
+                  Use the{' '}
+                  <Badge variant="outline" size="sm" className="px-1.5 py-0.5 text-xs">
+                    Sample
+                  </Badge>{' '}
+                  buttons within each tool to download example CSV files and understand the required
+                  format. You can upload your own data or use manual entry options where available.
                 </p>
               </div>
             </div>

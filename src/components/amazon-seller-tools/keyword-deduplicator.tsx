@@ -98,8 +98,10 @@ export default function KeywordDeduplicator() {
 
             // Skip if no keywords after parsing and filtering
             if (originalKeywords.length === 0) {
-                console.warn(`Skipping product '${item.product || `Row ${index + 1}`}' due to missing or empty keywords.`);
-                return null; // Mark as invalid for filtering later
+              console.warn(
+                `Skipping product '${item.product || `Row ${index + 1}`}' due to missing or empty keywords.`
+              );
+              return null; // Mark as invalid for filtering later
             }
 
             // 2. Deduplicate Keywords
@@ -130,14 +132,13 @@ export default function KeywordDeduplicator() {
         }
 
         // Update state: Add to existing if manual, otherwise replace
-        setProducts(prev => isManualEntry ? [...prev, ...processedItems] : processedItems);
+        setProducts(prev => (isManualEntry ? [...prev, ...processedItems] : processedItems));
 
         toast({
           title: 'Deduplication Complete',
           description: `${processedItems.length} product(s) processed successfully.`,
           variant: 'default',
         });
-
       } catch (err) {
         // Catch errors from processing logic
         const errorMsg = `Failed to process keyword data: ${err instanceof Error ? err.message : 'Unknown error'}`;
@@ -166,11 +167,19 @@ export default function KeywordDeduplicator() {
 
       // File validation
       if (file.size > MAX_FILE_SIZE) {
-        toast({ title: 'Error', description: `File size exceeds ${MAX_FILE_SIZE / (1024 * 1024)}MB`, variant: 'destructive' });
+        toast({
+          title: 'Error',
+          description: `File size exceeds ${MAX_FILE_SIZE / (1024 * 1024)}MB`,
+          variant: 'destructive',
+        });
         return;
       }
       if (!file.name.toLowerCase().endsWith('.csv')) {
-        toast({ title: 'Error', description: 'Invalid file type. Please upload a CSV.', variant: 'destructive' });
+        toast({
+          title: 'Error',
+          description: 'Invalid file type. Please upload a CSV.',
+          variant: 'destructive',
+        });
         return;
       }
 
@@ -190,14 +199,21 @@ export default function KeywordDeduplicator() {
             setUploadProgress(Math.min(progress * 100, 99));
           }
         },
-        complete: (result) => {
+        complete: result => {
           setUploadProgress(100);
 
           if (result.errors.length > 0) {
-            const errorMsg = `CSV parsing completed with errors: ${result.errors.slice(0, 3).map(e => `Row ${e.row}: ${e.message}`).join('; ')}...`;
+            const errorMsg = `CSV parsing completed with errors: ${result.errors
+              .slice(0, 3)
+              .map(e => `Row ${e.row}: ${e.message}`)
+              .join('; ')}...`;
             console.warn('CSV Parsing Errors:', result.errors);
             setError(errorMsg);
-            toast({ title: 'CSV Warning', description: 'Some rows had parsing errors. Check console.', variant: 'default' });
+            toast({
+              title: 'CSV Warning',
+              description: 'Some rows had parsing errors. Check console.',
+              variant: 'default',
+            });
           }
 
           // Validate required columns
@@ -216,8 +232,14 @@ export default function KeywordDeduplicator() {
           const validData = result.data.filter(item => item.product && item.keywords);
 
           if (validData.length === 0) {
-            setError('No data rows with required fields (product, keywords) found in the CSV file.');
-            toast({ title: 'Upload Error', description: 'No valid data rows found.', variant: 'destructive' });
+            setError(
+              'No data rows with required fields (product, keywords) found in the CSV file.'
+            );
+            toast({
+              title: 'Upload Error',
+              description: 'No valid data rows found.',
+              variant: 'destructive',
+            });
             setIsLoading(false);
             setUploadProgress(null);
             return;
@@ -226,7 +248,7 @@ export default function KeywordDeduplicator() {
           // Process the valid data using the centralized function
           processAndSetData(validData, false); // processAndSetData will handle final loading state
         },
-        error: (error) => {
+        error: error => {
           const errorMsg = `Failed to parse CSV: ${error.message}`;
           setError(errorMsg);
           toast({ title: 'Upload Error', description: errorMsg, variant: 'destructive' });
@@ -261,14 +283,14 @@ export default function KeywordDeduplicator() {
     // Reset form after processing (check error state after await/promise resolves implicitly)
     // Use a timeout to allow state updates to potentially propagate before checking error
     setTimeout(() => {
-        // Check the error state *after* processAndSetData finishes
-        // This relies on processAndSetData clearing the error on success.
-        // A more robust method might involve processAndSetData returning success/failure.
-        if (!error) { // Check the error state variable directly
-             setManualInput({ product: '', keywords: '' });
-        }
+      // Check the error state *after* processAndSetData finishes
+      // This relies on processAndSetData clearing the error on success.
+      // A more robust method might involve processAndSetData returning success/failure.
+      if (!error) {
+        // Check the error state variable directly
+        setManualInput({ product: '', keywords: '' });
+      }
     }, 0);
-
   }, [manualInput, processAndSetData, toast, error]); // Include error in dependencies
 
   const clearAllData = useCallback(() => {
@@ -276,7 +298,10 @@ export default function KeywordDeduplicator() {
     setError(null);
     setManualInput({ product: '', keywords: '' });
     if (fileInputRef.current) fileInputRef.current.value = ''; // Clear file input visually
-    toast({ title: 'Data Cleared', description: 'All keyword data and results have been cleared.' });
+    toast({
+      title: 'Data Cleared',
+      description: 'All keyword data and results have been cleared.',
+    });
   }, [toast]);
 
   const handleExport = useCallback(() => {
@@ -307,7 +332,11 @@ export default function KeywordDeduplicator() {
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(url); // Clean up blob URL
-      toast({ title: 'Export Success', description: 'Deduplicated keywords exported successfully.', variant: 'default' });
+      toast({
+        title: 'Export Success',
+        description: 'Deduplicated keywords exported successfully.',
+        variant: 'default',
+      });
     } catch (exportError) {
       const errorMsg = `Error exporting data: ${exportError instanceof Error ? exportError.message : 'Unknown error'}`;
       setError(errorMsg);
@@ -333,13 +362,15 @@ export default function KeywordDeduplicator() {
           <div className="text-sm text-blue-700 dark:text-blue-300">
             <p className="font-medium">CSV Format Requirements:</p>
             <p>
-              Required columns: <code>{REQUIRED_COLUMNS.join(', ')}</code> (keywords should be comma-separated within their cell).
+              Required columns: <code>{REQUIRED_COLUMNS.join(', ')}</code> (keywords should be
+              comma-separated within their cell).
             </p>
             <p className="mt-1">
               Example: <code>product,keywords</code>
               <br />
               <code>
-                Wireless Earbuds,&quot;bluetooth earbuds, wireless earbuds, earbuds bluetooth, wireless headphones, bluetooth earbuds&quot;
+                Wireless Earbuds,&quot;bluetooth earbuds, wireless earbuds, earbuds bluetooth,
+                wireless headphones, bluetooth earbuds&quot;
               </code>
             </p>
           </div>
@@ -350,7 +381,10 @@ export default function KeywordDeduplicator() {
           {/* CSV Upload */}
           <div className="space-y-4 rounded-lg border p-4">
             <h3 className="text-md font-semibold mb-2">1. Upload CSV Data</h3>
-            <Label htmlFor="csv-upload" className="flex items-center gap-1 mb-1 text-sm font-medium">
+            <Label
+              htmlFor="csv-upload"
+              className="flex items-center gap-1 mb-1 text-sm font-medium"
+            >
               Keyword Data (CSV)
               <TooltipProvider delayDuration={100}>
                 <Tooltip>
@@ -374,7 +408,9 @@ export default function KeywordDeduplicator() {
                 className="flex-grow justify-start text-left"
               >
                 <Upload className="mr-2 h-4 w-4" />
-                {products.length > 0 ? `${products.length} Product(s) Loaded` : 'Choose CSV File...'}
+                {products.length > 0
+                  ? `${products.length} Product(s) Loaded`
+                  : 'Choose CSV File...'}
               </Button>
               <Input
                 id="csv-upload"
@@ -385,15 +421,26 @@ export default function KeywordDeduplicator() {
                 className="hidden"
                 disabled={isLoading}
               />
-              <SampleCsvButton dataType="keyword-dedup" fileName="sample-keyword-deduplicator.csv" size="sm" buttonText="Sample" />
+              <SampleCsvButton
+                dataType="keyword-dedup"
+                fileName="sample-keyword-deduplicator.csv"
+                size="sm"
+                buttonText="Sample"
+              />
             </div>
             {isLoading && uploadProgress !== null && (
               <div className="mt-2 space-y-1">
                 <Progress value={uploadProgress} className="h-2 w-full" />
-                <p className="text-xs text-muted-foreground text-center">Processing file... {uploadProgress.toFixed(0)}%</p>
+                <p className="text-xs text-muted-foreground text-center">
+                  Processing file... {uploadProgress.toFixed(0)}%
+                </p>
               </div>
             )}
-            {products.length > 0 && !isLoading && <p className="text-xs text-green-600 mt-1">{products.length} product(s) loaded and processed.</p>}
+            {products.length > 0 && !isLoading && (
+              <p className="text-xs text-green-600 mt-1">
+                {products.length} product(s) loaded and processed.
+              </p>
+            )}
           </div>
 
           {/* Manual Input */}
@@ -401,7 +448,9 @@ export default function KeywordDeduplicator() {
             <h3 className="text-md font-semibold mb-2">2. Or Enter Manually</h3>
             <div className="space-y-3">
               <div>
-                <Label htmlFor="manual-product" className="text-sm">Product Name (Optional)</Label>
+                <Label htmlFor="manual-product" className="text-sm">
+                  Product Name (Optional)
+                </Label>
                 <Input
                   id="manual-product"
                   value={manualInput.product}
@@ -412,7 +461,9 @@ export default function KeywordDeduplicator() {
                 />
               </div>
               <div>
-                <Label htmlFor="manual-keywords" className="text-sm">Keywords (comma-separated)</Label>
+                <Label htmlFor="manual-keywords" className="text-sm">
+                  Keywords (comma-separated)
+                </Label>
                 <Textarea
                   id="manual-keywords"
                   value={manualInput.keywords}
@@ -426,7 +477,12 @@ export default function KeywordDeduplicator() {
                   Enter keywords separated by commas. Duplicates will be removed.
                 </p>
               </div>
-              <Button onClick={handleManualProcess} disabled={isLoading} size="sm" className="w-full">
+              <Button
+                onClick={handleManualProcess}
+                disabled={isLoading}
+                size="sm"
+                className="w-full"
+              >
                 <Filter className="mr-2 h-4 w-4" />
                 Remove Duplicates
               </Button>
@@ -474,9 +530,16 @@ export default function KeywordDeduplicator() {
         {/* Results Display Table */}
         {products.length > 0 && !isLoading && (
           <div className="mt-6 space-y-6">
-            <div className="rounded-lg border"> {/* Added border around the table container */}
-              <h3 className="text-md font-semibold mb-0 px-4 py-3 border-b">Keyword Deduplication Results</h3> {/* Title inside */}
-              <div className="overflow-x-auto"> {/* Ensure table is scrollable */}
+            <div className="rounded-lg border">
+              {' '}
+              {/* Added border around the table container */}
+              <h3 className="text-md font-semibold mb-0 px-4 py-3 border-b">
+                Keyword Deduplication Results
+              </h3>{' '}
+              {/* Title inside */}
+              <div className="overflow-x-auto">
+                {' '}
+                {/* Ensure table is scrollable */}
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -488,9 +551,11 @@ export default function KeywordDeduplicator() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {products.map((p) => (
+                    {products.map(p => (
                       <TableRow key={p.id}>
-                        <TableCell className="font-medium max-w-xs truncate" title={p.product}>{p.product}</TableCell>
+                        <TableCell className="font-medium max-w-xs truncate" title={p.product}>
+                          {p.product}
+                        </TableCell>
                         <TableCell className="text-center">{p.originalCount}</TableCell>
                         <TableCell className="text-center">{p.cleanedCount}</TableCell>
                         <TableCell className="text-center">

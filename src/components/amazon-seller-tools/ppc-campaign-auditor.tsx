@@ -17,7 +17,15 @@ import { Input } from '../ui/input'; // Keep Input for potential future use
 import { Label } from '../ui/label';
 import { useToast } from '../ui/use-toast';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
-import { Info, Upload, AlertCircle, Download, BarChartHorizontalBig, CheckCircle, TrendingDown } from 'lucide-react';
+import {
+  Info,
+  Upload,
+  AlertCircle,
+  Download,
+  BarChartHorizontalBig,
+  CheckCircle,
+  TrendingDown,
+} from 'lucide-react';
 import { useIsMobile } from '../../hooks/use-mobile';
 import { Progress } from '../ui/progress';
 import { Badge } from '../ui/badge';
@@ -112,19 +120,26 @@ const analyzeCampaign = (campaign: RawCampaignData, id: string): ProcessedCampai
       id,
       name: campaign.name || 'Invalid Data',
       type: campaign.type || 'N/A',
-      spend: NaN, sales: NaN, impressions: NaN, clicks: NaN,
-      acos: null, ctr: null, cpc: null, conversionRate: null, roas: null,
+      spend: NaN,
+      sales: NaN,
+      impressions: NaN,
+      clicks: NaN,
+      acos: null,
+      ctr: null,
+      cpc: null,
+      conversionRate: null,
+      roas: null,
       issues: ['Invalid numeric data (spend, sales, impressions, or clicks)'],
       recommendations: [],
     };
   }
 
   // Calculate metrics, handling division by zero
-  const acos = sales > 0 ? (spend / sales) * 100 : (spend > 0 ? Infinity : 0); // ACoS is Infinity if spend > 0 and sales = 0, else 0
+  const acos = sales > 0 ? (spend / sales) * 100 : spend > 0 ? Infinity : 0; // ACoS is Infinity if spend > 0 and sales = 0, else 0
   const ctr = impressions > 0 ? (clicks / impressions) * 100 : null;
   const cpc = clicks > 0 ? spend / clicks : null;
   const conversionRate = clicks > 0 ? (sales / clicks) * 100 : null; // Assuming sales value represents conversion count or value directly tied to clicks
-  const roas = spend > 0 ? sales / spend : (sales > 0 ? Infinity : 0); // ROAS is Infinity if sales > 0 and spend = 0, else 0
+  const roas = spend > 0 ? sales / spend : sales > 0 ? Infinity : 0; // ROAS is Infinity if sales > 0 and spend = 0, else 0
 
   const issues: string[] = [];
   const recommendations: string[] = [];
@@ -142,12 +157,16 @@ const analyzeCampaign = (campaign: RawCampaignData, id: string): ProcessedCampai
 
   if (conversionRate !== null && conversionRate < MIN_CONVERSION_RATE_THRESHOLD) {
     issues.push(`Low Conversion Rate (${conversionRate.toFixed(1)}%)`);
-    recommendations.push('Optimize listing (price, images, description, reviews), check keyword relevance.');
+    recommendations.push(
+      'Optimize listing (price, images, description, reviews), check keyword relevance.'
+    );
   }
 
   if (clicks < MIN_CLICKS_FOR_ANALYSIS) {
     issues.push(`Low Click Volume (${clicks})`);
-    recommendations.push('Consider increasing bids or budget for more visibility, check keyword search volume.');
+    recommendations.push(
+      'Consider increasing bids or budget for more visibility, check keyword search volume.'
+    );
   }
 
   if (campaign.type === 'Auto' && acos !== null && acos < 20 && acos !== Infinity) {
@@ -156,8 +175,8 @@ const analyzeCampaign = (campaign: RawCampaignData, id: string): ProcessedCampai
 
   // Add check for zero impressions
   if (impressions === 0) {
-      issues.push('Zero Impressions');
-      recommendations.push('Check campaign status, budget, bids, and targeting settings.');
+    issues.push('Zero Impressions');
+    recommendations.push('Check campaign status, budget, bids, and targeting settings.');
   }
 
   return {
@@ -199,61 +218,62 @@ export default function PpcCampaignAuditor() {
   }, [campaigns]);
 
   // Centralized function to process data and update state
-  const processAndSetData = useCallback((rawData: RawCampaignData[]) => {
-    if (!rawData || rawData.length === 0) {
-      setError('No valid campaign data found in the source.');
-      setCampaigns([]);
-      setChartData(null);
-      return;
-    }
-
-    setIsLoading(true); // Indicate processing state
-
-    try {
-      // Use Promise.all if analyzeCampaign becomes async in the future
-      const analyzedCampaigns = rawData.map((item, index) =>
-        analyzeCampaign(item, `campaign-${index}-${Date.now()}`) // Generate a unique ID
-      );
-
-      // Filter out campaigns that had critical data errors during initial conversion
-      const validCampaigns = analyzedCampaigns.filter(c => !isNaN(c.spend));
-
-      if (validCampaigns.length === 0) {
-        throw new Error('No valid campaigns could be processed after analysis.');
+  const processAndSetData = useCallback(
+    (rawData: RawCampaignData[]) => {
+      if (!rawData || rawData.length === 0) {
+        setError('No valid campaign data found in the source.');
+        setCampaigns([]);
+        setChartData(null);
+        return;
       }
 
-      setCampaigns(validCampaigns);
+      setIsLoading(true); // Indicate processing state
 
-      // Format data for the chart
-      const formattedChartData = validCampaigns.map(c => ({
-        name: c.name,
-        spend: c.spend,
-        sales: c.sales,
-        acos: c.acos,
-        roas: c.roas,
-        ctr: c.ctr,
-      }));
-      setChartData(formattedChartData);
+      try {
+        // Use Promise.all if analyzeCampaign becomes async in the future
+        const analyzedCampaigns = rawData.map(
+          (item, index) => analyzeCampaign(item, `campaign-${index}-${Date.now()}`) // Generate a unique ID
+        );
 
-      toast({
-        title: 'Analysis Complete',
-        description: `${validCampaigns.length} campaign(s) analyzed successfully.`,
-        variant: 'default',
-      });
-      setError(null); // Clear any previous error
+        // Filter out campaigns that had critical data errors during initial conversion
+        const validCampaigns = analyzedCampaigns.filter(c => !isNaN(c.spend));
 
-    } catch (err) {
-      const errorMsg = `Failed to process campaign data: ${err instanceof Error ? err.message : 'Unknown error'}`;
-      setError(errorMsg);
-      toast({ title: 'Processing Error', description: errorMsg, variant: 'destructive' });
-      setCampaigns([]); // Clear data on error
-      setChartData(null);
-    } finally {
-      setIsLoading(false); // End processing state
-      setUploadProgress(null); // Reset progress if it was an upload
-    }
-  }, [toast]);
+        if (validCampaigns.length === 0) {
+          throw new Error('No valid campaigns could be processed after analysis.');
+        }
 
+        setCampaigns(validCampaigns);
+
+        // Format data for the chart
+        const formattedChartData = validCampaigns.map(c => ({
+          name: c.name,
+          spend: c.spend,
+          sales: c.sales,
+          acos: c.acos,
+          roas: c.roas,
+          ctr: c.ctr,
+        }));
+        setChartData(formattedChartData);
+
+        toast({
+          title: 'Analysis Complete',
+          description: `${validCampaigns.length} campaign(s) analyzed successfully.`,
+          variant: 'default',
+        });
+        setError(null); // Clear any previous error
+      } catch (err) {
+        const errorMsg = `Failed to process campaign data: ${err instanceof Error ? err.message : 'Unknown error'}`;
+        setError(errorMsg);
+        toast({ title: 'Processing Error', description: errorMsg, variant: 'destructive' });
+        setCampaigns([]); // Clear data on error
+        setChartData(null);
+      } finally {
+        setIsLoading(false); // End processing state
+        setUploadProgress(null); // Reset progress if it was an upload
+      }
+    },
+    [toast]
+  );
 
   const handleFileUpload = useCallback(
     async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -263,11 +283,19 @@ export default function PpcCampaignAuditor() {
       if (!file) return;
 
       if (file.size > MAX_FILE_SIZE) {
-        toast({ title: 'Error', description: `File size exceeds ${MAX_FILE_SIZE / (1024 * 1024)}MB`, variant: 'destructive' });
+        toast({
+          title: 'Error',
+          description: `File size exceeds ${MAX_FILE_SIZE / (1024 * 1024)}MB`,
+          variant: 'destructive',
+        });
         return;
       }
       if (!file.name.toLowerCase().endsWith('.csv')) {
-        toast({ title: 'Error', description: 'Invalid file type. Please upload a CSV.', variant: 'destructive' });
+        toast({
+          title: 'Error',
+          description: 'Invalid file type. Please upload a CSV.',
+          variant: 'destructive',
+        });
         return;
       }
 
@@ -281,15 +309,22 @@ export default function PpcCampaignAuditor() {
         const batchProcessor = new BatchProcessor<RawCampaignData>();
         const result = await batchProcessor.processFile(
           file,
-          (progress) => setUploadProgress(progress * 100),
+          progress => setUploadProgress(progress * 100),
           REQUIRED_COLUMNS
         );
 
         if (result.errors.length > 0) {
-          const errorMsg = `CSV processing completed with errors: ${result.errors.slice(0, 3).map(e => `Row ${e.row}: ${e.message}`).join('; ')}...`;
+          const errorMsg = `CSV processing completed with errors: ${result.errors
+            .slice(0, 3)
+            .map(e => `Row ${e.row}: ${e.message}`)
+            .join('; ')}...`;
           console.warn('CSV Processing Errors:', result.errors);
           setError(errorMsg);
-          toast({ title: 'CSV Warning', description: 'Some rows had errors. Check console.', variant: 'default' });
+          toast({
+            title: 'CSV Warning',
+            description: 'Some rows had errors. Check console.',
+            variant: 'default',
+          });
         }
 
         if (result.data.length === 0) {
@@ -298,7 +333,6 @@ export default function PpcCampaignAuditor() {
 
         // Process the valid data
         processAndSetData(result.data); // Use the centralized processing function
-
       } catch (error) {
         const errorMsg = `Failed to process CSV: ${error instanceof Error ? error.message : 'Unknown error'}`;
         setError(errorMsg);
@@ -355,7 +389,11 @@ export default function PpcCampaignAuditor() {
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(url); // Clean up blob URL
-      toast({ title: 'Export Success', description: 'Campaign audit exported successfully.', variant: 'default' });
+      toast({
+        title: 'Export Success',
+        description: 'Campaign audit exported successfully.',
+        variant: 'default',
+      });
     } catch (error) {
       const errorMsg = `Error exporting data: ${error instanceof Error ? error.message : 'Unknown error'}`;
       setError(errorMsg);
@@ -388,7 +426,8 @@ export default function PpcCampaignAuditor() {
       <CardHeader>
         <CardTitle>PPC Campaign Auditor</CardTitle>
         <CardDescription>
-          Upload your Amazon PPC campaign data CSV to analyze performance and get optimization suggestions.
+          Upload your Amazon PPC campaign data CSV to analyze performance and get optimization
+          suggestions.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -404,7 +443,8 @@ export default function PpcCampaignAuditor() {
                 </TooltipTrigger>
                 <TooltipContent>
                   <p className="text-xs max-w-xs">
-                    Required columns: {REQUIRED_COLUMNS.join(', ')}. Download the report from Amazon Ads.
+                    Required columns: {REQUIRED_COLUMNS.join(', ')}. Download the report from Amazon
+                    Ads.
                   </p>
                 </TooltipContent>
               </Tooltip>
@@ -419,7 +459,9 @@ export default function PpcCampaignAuditor() {
               className="flex-grow justify-start text-left"
             >
               <Upload className="mr-2 h-4 w-4" />
-              {campaigns.length > 0 ? `${campaigns.length} Campaign(s) Loaded` : 'Choose CSV File...'}
+              {campaigns.length > 0
+                ? `${campaigns.length} Campaign(s) Loaded`
+                : 'Choose CSV File...'}
             </Button>
             <Input
               id="csv-upload"
@@ -430,15 +472,26 @@ export default function PpcCampaignAuditor() {
               className="hidden"
               disabled={isLoading}
             />
-            <SampleCsvButton dataType="ppc" fileName="sample-ppc-campaign.csv" size="sm" buttonText="Sample" />
+            <SampleCsvButton
+              dataType="ppc"
+              fileName="sample-ppc-campaign.csv"
+              size="sm"
+              buttonText="Sample"
+            />
           </div>
           {isLoading && uploadProgress !== null && (
             <div className="mt-2 space-y-1">
               <Progress value={uploadProgress} className="h-2 w-full" />
-              <p className="text-xs text-muted-foreground text-center">Processing file... {uploadProgress.toFixed(0)}%</p>
+              <p className="text-xs text-muted-foreground text-center">
+                Processing file... {uploadProgress.toFixed(0)}%
+              </p>
             </div>
           )}
-          {campaigns.length > 0 && !isLoading && <p className="text-xs text-green-600 mt-1">{campaigns.length} campaign(s) loaded and analyzed.</p>}
+          {campaigns.length > 0 && !isLoading && (
+            <p className="text-xs text-green-600 mt-1">
+              {campaigns.length} campaign(s) loaded and analyzed.
+            </p>
+          )}
         </div>
 
         {/* Action Buttons */}
@@ -472,59 +525,68 @@ export default function PpcCampaignAuditor() {
 
         {/* Loading Indicator (for general processing/analysis) */}
         {isLoading && uploadProgress === null && (
-           <div className="mt-2 space-y-1 text-center">
-              <BarChartHorizontalBig className="mx-auto h-6 w-6 animate-pulse text-primary" />
-              <p className="text-sm text-muted-foreground">Analyzing campaigns...</p>
-           </div>
+          <div className="mt-2 space-y-1 text-center">
+            <BarChartHorizontalBig className="mx-auto h-6 w-6 animate-pulse text-primary" />
+            <p className="text-sm text-muted-foreground">Analyzing campaigns...</p>
+          </div>
         )}
 
         {/* Results Display */}
         {chartData && !isLoading && (
           <div className="mt-6 space-y-8">
-
             {/* Summary Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <Card>
-                    <CardHeader className="pb-2">
-                        <CardDescription>Total Campaigns</CardDescription>
-                        <CardTitle className="text-2xl">{summary.campaignCount}</CardTitle>
-                    </CardHeader>
-                </Card>
-                 <Card>
-                    <CardHeader className="pb-2">
-                        <CardDescription>Total Ad Spend</CardDescription>
-                        <CardTitle className="text-2xl">${summary.totalSpend.toFixed(2)}</CardTitle>
-                    </CardHeader>
-                </Card>
-                 <Card>
-                    <CardHeader className="pb-2">
-                        <CardDescription>Total Sales</CardDescription>
-                        <CardTitle className="text-2xl">${summary.totalSales.toFixed(2)}</CardTitle>
-                    </CardHeader>
-                </Card>
-                 <Card>
-                    <CardHeader className="pb-2">
-                        <CardDescription>Avg. ACoS / Overall ROAS</CardDescription>
-                        <CardTitle className="text-2xl">
-                            <span className={cn(averageAcos > MAX_ACOS_THRESHOLD ? 'text-red-500' : 'text-green-600')}>
-                                {averageAcos.toFixed(1)}%
-                            </span>
-                            {' / '}
-                            <span>{overallRoas.toFixed(2)}x</span>
-                        </CardTitle>
-                    </CardHeader>
-                </Card>
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardDescription>Total Campaigns</CardDescription>
+                  <CardTitle className="text-2xl">{summary.campaignCount}</CardTitle>
+                </CardHeader>
+              </Card>
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardDescription>Total Ad Spend</CardDescription>
+                  <CardTitle className="text-2xl">${summary.totalSpend.toFixed(2)}</CardTitle>
+                </CardHeader>
+              </Card>
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardDescription>Total Sales</CardDescription>
+                  <CardTitle className="text-2xl">${summary.totalSales.toFixed(2)}</CardTitle>
+                </CardHeader>
+              </Card>
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardDescription>Avg. ACoS / Overall ROAS</CardDescription>
+                  <CardTitle className="text-2xl">
+                    <span
+                      className={cn(
+                        averageAcos > MAX_ACOS_THRESHOLD ? 'text-red-500' : 'text-green-600'
+                      )}
+                    >
+                      {averageAcos.toFixed(1)}%
+                    </span>
+                    {' / '}
+                    <span>{overallRoas.toFixed(2)}x</span>
+                  </CardTitle>
+                </CardHeader>
+              </Card>
             </div>
-
 
             {/* Bar Chart */}
             <div className="rounded-lg border p-4">
               <h3 className="text-md font-semibold mb-4">Campaign Performance Overview</h3>
-              <div className="h-[450px] w-full"> {/* Increased height slightly */}
+              <div className="h-[450px] w-full">
+                {' '}
+                {/* Increased height slightly */}
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart
                     data={chartData}
-                    margin={{ top: 5, right: isMobile ? 5 : 20, left: isMobile ? -15 : 5, bottom: isMobile ? 80 : 40 }} // Increased bottom margin
+                    margin={{
+                      top: 5,
+                      right: isMobile ? 5 : 20,
+                      left: isMobile ? -15 : 5,
+                      bottom: isMobile ? 80 : 40,
+                    }} // Increased bottom margin
                   >
                     <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.5} />
                     <XAxis
@@ -536,23 +598,47 @@ export default function PpcCampaignAuditor() {
                       interval={0} // Show all labels
                     />
                     {/* Define Y-axes */}
-                    <YAxis yAxisId="left" orientation="left" stroke={CHART_COLORS.spend} tick={{ fontSize: 11 }} />
-                    <YAxis yAxisId="right" orientation="right" stroke={CHART_COLORS.acos} tick={{ fontSize: 11 }} unit="%" />
+                    <YAxis
+                      yAxisId="left"
+                      orientation="left"
+                      stroke={CHART_COLORS.spend}
+                      tick={{ fontSize: 11 }}
+                    />
+                    <YAxis
+                      yAxisId="right"
+                      orientation="right"
+                      stroke={CHART_COLORS.acos}
+                      tick={{ fontSize: 11 }}
+                      unit="%"
+                    />
                     <RechartsTooltip
-                      contentStyle={{ fontSize: '12px', padding: '5px 10px', borderRadius: '4px', border: '1px solid #ccc' }}
+                      contentStyle={{
+                        fontSize: '12px',
+                        padding: '5px 10px',
+                        borderRadius: '4px',
+                        border: '1px solid #ccc',
+                      }}
                       itemStyle={{ padding: '2px 0' }}
                       formatter={(value, name) => {
-                          if (name === 'acos' || name === 'ctr') return `${Number(value).toFixed(1)}%`;
-                          if (name === 'roas') return `${Number(value).toFixed(2)}x`;
-                          if (name === 'spend' || name === 'sales') return `$${Number(value).toFixed(2)}`;
-                          return value;
+                        if (name === 'acos' || name === 'ctr')
+                          return `${Number(value).toFixed(1)}%`;
+                        if (name === 'roas') return `${Number(value).toFixed(2)}x`;
+                        if (name === 'spend' || name === 'sales')
+                          return `$${Number(value).toFixed(2)}`;
+                        return value;
                       }}
                     />
                     <Legend wrapperStyle={{ paddingTop: isMobile ? 15 : 20, fontSize: '12px' }} />
                     {/* Define Bars */}
                     <Bar yAxisId="left" dataKey="spend" name="Spend" fill={CHART_COLORS.spend} />
                     <Bar yAxisId="left" dataKey="sales" name="Sales" fill={CHART_COLORS.sales} />
-                    <Bar yAxisId="right" dataKey="acos" name="ACoS" fill={CHART_COLORS.acos} unit="%" />
+                    <Bar
+                      yAxisId="right"
+                      dataKey="acos"
+                      name="ACoS"
+                      fill={CHART_COLORS.acos}
+                      unit="%"
+                    />
                     {/* <Bar yAxisId="right" dataKey="ctr" name="CTR" fill={CHART_COLORS.ctr} unit="%" /> */}
                     {/* <Bar yAxisId="right" dataKey="roas" name="ROAS" fill={CHART_COLORS.roas} unit="x" /> */}
                   </BarChart>
@@ -583,25 +669,49 @@ export default function PpcCampaignAuditor() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {campaigns.map((c) => (
+                    {campaigns.map(c => (
                       <TableRow key={c.id}>
-                        <TableCell className="font-medium max-w-xs truncate" title={c.name}>{c.name}</TableCell>
-                        <TableCell><Badge variant="secondary">{c.type}</Badge></TableCell>
+                        <TableCell className="font-medium max-w-xs truncate" title={c.name}>
+                          {c.name}
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant="secondary">{c.type}</Badge>
+                        </TableCell>
                         <TableCell className="text-right">${c.spend.toFixed(2)}</TableCell>
                         <TableCell className="text-right">${c.sales.toFixed(2)}</TableCell>
-                        <TableCell className={cn("text-right font-medium", c.acos !== null && c.acos > MAX_ACOS_THRESHOLD ? 'text-red-500' : 'text-green-600')}>
+                        <TableCell
+                          className={cn(
+                            'text-right font-medium',
+                            c.acos !== null && c.acos > MAX_ACOS_THRESHOLD
+                              ? 'text-red-500'
+                              : 'text-green-600'
+                          )}
+                        >
                           {c.acos?.toFixed(1) ?? 'N/A'}%
                         </TableCell>
+                        <TableCell className="text-right">{c.roas?.toFixed(2) ?? 'N/A'}x</TableCell>
                         <TableCell className="text-right">
-                          {c.roas?.toFixed(2) ?? 'N/A'}x
+                          {c.impressions.toLocaleString()}
                         </TableCell>
-                        <TableCell className="text-right">{c.impressions.toLocaleString()}</TableCell>
                         <TableCell className="text-right">{c.clicks.toLocaleString()}</TableCell>
-                        <TableCell className={cn("text-right", c.ctr !== null && c.ctr < MIN_CTR_THRESHOLD ? 'text-red-500' : '')}>
+                        <TableCell
+                          className={cn(
+                            'text-right',
+                            c.ctr !== null && c.ctr < MIN_CTR_THRESHOLD ? 'text-red-500' : ''
+                          )}
+                        >
                           {c.ctr?.toFixed(2) ?? 'N/A'}%
                         </TableCell>
                         <TableCell className="text-right">${c.cpc?.toFixed(2) ?? 'N/A'}</TableCell>
-                        <TableCell className={cn("text-right", c.conversionRate !== null && c.conversionRate < MIN_CONVERSION_RATE_THRESHOLD ? 'text-red-500' : '')}>
+                        <TableCell
+                          className={cn(
+                            'text-right',
+                            c.conversionRate !== null &&
+                              c.conversionRate < MIN_CONVERSION_RATE_THRESHOLD
+                              ? 'text-red-500'
+                              : ''
+                          )}
+                        >
                           {c.conversionRate?.toFixed(1) ?? 'N/A'}%
                         </TableCell>
                         <TableCell>
@@ -613,7 +723,9 @@ export default function PpcCampaignAuditor() {
                                 </TooltipTrigger>
                                 <TooltipContent>
                                   <ul className="list-disc list-inside text-xs">
-                                    {c.issues.map((issue, i) => <li key={i}>{issue}</li>)}
+                                    {c.issues.map((issue, i) => (
+                                      <li key={i}>{issue}</li>
+                                    ))}
                                   </ul>
                                 </TooltipContent>
                               </Tooltip>
@@ -622,22 +734,24 @@ export default function PpcCampaignAuditor() {
                             <Badge variant="default">None</Badge>
                           )}
                         </TableCell>
-                         <TableCell>
+                        <TableCell>
                           {c.recommendations.length > 0 ? (
                             <TooltipProvider delayDuration={100}>
                               <Tooltip>
                                 <TooltipTrigger asChild>
-                                   <Badge variant="outline">{c.recommendations.length} Rec(s)</Badge>
+                                  <Badge variant="outline">{c.recommendations.length} Rec(s)</Badge>
                                 </TooltipTrigger>
                                 <TooltipContent>
                                   <ul className="list-disc list-inside text-xs">
-                                    {c.recommendations.map((rec, i) => <li key={i}>{rec}</li>)}
+                                    {c.recommendations.map((rec, i) => (
+                                      <li key={i}>{rec}</li>
+                                    ))}
                                   </ul>
                                 </TooltipContent>
                               </Tooltip>
                             </TooltipProvider>
                           ) : (
-                             <Badge variant="secondary">None</Badge>
+                            <Badge variant="secondary">None</Badge>
                           )}
                         </TableCell>
                       </TableRow>
