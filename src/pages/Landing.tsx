@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Wrench, Github } from 'lucide-react';
+import { ArrowRight, Wrench, Github, Twitter, Linkedin, Facebook } from 'lucide-react';
 
 const Landing = () => {
   return (
@@ -112,6 +112,63 @@ const Landing = () => {
           </div>
         </div>
       </main>
+
+      <footer className="bg-gray-50 border-t border-gray-200 mt-24">
+        <div className="container mx-auto px-6 py-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+            <div className="space-y-4">
+              <h4 className="text-lg font-semibold text-burnt-sienna">Resources</h4>
+              <nav className="space-y-2">
+                <Link to="/about" className="block text-gray-600 hover:text-burnt-sienna transition-colors">
+                  About Us
+                </Link>
+                <Link to="/documentation" className="block text-gray-600 hover:text-burnt-sienna transition-colors">
+                  Documentation
+                </Link>
+                <Link to="/blog" className="block text-gray-600 hover:text-burnt-sienna transition-colors">
+                  Blog
+                </Link>
+              </nav>
+            </div>
+
+            <div className="space-y-4">
+              <h4 className="text-lg font-semibold text-shakespeare">Connect</h4>
+              <div className="flex space-x-4">
+                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-shakespeare transition-colors">
+                  <Twitter className="h-5 w-5" />
+                </a>
+                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-shakespeare transition-colors">
+                  <Linkedin className="h-5 w-5" />
+                </a>
+                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-shakespeare transition-colors">
+                  <Facebook className="h-5 w-5" />
+                </a>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <h4 className="text-lg font-semibold text-jaffa">Legal</h4>
+              <nav className="space-y-2">
+                <Link to="/privacy" className="block text-gray-600 hover:text-jaffa transition-colors">
+                  Privacy Policy
+                </Link>
+                <Link to="/terms" className="block text-gray-600 hover:text-jaffa transition-colors">
+                  Terms of Service
+                </Link>
+                <Link to="/security" className="block text-gray-600 hover:text-jaffa transition-colors">
+                  Security
+                </Link>
+              </nav>
+            </div>
+          </div>
+
+          <div className="border-t border-gray-200 pt-8 text-center">
+            <p className="text-sm text-muted-foreground">
+              © {new Date().getFullYear()} Amazon Insights Sync. All rights reserved.
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };

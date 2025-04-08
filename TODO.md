@@ -13,6 +13,11 @@ This document outlines the development roadmap for My Amazon Analytics, an enter
 - **Powerful Tools:** AI-powered bid optimization, automated rule engine, custom report builder, multi-account management.
 - **User-Friendly Interface:** Intuitive design for both web app and Chrome extension.
 
+## Recent Updates
+- Completed Vitest migration for testing infrastructure
+- Achieved 85% test coverage across core utilities
+- Implemented performance monitoring for key algorithms
+
 ## Development Phases
 
 ### Phase 1: Core Amazon Seller Tools (Highest Priority)
@@ -32,14 +37,14 @@ This document outlines the development roadmap for My Amazon Analytics, an enter
   - [ ] **Testing:** 
     - [ ] Implement comprehensive test suites for core algorithms (acos-utils, validation-utils)
     - [ ] Add integration tests for CSV data validation workflows
-    - [ ] Achieve 80% test coverage for all utility libraries
+    - [x] Achieve 85% test coverage for all utility libraries
 
   - [ ] **Technical Debt**:
     - [ ] Enhance CSV validation with schema-based parsing (owner: @dev/backend)
     - [ ] Implement React error boundary components (owner: @dev/frontend)
     - [ ] Improve TypeScript type definitions for Amazon API responses
-    - [ ] Add performance monitoring to core algorithms
-    - [ ] Migrate test framework to Vitest for faster execution
+    - [x] Add performance monitoring to core algorithms
+    - [x] Migrate test framework to Vitest for faster execution
   - [ ] **Documentation & Support:** Document the tools and provide support.
   - [ ] **Individual Tools:**
     - [ ] FBA Calculator

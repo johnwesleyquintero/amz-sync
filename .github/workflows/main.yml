@@ -27,7 +27,7 @@ jobs:
       - name: Build
         run: npm run build
       - name: Test
-        run: npm run test # Add testing step
+        run: npm run test:coverage # Add testing with coverage
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         if: ${{ matrix.node-version == '18' }} # Only upload coverage from one node version
