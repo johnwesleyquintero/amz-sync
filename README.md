@@ -5,6 +5,7 @@
 
 ### Enterprise-Grade Amazon Advertising Analytics Platform
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/5e8f7348-e74c-4014-b1be-1aba4dd5043c/deploy-status)](https://app.netlify.com/sites/amazonsync/deploys)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-3178C6.svg)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-18.2+-61DAFB.svg)](https://reactjs.org/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
@@ -13,7 +14,7 @@
 
 **Transform Your Amazon Advertising Strategy with Data-Driven Insights**
 
-[🚀 Live Demo](https://myamazonanalytics.vercel.app/) • [📚 Documentation/Roadmap](https://github.com/johnwesleyquintero/my-amazon-analytics/blob/main/TODO.md) • [🐞 Report Issue](https://github.com/johnwesleyquintero/my-amazon-analytics/issues)
+[▲ Vercel](https://myamazonanalytics.vercel.app/) • [✳ Netlify](https://amazonsync.netlify.app/) • [📚 Documentation/Roadmap](https://github.com/johnwesleyquintero/my-amazon-analytics/blob/main/TODO.md) • [🐞 Report Issue](https://github.com/johnwesleyquintero/my-amazon-analytics/issues)
 
 </div>
 
@@ -83,6 +84,14 @@ npm run dev
 
 ```bash
 npm run build
+```
+
+### Pro Tip
+
+If you're using [Bun] as your package manager, you can use the following command to run the project:
+
+```bash
+bun cq
 ```
 
 ## 📈 Feature Roadmap

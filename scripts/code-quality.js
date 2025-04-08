@@ -1,7 +1,13 @@
 import chalk from 'chalk';
 import { execSync } from 'child_process';
 
-const commands = ['npm run format', 'npm run lint', 'npm run typecheck', 'npm run build'];
+const commands = [
+  'npm run format',
+  'npm run lint',
+  'npx tsc --noEmit',
+  'npm run build',
+  'npx vite --port=4000',
+];
 
 (async () => {
   try {
