@@ -1,0 +1,10 @@
+{
+  "parallel": true,
+  "commands": ["npm run format", "npm run lint", "npx tsc --noEmit", "npm run build"],
+  "errorCategories": {
+    "style": {
+      "patterns": ["style.*rule", "prettier", "eslint"],
+      "suggestion": "Review code style guidelines and formatting rules"
+    }
+  }
+}

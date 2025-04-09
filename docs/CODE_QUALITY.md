@@ -2,7 +2,9 @@
 
 ## Overview
 
-The Code Quality Framework automates code quality checks within your project, ensuring adherence to formatting standards, linting rules, type safety, and successful builds. **Crucially, it runs all configured checks sequentially, even if some produce errors or warnings, and provides a consolidated summary of any issues encountered at the end.** This facilitates easier debugging and ensures all potential problems are highlighted in a single run. When integrated into your CI pipeline, it consistently maintains high code quality standards.
+The Code Quality Framework automates code quality checks within your project, ensuring adherence to formatting standards, linting rules, type safety, and successful builds. It supports both parallel and sequential execution of checks, with intelligent error categorization and reporting. The framework provides a consolidated summary of any issues encountered, categorizing them for easier debugging and resolution. When integrated into your CI pipeline, it consistently maintains high code quality standards.
+
+For detailed configuration options including parallel execution and error categorization, see [Code Quality Configuration Guide](docs/CODE_QUALITY_CONFIG.md).
 
 ## Dependencies
 
