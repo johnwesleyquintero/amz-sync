@@ -1,5 +1,6 @@
 import Papa from 'papaparse';
 import { toast } from '@/hooks/use-toast';
+import { validateCsvWithSchema, type CsvSchema } from './validation-utils';
 
 export interface BatchProcessingOptions {
   batchSize?: number;
@@ -76,7 +77,28 @@ export class BatchProcessor<T> {
       try {
         for (let i = 0; i < batch.length; i++) {
           const row = batch[i];
-          if (this.options.validateRow && !this.options.validateRow(row)) {
+          if (this.options.schema) {
+          try {
+            validateCsvWithSchema([row], this.options.schema);
+          } catch (error) {
+            if (error instanceof AggregateError) {
+              error.errors.forEach((e: ValidationError) => {
+                this.errors.push({
+                  row: currentBatch * (this.options.batchSize || 1000) + i,
+                  error: e.message,
+                  data: row,
+                });
+              });
+            } else {
+              this.errors.push({
+                row: currentBatch * (this.options.batchSize || 1000) + i,
+                error: error.message,
+                data: row,
+              });
+            }
+            continue;
+          }
+        } else if (this.options.validateRow && !this.options.validateRow(row)) {
             this.errors.push({
               row: currentBatch * (this.options.batchSize || 1000) + i,
               error: 'Row validation failed',

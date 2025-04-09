@@ -121,3 +121,40 @@ export interface CompetitorData {
 }
 
 export type ReportTimeframe = 'last7' | 'last30' | 'last90' | 'custom';
+
+export interface CsvSchema {
+  columns: {
+    [key: string]: {
+      required: boolean;
+      dataType: 'string' | 'number' | 'date' | 'boolean';
+      format?: RegExp;
+      min?: number;
+      max?: number;
+      allowedValues?: string[];
+    };
+  };
+  strictMode?: boolean;
+}
+
+export const AmazonCsvSchemas = {
+  ACOS: {
+    columns: {
+      campaignId: { required: true, dataType: 'string', format: /^\d{10}$/ },
+      acos: { required: true, dataType: 'number', min: 0, max: 100 },
+      spend: { required: true, dataType: 'number', min: 0 },
+      sales: { required: true, dataType: 'number', min: 0 },
+      date: { required: true, dataType: 'date', format: /^\d{4}-\d{2}-\d{2}$/ }
+    },
+    strictMode: true
+  } as CsvSchema,
+  PPC: {
+    columns: {
+      keyword: { required: true, dataType: 'string' },
+      impressions: { required: true, dataType: 'number', min: 0 },
+      clicks: { required: true, dataType: 'number', min: 0 },
+      ctr: { required: true, dataType: 'number', min: 0, max: 100 },
+      conversionRate: { required: true, dataType: 'number', min: 0, max: 100 }
+    },
+    strictMode: true
+  } as CsvSchema
+};

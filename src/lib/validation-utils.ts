@@ -162,3 +162,83 @@ export function checkRateLimit(requestCount: number, windowStart: number): boole
 export function getSecurityHeaders(): Record<string, string> {
   return securityConfig.headers;
 }
+
+// CSV Schema Validation
+
+export function validateCsvWithSchema(data: any[], schema: CsvSchema): void {
+  const errors: ValidationError[] = [];
+  
+  data.forEach((row, index) => {
+    // Validate required columns
+    Object.entries(schema.columns).forEach(([colName, def]) => {
+      if (def.required && !(colName in row)) {
+        errors.push(new ValidationError(
+          `Missing required column '${colName}' at row ${index + 1}`
+        ));
+      }
+
+      if (row[colName]) {
+        // Type checking
+        const actualType = detectDataType(row[colName]);
+        if (actualType !== def.dataType) {
+          errors.push(new ValidationError(
+            `Invalid type for '${colName}' at row ${index + 1}: Expected ${def.dataType} but got ${actualType}`
+          ));
+        }
+
+        // Format validation
+        if (def.format && !def.format.test(String(row[colName]))) {
+          errors.push(new ValidationError(
+            `Invalid format for '${colName}' at row ${index + 1}`
+          ));
+        }
+
+        // Value range checks
+        if (typeof def.min === 'number' && Number(row[colName]) < def.min) {
+          errors.push(new ValidationError(
+            `Value too low for '${colName}' at row ${index + 1}: Minimum ${def.min}`
+          ));
+        }
+        
+        if (typeof def.max === 'number' && Number(row[colName]) > def.max) {
+          errors.push(new ValidationError(
+            `Value too high for '${colName}' at row ${index + 1}: Maximum ${def.max}`
+          ));
+        }
+
+        // Allowed values check
+        if (def.allowedValues && !def.allowedValues.includes(String(row[colName]))) {
+          errors.push(new ValidationError(
+            `Invalid value for '${colName}' at row ${index + 1}: Not in allowed values`
+          ));
+        }
+      }
+    });
+
+    // Strict mode validation
+    if (schema.strictMode) {
+      Object.keys(row).forEach(colName => {
+        if (!schema.columns[colName]) {
+          errors.push(new ValidationError(
+            `Unexpected column '${colName}' at row ${index + 1} in strict mode`
+          ));
+        }
+      });
+    }
+  });
+
+  if (errors.length > 0) {
+    throw new AggregateError(errors, 'CSV validation failed');
+  }
+}
+
+function detectDataType(value: any): string {
+  if (typeof value === 'string') {
+    if (!isNaN(Date.parse(value))) return 'date';
+    if (value.toLowerCase() === 'true' || value.toLowerCase() === 'false') return 'boolean';
+    return 'string';
+  }
+  if (typeof value === 'number') return 'number';
+  if (typeof value === 'boolean') return 'boolean';
+  return typeof value;
+}
