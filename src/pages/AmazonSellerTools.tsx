@@ -216,9 +216,8 @@ export default function AmazonSellerTools() {
       id="tools"
       className="py-12 md:py-16 bg-gradient-to-b from-white to-blue-50 dark:from-gray-900 dark:to-slate-950" // Consistent background gradient
     >
-      <div className="container px-4 md:px-6">
-        {/* Section Header */}
-        <div className="mb-8 md:mb-12 text-center">
+      <div className="container px-4 md:px-6 max-w-[1200px] mx-auto">
+        <div className="mb-8 md:mb-12 text-center space-y-4">
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl flex items-center justify-center gap-2 text-gray-900 dark:text-gray-100">
             <Wrench className="h-7 w-7 text-primary" /> Amazon Seller Tools
           </h2>
@@ -287,7 +286,7 @@ export default function AmazonSellerTools() {
               activeTool.component
             ) : (
               <Card>
-                <CardContent className="p-6 text-center text-muted-foreground">
+                <CardContent className="p-4 text-center text-muted-foreground">
                   Select a tool from the sidebar to get started.
                 </CardContent>
               </Card>

@@ -89,8 +89,9 @@ This document outlines the development roadmap for My Amazon Analytics, an enter
     - [ ] **UI Consistency Audit:**
       - [x] Create UI style guide document outlining spacing, typography and container requirements
       - [ ] Standardize ToolLabel component usage across all tools
-      - [ ] Align container padding/margins in ToolCard components
-      - [ ] Unify beta badge positioning and styling in tool headers
+      - [x] Align container padding/margins in ToolCard components
+      - [x] Unify beta badge positioning and styling in tool headers
+      - [ ] Standardizing `CSV Format Requirements` across all tool UI <!-- Added New Task Here -->
     - [ ] **Component Decomposition:** Break down the `FeaturedToolsSection` component into smaller, more focused components (e.g., `ToolCard`, `ToolTabs`).
     - [ ] **Consistent Styling:** Use consistent styling across all tool components.
     - [ ] **Version Management:** Make the version number a variable or pull it from a configuration file.

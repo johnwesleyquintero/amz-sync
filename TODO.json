@@ -431,7 +431,7 @@
                     {
                       "id": "p1-s1-t14-sub1-sub3",
                       "text": "Align container padding/margins in ToolCard components",
-                      "completed": false,
+                      "completed": true,
                       "owner": null,
                       "subTasks": []
                     },
@@ -450,8 +450,15 @@
                       "subTasks": []
                     },
                     {
-                      "id": "p1-s1-t14-sub1-sub4",
+                      "id": "p1-s1-t14-sub1-sub6",
                       "text": "Unify beta badge positioning and styling in tool headers",
+                      "completed": false,
+                      "owner": null,
+                      "subTasks": []
+                    },
+                    {
+                      "id": "p1-s1-t14-sub5",
+                      "text": "Standardize `CSV Format Requirements` display across all tool UIs.",
                       "completed": false,
                       "owner": null,
                       "subTasks": []
