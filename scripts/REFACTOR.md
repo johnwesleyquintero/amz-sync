@@ -380,19 +380,18 @@ console.log(chalk.cyan(`${modeIcon} Running ${this.totalChecks} checks in ${mode
   ? `Timeout after ${check.timeout ?? this.config.commandTimeout / 1000}s`
   : `Failed (Exit Code: ${result.exitCode ?? 'N/A'}${result.signal ? `, Signal: ${result.signal}` : ''})`;
 
+  console.error(
+  chalk.red(`✘ ${failureMsg}: ${chalk.bold(check.name)}`) + chalk.gray(` (${durationSec}s)\n`)
+  );
 
-    console.error(
-      chalk.red(`✘ ${failureMsg}: ${chalk.bold(check.name)}`) + chalk.gray(` (${durationSec}s)\n`)
-    );
+  // Show immediate snippet of the error
+  const errorSnippet = (result.output || 'No output captured.').substring(0, 300);
+  console.error(
+  chalk.gray(`  Error snippet: ${errorSnippet}${errorSnippet.length === 300 ? '...' : ''}\n`)
+  );
 
-    // Show immediate snippet of the error
-    const errorSnippet = (result.output || 'No output captured.').substring(0, 300);
-    console.error(
-      chalk.gray(`  Error snippet: ${errorSnippet}${errorSnippet.length === 300 ? '...' : ''}\n`)
-    );
-
-    const { category, suggestion } = categorizeError(result.output, this.config.errorCategories);
-    this.failedChecks.push({ check, result, category, suggestion });
+  const { category, suggestion } = categorizeError(result.output, this.config.errorCategories);
+  this.failedChecks.push({ check, result, category, suggestion });
 
 }
 
@@ -420,16 +419,15 @@ console.log(chalk.cyan(`${modeIcon} Running ${this.totalChecks} checks in ${mode
   ? chalk.green.bold('✔ All checks passed successfully!')
   : chalk.red.bold(`✘ ${this.failedChecks.length} check(s) failed.`);
 
+  console.log(chalk.cyan.bold(`\n--- Code Quality Checks Complete ---`));
+  console.log(`Ran ${this.checksCompleted}/${this.totalChecks} checks in ${totalDuration}s.`);
+  console.log(`${resultMessage}\n`);
 
-    console.log(chalk.cyan.bold(`\n--- Code Quality Checks Complete ---`));
-    console.log(`Ran ${this.checksCompleted}/${this.totalChecks} checks in ${totalDuration}s.`);
-    console.log(`${resultMessage}\n`);
+  if (!allPassed) {
+  this.printFailureSummary();
+  }
 
-    if (!allPassed) {
-      this.printFailureSummary();
-    }
-
-    return allPassed;
+  return allPassed;
 
 }
 
