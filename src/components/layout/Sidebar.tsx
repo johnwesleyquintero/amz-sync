@@ -1,21 +1,24 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button'; // Import Button
+import { Button } from '@/components/ui/button';
+import { useSidebar } from '@/hooks/use-sidebar';
 import {
   BarChart3,
   FileSpreadsheet,
   Settings,
-  // Home, // Home icon wasn't used, removed unless needed elsewhere
   Users,
   LayoutDashboard,
   Search,
   ShoppingBag,
   Wrench,
+  Menu,
+  X,
 } from 'lucide-react';
 
 const Sidebar = () => {
   const location = useLocation();
+  const { isOpen, toggle } = useSidebar();
 
   // Navigation items remain the same
   const navigation = [
@@ -31,18 +34,49 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className="w-64 border-r border-border bg-white dark:bg-sidebar flex-shrink-0">
+    <aside
+      className={cn(
+        'fixed md:relative z-30 h-full transition-all duration-300 ease-in-out',
+        'border-r border-border bg-white dark:bg-sidebar flex-shrink-0',
+        isOpen ? 'w-64 translate-x-0' : 'w-64 -translate-x-full md:w-16 md:translate-x-0'
+      )}
+    >
+      {/* Mobile overlay */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 md:hidden"
+          onClick={toggle}
+          aria-hidden="true"
+        />
+      )}
       {' '}
       {/* Added flex-shrink-0 */}
       <div className="flex flex-col h-full">
         {/* Header Section */}
         <div className="p-4 border-b border-border">
           {/* Wrap logo/title in a link to the dashboard */}
-          <Link to="/dashboard" className="flex items-center gap-2 group">
-            <img src="/logo.svg" className="h-8 w-8" alt="Amazon Analytics Logo" />
-            <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100 group-hover:text-burnt-sienna transition-colors duration-200">
-              My Amazon Analytics
-            </h1>
+          <div className="flex items-center justify-between">
+            <Link to="/dashboard" className="flex items-center gap-2 group">
+              <img src="/logo.svg" className="h-8 w-8" alt="Amazon Analytics Logo" />
+              <h1
+                className={cn(
+                  'text-xl font-bold text-gray-900 dark:text-gray-100 group-hover:text-burnt-sienna transition-colors duration-200',
+                  !isOpen && 'md:hidden'
+                )}
+              >
+                My Amazon Analytics
+              </h1>
+            </Link>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden"
+              onClick={toggle}
+            >
+              <X className="h-5 w-5" />
+            </Button>
+          </div>
+
           </Link>
         </div>
 
