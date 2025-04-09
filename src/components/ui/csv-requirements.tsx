@@ -13,7 +13,7 @@ type CsvRequirementsProps = {
 export function CsvRequirements({
   requiredColumns,
   optionalColumns = [],
-  maxFileSize = '5MB'
+  maxFileSize = '5MB',
 }: CsvRequirementsProps) {
   return (
     <Card className="mt-4 border-dashed border-2 border-muted">
@@ -36,8 +36,10 @@ export function CsvRequirements({
         <div className="space-y-1">
           <Label className="font-semibold">Required Columns:</Label>
           <ul className="list-disc pl-6 text-sm">
-            {requiredColumns.map((col) => (
-              <li key={col} className="font-mono">{col}</li>
+            {requiredColumns.map(col => (
+              <li key={col} className="font-mono">
+                {col}
+              </li>
             ))}
           </ul>
         </div>
@@ -46,8 +48,10 @@ export function CsvRequirements({
           <div className="space-y-1">
             <Label className="font-semibold">Optional Columns:</Label>
             <ul className="list-disc pl-6 text-sm">
-              {optionalColumns.map((col) => (
-                <li key={col} className="font-mono">{col}</li>
+              {optionalColumns.map(col => (
+                <li key={col} className="font-mono">
+                  {col}
+                </li>
               ))}
             </ul>
           </div>

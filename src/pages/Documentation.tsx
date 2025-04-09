@@ -43,7 +43,9 @@ const Documentation = () => {
               </h2>
               <div className="space-y-4">
                 <div className="border-l-4 border-primary pl-4">
-                  <h3 className="font-medium text-gray-900 dark:text-gray-100">Installation Guide</h3>
+                  <h3 className="font-medium text-gray-900 dark:text-gray-100">
+                    Installation Guide
+                  </h3>
                   <p className="text-gray-700 dark:text-gray-300 mt-1">
                     Set up the development environment and install dependencies using npm or yarn.
                   </p>
@@ -58,7 +60,9 @@ const Documentation = () => {
             </section>
 
             <section className="bg-white p-6 rounded-lg shadow-md dark:bg-gray-800 dark:border dark:border-gray-700">
-              <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Tool Guides</h2>
+              <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">
+                Tool Guides
+              </h2>
               <div className="space-y-4">
                 <div className="border-l-4 border-primary pl-4">
                   <h3 className="font-medium text-gray-900 dark:text-gray-100">ACOS Analyzer</h3>
@@ -67,7 +71,9 @@ const Documentation = () => {
                   </p>
                 </div>
                 <div className="border-l-4 border-primary pl-4">
-                  <h3 className="font-medium text-gray-900 dark:text-gray-100">Keyword Deduplicator</h3>
+                  <h3 className="font-medium text-gray-900 dark:text-gray-100">
+                    Keyword Deduplicator
+                  </h3>
                   <p className="text-gray-700 dark:text-gray-300 mt-1">
                     Guide for optimizing PPC campaigns through keyword management.
                   </p>
@@ -76,7 +82,9 @@ const Documentation = () => {
             </section>
 
             <section className="bg-white p-6 rounded-lg shadow-md dark:bg-gray-800 dark:border dark:border-gray-700">
-              <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">API Reference</h2>
+              <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">
+                API Reference
+              </h2>
               <div className="space-y-4">
                 <div className="border-l-4 border-primary pl-4">
                   <h3 className="font-medium text-gray-900 dark:text-gray-100">Authentication</h3>

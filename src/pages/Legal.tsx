@@ -2,7 +2,12 @@
 import React from 'react';
 import MainLayout from '@/components/layout/MainLayout';
 import { FileText } from 'lucide-react';
-import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion';
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from '@/components/ui/accordion';
 
 export default function Legal() {
   return (
@@ -13,9 +18,7 @@ export default function Legal() {
             <FileText className="h-6 w-6 text-primary" />
             Legal Information
           </h1>
-          <p className="text-muted-foreground">
-            Legal disclosures and compliance documents
-          </p>
+          <p className="text-muted-foreground">Legal disclosures and compliance documents</p>
         </div>
 
         <div className="space-y-6">

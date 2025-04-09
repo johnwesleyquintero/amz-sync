@@ -19,7 +19,9 @@ export const ErrorMessages = {
 
 export function useErrorHandler() {
   const showError = (error: Error) => {
-    const code = (error as any).errorCode || ErrorCodes.UNKNOWN;
+    const code = (error instanceof Error && 'errorCode' in error) 
+    ? (error as CustomError).errorCode 
+    : ErrorCodes.UNKNOWN;
     ToastUtils.error({
       title: 'Operation Failed',
       description: ErrorMessages[code] || error.message
@@ -32,18 +34,27 @@ export function useErrorHandler() {
 
 export function ErrorBoundaryWithMessage({ children }: { children: React.ReactNode }) {
   return (
-    <ErrorBoundary 
-      onError={(error) => 
+    <ErrorBoundary
+      onError={(error: unknown) => {
         ToastUtils.error({
           title: 'Component Error',
-          description: ErrorMessages[(error as any).errorCode] || error.message
-        })
-      }
+          description: ('errorCode' in error) 
+        ? ErrorMessages[(error as CustomError).errorCode] 
+        : (error as Error).message
+        });
+      }}
     >
       {children}
     </ErrorBoundary>
   );
 }
+
+/**
+ * Represents application-specific errors with error codes
+ * @typedef {Object} CustomError
+ * @property {string} errorCode - Unique error identifier from ErrorCodes
+ */
+type CustomError = Error & { errorCode: keyof typeof ErrorCodes };
 
 export function handleError(error: unknown) {
   const normalizedError = error instanceof Error 
@@ -52,7 +63,11 @@ export function handleError(error: unknown) {
   
   return {
     error: normalizedError,
-    code: (normalizedError as any).errorCode || ErrorCodes.UNKNOWN,
-    message: ErrorMessages[(normalizedError as any).errorCode] || normalizedError.message
+    code: ('errorCode' in normalizedError) 
+    ? (normalizedError as CustomError).errorCode 
+    : ErrorCodes.UNKNOWN,
+    message: ('errorCode' in normalizedError) 
+      ? ErrorMessages[normalizedError.errorCode as keyof typeof ErrorCodes]
+      : normalizedError.message
   };
 }

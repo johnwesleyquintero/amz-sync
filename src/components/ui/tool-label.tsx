@@ -17,11 +17,7 @@ const ToolLabel: React.FC<ToolLabelProps> = ({ title, description, status }) => 
           </span>
         )}
       </div>
-      {description && (
-        <p className="mt-2 text-gray-600 text-base leading-relaxed">
-          {description}
-        </p>
-      )}
+      {description && <p className="mt-2 text-gray-600 text-base leading-relaxed">{description}</p>}
     </div>
   );
 };

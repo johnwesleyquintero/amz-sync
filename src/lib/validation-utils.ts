@@ -165,52 +165,58 @@ export function getSecurityHeaders(): Record<string, string> {
 
 // CSV Schema Validation
 
-export function validateCsvWithSchema(data: any[], schema: CsvSchema): void {
+export function validateCsvWithSchema(data: Record<string, unknown>[], schema: CsvSchema): void {
   const errors: ValidationError[] = [];
-  
+
   data.forEach((row, index) => {
     // Validate required columns
     Object.entries(schema.columns).forEach(([colName, def]) => {
       if (def.required && !(colName in row)) {
-        errors.push(new ValidationError(
-          `Missing required column '${colName}' at row ${index + 1}`
-        ));
+        errors.push(
+          new ValidationError(`Missing required column '${colName}' at row ${index + 1}`)
+        );
       }
 
       if (row[colName]) {
         // Type checking
         const actualType = detectDataType(row[colName]);
         if (actualType !== def.dataType) {
-          errors.push(new ValidationError(
-            `Invalid type for '${colName}' at row ${index + 1}: Expected ${def.dataType} but got ${actualType}`
-          ));
+          errors.push(
+            new ValidationError(
+              `Invalid type for '${colName}' at row ${index + 1}: Expected ${def.dataType} but got ${actualType}`
+            )
+          );
         }
 
         // Format validation
         if (def.format && !def.format.test(String(row[colName]))) {
-          errors.push(new ValidationError(
-            `Invalid format for '${colName}' at row ${index + 1}`
-          ));
+          errors.push(new ValidationError(`Invalid format for '${colName}' at row ${index + 1}`));
         }
 
         // Value range checks
         if (typeof def.min === 'number' && Number(row[colName]) < def.min) {
-          errors.push(new ValidationError(
-            `Value too low for '${colName}' at row ${index + 1}: Minimum ${def.min}`
-          ));
+          errors.push(
+            new ValidationError(
+              `Value too low for '${colName}' at row ${index + 1}: Minimum ${def.min}`
+            )
+          );
         }
-        
+
         if (typeof def.max === 'number' && Number(row[colName]) > def.max) {
-          errors.push(new ValidationError(
-            `Value too high for '${colName}' at row ${index + 1}: Maximum ${def.max}`
-          ));
+          errors.push(
+            new ValidationError(
+              `Value too high for '${colName}' at row ${index + 1}: Maximum ${def.max}`
+            )
+          );
         }
 
         // Allowed values check
         if (def.allowedValues && !def.allowedValues.includes(String(row[colName]))) {
-          errors.push(new ValidationError(
-            `Invalid value for '${colName}' at row ${index + 1}: Not in allowed values`
-          ));
+          errors.push(
+            new ValidationError(
+              `Invalid value for '${colName}' at row ${index + 1}: Not in allowed values`
+            )
+          );
         }
       }
     });
@@ -219,9 +225,9 @@ export function validateCsvWithSchema(data: any[], schema: CsvSchema): void {
     if (schema.strictMode) {
       Object.keys(row).forEach(colName => {
         if (!schema.columns[colName]) {
-          errors.push(new ValidationError(
-            `Unexpected column '${colName}' at row ${index + 1} in strict mode`
-          ));
+          errors.push(
+            new ValidationError(`Unexpected column '${colName}' at row ${index + 1} in strict mode`)
+          );
         }
       });
     }
@@ -232,7 +238,7 @@ export function validateCsvWithSchema(data: any[], schema: CsvSchema): void {
   }
 }
 
-function detectDataType(value: any): string {
+function detectDataType(value: unknown): string {
   if (typeof value === 'string') {
     if (!isNaN(Date.parse(value))) return 'date';
     if (value.toLowerCase() === 'true' || value.toLowerCase() === 'false') return 'boolean';
@@ -242,7 +248,6 @@ function detectDataType(value: any): string {
   if (typeof value === 'boolean') return 'boolean';
   return typeof value;
 }
-
 
 export interface CsvSchema {
   columns: {
@@ -263,20 +268,20 @@ export const csvSchemas = {
   acosReport: {
     columns: {
       'Campaign Name': { dataType: 'string', required: true },
-      'Spend': { dataType: 'number', required: true, min: 0 },
-      'Sales': { dataType: 'number', required: true, min: 0 },
-      'ACoS': { dataType: 'number', required: true, min: 0, max: 100 },
-      'Impressions': { dataType: 'number', min: 0 },
-      'Clicks': { dataType: 'number', min: 0 },
+      Spend: { dataType: 'number', required: true, min: 0 },
+      Sales: { dataType: 'number', required: true, min: 0 },
+      ACoS: { dataType: 'number', required: true, min: 0, max: 100 },
+      Impressions: { dataType: 'number', min: 0 },
+      Clicks: { dataType: 'number', min: 0 },
     },
-    strictMode: true
+    strictMode: true,
   },
   fbaInventory: {
     columns: {
-      'SKU': { dataType: 'string', required: true, format: /^[A-Z0-9-]{1,40}$/ },
-      'FNSKU': { dataType: 'string', format: /^[A-Z0-9]{10}$/ },
-      'Quantity': { dataType: 'number', required: true, min: 0 },
-      'Condition': { dataType: 'string', allowedValues: ['NEW', 'REFURBISHED', 'USED'] },
-    }
-  }
+      SKU: { dataType: 'string', required: true, format: /^[A-Z0-9-]{1,40}$/ },
+      FNSKU: { dataType: 'string', format: /^[A-Z0-9]{10}$/ },
+      Quantity: { dataType: 'number', required: true, min: 0 },
+      Condition: { dataType: 'string', allowedValues: ['NEW', 'REFURBISHED', 'USED'] },
+    },
+  },
 };

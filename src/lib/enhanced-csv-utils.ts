@@ -78,27 +78,27 @@ export class BatchProcessor<T> {
         for (let i = 0; i < batch.length; i++) {
           const row = batch[i];
           if (this.options.schema) {
-          try {
-            validateCsvWithSchema([row], this.options.schema);
-          } catch (error) {
-            if (error instanceof AggregateError) {
-              error.errors.forEach((e: ValidationError) => {
+            try {
+              validateCsvWithSchema([row], this.options.schema);
+            } catch (error) {
+              if (error instanceof AggregateError) {
+                error.errors.forEach((e: ValidationError) => {
+                  this.errors.push({
+                    row: currentBatch * (this.options.batchSize || 1000) + i,
+                    error: e.message,
+                    data: row,
+                  });
+                });
+              } else {
                 this.errors.push({
                   row: currentBatch * (this.options.batchSize || 1000) + i,
-                  error: e.message,
+                  error: error.message,
                   data: row,
                 });
-              });
-            } else {
-              this.errors.push({
-                row: currentBatch * (this.options.batchSize || 1000) + i,
-                error: error.message,
-                data: row,
-              });
+              }
+              continue;
             }
-            continue;
-          }
-        } else if (this.options.validateRow && !this.options.validateRow(row)) {
+          } else if (this.options.validateRow && !this.options.validateRow(row)) {
             this.errors.push({
               row: currentBatch * (this.options.batchSize || 1000) + i,
               error: 'Row validation failed',

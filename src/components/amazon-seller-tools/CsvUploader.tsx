@@ -22,7 +22,7 @@ type SampleDataType =
   | 'keyword-trend'; // Added missing types based on usage in other files
 
 type CsvUploaderProps<T extends CsvRow> = {
-  onUploadSuccess: (data: T[]) => void;
+  onUploadSuccess: (data: CsvRow[]) => void;
   isLoading: boolean;
   onClear: () => void;
   hasData: boolean;
@@ -48,10 +48,13 @@ class CSVValidationError extends Error {
 }
 
 // Define validation function if needed, otherwise remove
-const validateCSVSchema = (fields: string[], data: any[], toolType: string): string[] => {
+const validateCSVSchema = (fields: string[], data: CsvRow[], toolType: string): string[] => {
   try {
     const schema = csvSchemas[toolType as keyof typeof csvSchemas];
-    const parsedData = parseCsvData(data.map(row => row.join(',')).join('\n'), toolType as keyof typeof csvSchemas);
+    const parsedData = parseCsvData(
+      data.map(row => row.join(',')).join('\n'),
+      toolType as keyof typeof csvSchemas
+    );
     return [];
   } catch (error) {
     if (error instanceof AggregateError) {

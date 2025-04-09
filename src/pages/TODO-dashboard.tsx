@@ -177,7 +177,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, level = 0, onToggleTask }) =>
                   dependencies: subTask.dependencies || [],
                   attachments: subTask.attachments || [],
                   watchers: subTask.watchers || [],
-                  subTasks: subTask.subTasks || []
+                  subTasks: subTask.subTasks || [],
                 }}
                 level={level + 1}
                 onToggleTask={onToggleTask}
@@ -320,7 +320,7 @@ const TODODashboard: React.FC = () => {
                                 dependencies: task.dependencies || [],
                                 attachments: task.attachments || [],
                                 watchers: task.watchers || [],
-                                subTasks: task.subTasks || []
+                                subTasks: task.subTasks || [],
                               }}
                               level={0}
                               onToggleTask={handleToggleTask} // Pass the handler down

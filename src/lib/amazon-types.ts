@@ -143,9 +143,9 @@ export const AmazonCsvSchemas = {
       acos: { required: true, dataType: 'number', min: 0, max: 100 },
       spend: { required: true, dataType: 'number', min: 0 },
       sales: { required: true, dataType: 'number', min: 0 },
-      date: { required: true, dataType: 'date', format: /^\d{4}-\d{2}-\d{2}$/ }
+      date: { required: true, dataType: 'date', format: /^\d{4}-\d{2}-\d{2}$/ },
     },
-    strictMode: true
+    strictMode: true,
   } as CsvSchema,
   PPC: {
     columns: {
@@ -153,8 +153,8 @@ export const AmazonCsvSchemas = {
       impressions: { required: true, dataType: 'number', min: 0 },
       clicks: { required: true, dataType: 'number', min: 0 },
       ctr: { required: true, dataType: 'number', min: 0, max: 100 },
-      conversionRate: { required: true, dataType: 'number', min: 0, max: 100 }
+      conversionRate: { required: true, dataType: 'number', min: 0, max: 100 },
     },
-    strictMode: true
-  } as CsvSchema
+    strictMode: true,
+  } as CsvSchema,
 };

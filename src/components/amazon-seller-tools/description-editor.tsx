@@ -537,11 +537,11 @@ export default function DescriptionEditor() {
       <CardContent className="space-y-6">
         {/* CSV Format Info */}
         <CsvRequirements
-  requiredColumns={['product', 'description']}
-  optionalColumns={['asin']}
-  maxFileSize="5MB"
-  className="mt-4"
-/>
+          requiredColumns={['product', 'description']}
+          optionalColumns={['asin']}
+          maxFileSize="5MB"
+          className="mt-4"
+        />
 
         {/* Input Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

@@ -19,7 +19,7 @@ export function parseCsvValue(value: string, schemaType?: 'string' | 'number' | 
 }
 
 export function validateCsvAgainstSchema(
-  data: any[],
+  data: Record<string, unknown>[],
   headers: string[],
   schema: CsvSchema
 ): void {
@@ -49,27 +49,39 @@ export function validateCsvAgainstSchema(
         const def = schema.columns[column];
 
         if (def.required && (value === null || value === undefined || value === '')) {
-          errors.push(new ValidationError(`Missing required value for ${column} at row ${rowIndex + 1}`));
+          errors.push(
+            new ValidationError(`Missing required value for ${column} at row ${rowIndex + 1}`)
+          );
         }
 
         if (value !== null && value !== undefined && value !== '') {
           // Type validation
           const parsed = parseCsvValue(String(value), def.dataType);
           if (typeof parsed !== def.dataType && def.dataType === 'number' && isNaN(parsed)) {
-            errors.push(new ValidationError(`Invalid number format for ${column} at row ${rowIndex + 1}`));
+            errors.push(
+              new ValidationError(`Invalid number format for ${column} at row ${rowIndex + 1}`)
+            );
           }
 
           // Format validation
           if (def.format && !def.format.test(String(value))) {
-            errors.push(new ValidationError(`Format mismatch for ${column} at row ${rowIndex + 1}`));
+            errors.push(
+              new ValidationError(`Format mismatch for ${column} at row ${rowIndex + 1}`)
+            );
           }
 
           // Value constraints
           if (typeof def.min === 'number' && Number(value) < def.min) {
-            errors.push(new ValidationError(`${column} value too low at row ${rowIndex + 1} (min ${def.min})`));
+            errors.push(
+              new ValidationError(`${column} value too low at row ${rowIndex + 1} (min ${def.min})`)
+            );
           }
           if (typeof def.max === 'number' && Number(value) > def.max) {
-            errors.push(new ValidationError(`${column} value too high at row ${rowIndex + 1} (max ${def.max})`));
+            errors.push(
+              new ValidationError(
+                `${column} value too high at row ${rowIndex + 1} (max ${def.max})`
+              )
+            );
           }
 
           // Allowed values
@@ -86,17 +98,27 @@ export function validateCsvAgainstSchema(
   }
 }
 
-export function parseCsvData(csvText: string, schemaType: keyof typeof csvSchemas): any[] {
+export function parseCsvData(
+  csvText: string,
+  schemaType: keyof typeof csvSchemas
+): Record<string, unknown>[] {
   const schema = csvSchemas[schemaType];
   const rows = csvText.split('\n').filter(line => line.trim());
-  const headers = rows.shift()?.split(',').map(h => h.trim()) || [];
-  
+  const headers =
+    rows
+      .shift()
+      ?.split(',')
+      .map(h => h.trim()) || [];
+
   const data = rows.map((row, index) => {
     const values = row.split(',');
-    return headers.reduce((obj, header, i) => {
-      obj[header] = parseCsvValue(values[i], schema.columns[header]?.dataType);
-      return obj;
-    }, {} as any);
+    return headers.reduce(
+      (obj, header, i) => {
+        obj[header] = parseCsvValue(values[i], schema.columns[header]?.dataType);
+        return obj;
+      },
+      {} as Record<string, unknown>
+    );
   });
 
   validateCsvAgainstSchema(data, headers, schema);

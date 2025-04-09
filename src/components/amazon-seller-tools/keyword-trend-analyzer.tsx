@@ -318,10 +318,7 @@ export default function KeywordTrendAnalyzer() {
       </CardHeader>
       <CardContent className="space-y-6">
         {/* CSV Format Info */}
-        <CsvRequirements
-        requiredColumns={['date']}
-        maxFileSize="5MB"
-      />
+        <CsvRequirements requiredColumns={['date']} maxFileSize="5MB" />
 
         {/* Input Section */}
         <div className="space-y-4 rounded-lg border p-4">

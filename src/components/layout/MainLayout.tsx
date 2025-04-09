@@ -43,9 +43,11 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
         {/* TopBar: Fixed height (defined internally), prevents shrinking */}
         <TopBar />
         {/* Main Content: Enhanced scroll area with subtle texture */}
-        <main className="flex-1 overflow-y-auto p-6 bg-gradient-to-br from-background/70 via-background/30 to-background/70 \
+        <main
+          className="flex-1 overflow-y-auto p-6 bg-gradient-to-br from-background/70 via-background/30 to-background/70 \
           shadow-inner-xl dark:shadow-neutral-900/30 \
-          transition-all duration-300">
+          transition-all duration-300"
+        >
           {children}
         </main>
       </div>
