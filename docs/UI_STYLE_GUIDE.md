@@ -91,6 +91,19 @@ This document outlines the core UI design patterns and requirements for Amazon I
 
 ## Component-Specific Guidelines
 
+### CSV Requirements Component
+```tsx
+<CsvRequirements 
+  requiredColumns={['date', 'product_id']}
+  optionalColumns={['sales_rank', 'review_count']}
+  maxFileSize="10MB"
+/>
+```
+- Always place below main content section
+- Use border-dashed styling for visual distinction
+- Include required/optional columns as props
+- Show sample CSV button as last element
+
 ### Tool Cards
 - Consistent padding: 16px
 - Title font size: 1.25rem (20px)

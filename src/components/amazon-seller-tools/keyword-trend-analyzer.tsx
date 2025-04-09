@@ -318,26 +318,10 @@ export default function KeywordTrendAnalyzer() {
       </CardHeader>
       <CardContent className="space-y-6">
         {/* CSV Format Info */}
-        <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg flex items-start gap-3">
-          <Info className="h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0" />
-          <div className="text-sm text-blue-700 dark:text-blue-300">
-            <p className="font-medium">CSV Format Requirements:</p>
-            <p>
-              Required column: <code>date</code> (e.g., YYYY-MM-DD, MM/DD/YYYY).
-            </p>
-            <p>
-              Additional columns represent keywords, with numeric values (e.g., search volume,
-              rank).
-            </p>
-            <p className="mt-1">
-              Example: <code>date,wireless earbuds,bluetooth speaker</code>
-              <br />
-              <code>2023-10-01,135000,85000</code>
-              <br />
-              <code>2023-10-02,138000,84500</code>
-            </p>
-          </div>
-        </div>
+        <CsvRequirements
+        requiredColumns={['date']}
+        maxFileSize="5MB"
+      />
 
         {/* Input Section */}
         <div className="space-y-4 rounded-lg border p-4">
