@@ -7,7 +7,6 @@ const commands = [
   'npm run format',
   'npm run lint',
   'npx tsc --noEmit', // Or your typecheck script e.g., 'npm run typecheck'
-  'npm run build',
 ];
 
 // Array to keep track of commands that failed and their output

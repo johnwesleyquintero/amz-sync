@@ -43,13 +43,8 @@ const Sidebar = () => {
     >
       {/* Mobile overlay */}
       {isOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 md:hidden"
-          onClick={toggle}
-          aria-hidden="true"
-        />
-      )}
-      {' '}
+        <div className="fixed inset-0 bg-black/50 md:hidden" onClick={toggle} aria-hidden="true" />
+      )}{' '}
       {/* Added flex-shrink-0 */}
       <div className="flex flex-col h-full">
         {/* Header Section */}
@@ -67,17 +62,10 @@ const Sidebar = () => {
                 My Amazon Analytics
               </h1>
             </Link>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="md:hidden"
-              onClick={toggle}
-            >
+            <Button variant="ghost" size="icon" className="md:hidden" onClick={toggle}>
               <X className="h-5 w-5" />
             </Button>
           </div>
-
-          </Link>
         </div>
 
         {/* Navigation Section */}
