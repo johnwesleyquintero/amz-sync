@@ -250,7 +250,17 @@ const calculateScore = (text: string, targetKeywords: string[]): number => {
 
 export default function DescriptionEditor() {
   const { toast } = useToast();
-  const [products, setProducts] = useState<ProductDescription[]>([]);
+  const [products, setProducts] = useState<ProductDescription[]>([
+    {
+      id: 'sample-1',
+      product: 'Sample Product',
+      description:
+        'This is a sample product description. Edit or replace this with your own content.',
+      characterCount: 48,
+      keywordCount: 0,
+      score: 0,
+    },
+  ]);
   const [isLoading, setIsLoading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -288,6 +298,7 @@ export default function DescriptionEditor() {
 
   const handleFileUpload = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
+      const { setProducts } = props;
       const file = event.target.files?.[0];
       if (event.target) event.target.value = ''; // Allow re-upload
 
@@ -408,6 +419,7 @@ export default function DescriptionEditor() {
 
   const handleDescriptionChange = useCallback(
     (value: string) => {
+      const { setProducts } = props;
       if (!activeProduct) return;
 
       const updatedProduct = {
@@ -429,6 +441,7 @@ export default function DescriptionEditor() {
   );
 
   const handleAddProduct = useCallback(() => {
+    const { setProducts } = props;
     if (!manualInput.product.trim() || !manualInput.description.trim()) {
       setError('Product Name and Description are required.');
       toast({
@@ -475,6 +488,7 @@ export default function DescriptionEditor() {
   }, [activeProduct, toast]);
 
   const clearAllData = useCallback(() => {
+    const { setProducts } = props;
     setProducts([]);
     setActiveProduct(null);
     setError(null);

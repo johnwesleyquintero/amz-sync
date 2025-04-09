@@ -175,6 +175,19 @@ const CATEGORY_ORDER: string[] = [
 export default function AmazonSellerTools() {
   // Set the default active tool to the first tool in the list
   const [activeToolId, setActiveToolId] = useState<string>(ALL_TOOLS[0].id);
+  const [initialized, setInitialized] = useState<boolean>(false);
+
+  useEffect(() => {
+    // Initialize components with sample data
+    if (!initialized) {
+      setInitialized(true);
+      // Set default tool to Keyword Trend Analyzer if empty
+      if (!activeToolId) {
+        const trendAnalyzer = ALL_TOOLS.find(tool => tool.name === 'Keyword Trend Analyzer');
+        if (trendAnalyzer) setActiveToolId(trendAnalyzer.id);
+      }
+    }
+  }, [initialized, activeToolId]);
 
   // Memoize the categorized tools to avoid recalculating on every render
   const categorizedTools = useMemo(() => {

@@ -63,8 +63,21 @@ const stringToColor = (str: string): string => {
 
 export default function KeywordTrendAnalyzer() {
   const { toast } = useToast();
-  const [chartData, setChartData] = useState<ChartDataPoint[]>([]);
-  const [keywords, setKeywords] = useState<string[]>([]); // Store identified keyword columns
+  const [chartData, setChartData] = useState<ChartDataPoint[]>([
+    {
+      name: '2023-01-01',
+      'sample-keyword': 100,
+    },
+    {
+      name: '2023-01-02',
+      'sample-keyword': 150,
+    },
+    {
+      name: '2023-01-03',
+      'sample-keyword': 200,
+    },
+  ]);
+  const [keywords, setKeywords] = useState<string[]>(['sample-keyword']); // Store identified keyword columns
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [uploadProgress, setUploadProgress] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
