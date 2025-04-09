@@ -122,8 +122,4 @@ export class KeywordIntelligence {
       matchType: 'exact',
     };
   }
-
-  static async analyzeBatch(keywords: string[]): Promise<KeywordAnalysis[]> {
-    return Promise.all(keywords.map(k => this.analyzeKeyword(k)));
-  }
 }
