@@ -48,17 +48,17 @@ class CSVValidationError extends Error {
 }
 
 // Define validation function if needed, otherwise remove
-const validateCSVSchema = (fields: string[] | undefined, data: unknown[]): string[] => {
-  const errors: string[] = [];
-  // Implement your schema validation logic here
-  // Example: Check if required fields exist
-  // const required = ['field1', 'field2'];
-  // required.forEach(reqField => {
-  //   if (!fields?.includes(reqField)) {
-  //     errors.push(`Missing required column: ${reqField}`);
-  //   }
-  // });
-  return errors;
+const validateCSVSchema = (fields: string[], data: any[], toolType: string): string[] => {
+  try {
+    const schema = csvSchemas[toolType as keyof typeof csvSchemas];
+    const parsedData = parseCsvData(data.map(row => row.join(',')).join('\n'), toolType as keyof typeof csvSchemas);
+    return [];
+  } catch (error) {
+    if (error instanceof AggregateError) {
+      return error.errors.map(e => e.message);
+    }
+    return ['Invalid CSV format'];
+  }
 };
 
 // The actual component function

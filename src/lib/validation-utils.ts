@@ -242,3 +242,41 @@ function detectDataType(value: any): string {
   if (typeof value === 'boolean') return 'boolean';
   return typeof value;
 }
+
+
+export interface CsvSchema {
+  columns: {
+    [key: string]: {
+      dataType: 'string' | 'number' | 'date';
+      required?: boolean;
+      format?: RegExp;
+      min?: number;
+      max?: number;
+      allowedValues?: string[];
+    };
+  };
+  strictMode?: boolean;
+}
+
+// Predefined schemas for common CSV types
+export const csvSchemas = {
+  acosReport: {
+    columns: {
+      'Campaign Name': { dataType: 'string', required: true },
+      'Spend': { dataType: 'number', required: true, min: 0 },
+      'Sales': { dataType: 'number', required: true, min: 0 },
+      'ACoS': { dataType: 'number', required: true, min: 0, max: 100 },
+      'Impressions': { dataType: 'number', min: 0 },
+      'Clicks': { dataType: 'number', min: 0 },
+    },
+    strictMode: true
+  },
+  fbaInventory: {
+    columns: {
+      'SKU': { dataType: 'string', required: true, format: /^[A-Z0-9-]{1,40}$/ },
+      'FNSKU': { dataType: 'string', format: /^[A-Z0-9]{10}$/ },
+      'Quantity': { dataType: 'number', required: true, min: 0 },
+      'Condition': { dataType: 'string', allowedValues: ['NEW', 'REFURBISHED', 'USED'] },
+    }
+  }
+};
