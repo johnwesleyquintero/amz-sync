@@ -72,8 +72,8 @@ This document outlines the development roadmap for My Amazon Analytics, an enter
   - [ ] **Tool Data Organization:**
     - [ ] Move tools to a separate file (e.g., `toolsData.ts`).
     - [ ] Add a `category` property to each tool object.
-    - [ ] Create separate arrays for each tool category (e.g., `marketAnalysisTools`, `listingOptimizationTools`).
-    - [ ] Define a `Tool` interface or type for consistency.
+    - [x] Create separate arrays for each tool category (e.g., `marketAnalysisTools`, `listingOptimizationTools`).
+    - [x] Define a `Tool` interface or type for consistency.
   - [ ] **Dynamic Tab Rendering:** Create a function to render tab rows dynamically based on the tools array and the desired number of tools per row.
   - [ ] **Lazy Loading:** Implement lazy loading for tool components using `React.lazy` and `Suspense`.
   - [ ] **UX Enhancements:**
@@ -100,8 +100,8 @@ This document outlines the development roadmap for My Amazon Analytics, an enter
     - [ ] **Keyboard Navigation:** Verify keyboard navigation for tab navigation and tool interactions.
   - [ ] **AmazonSellerTools.tsx Improvements:**
     - [ ] **Tool Descriptions:** Add more detail and examples to tool descriptions in the `ALL_TOOLS` array.
-    - [ ] **Tool Status:** Use the `status` property in the `ALL_TOOLS` array to indicate the development stage of each tool (e.g., "active", "beta", "alpha", "planned").
-    - [ ] **Tool Versioning:** Use the `version` property in the `ALL_TOOLS` array to track the version of each tool and provide a changelog for users.
+    - [x] **Tool Status:** Use the `status` property in the `ALL_TOOLS` array to indicate the development stage of each tool (e.g., "active", "beta", "alpha", "planned").
+    - [x] **Tool Versioning:** Use the `version` property in the `ALL_TOOLS` array to track the version of each tool and provide a changelog for users.
     - [ ] **Accessibility:** Improve the component to be more accessible to users with disabilities. This could include adding ARIA attributes and improving keyboard navigation.
     - [ ] **Testing:** Test the component and its associated tools more thoroughly to ensure they function correctly and provide accurate results.
     - [ ] **Component Decomposition:** Break down the `AmazonSellerTools` component into smaller, more focused components (e.g., `ToolCard`, `ToolTabs`).
