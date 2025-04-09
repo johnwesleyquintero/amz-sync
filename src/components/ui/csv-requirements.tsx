@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Label } from '../ui/label';
 import { Info } from 'lucide-react';
-import SampleCsvButton from './sample-csv-button';
+import SampleCsvButton from '../amazon-seller-tools/sample-csv-button';
 
 type CsvRequirementsProps = {
   requiredColumns: string[];

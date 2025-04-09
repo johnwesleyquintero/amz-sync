@@ -67,7 +67,7 @@ interface ManualInputState {
 
 // --- Constants ---
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-const REQUIRED_COLUMNS: (keyof RawProductData)[] = ['product', 'description'];
+import { CsvRequirements } from '@/components/ui/csv-requirements';
 const OPTIONAL_COLUMNS: (keyof RawProductData)[] = ['asin'];
 
 // --- Helper Functions (Keyword Counting & Scoring) ---
@@ -531,30 +531,17 @@ export default function DescriptionEditor() {
         <ToolLabel
           title="Description Editor"
           description="AI-enhanced rich text editor for Amazon product descriptions with SEO optimization."
+          status="new"
         />
       </CardHeader>
       <CardContent className="space-y-6">
         {/* CSV Format Info */}
-        <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg flex items-start gap-3">
-          <Info className="h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0" />
-          <div className="text-sm text-blue-700 dark:text-blue-300">
-            <p className="font-medium">CSV Format Requirements:</p>
-            <p>
-              Required columns: <code>{REQUIRED_COLUMNS.join(', ')}</code>.
-            </p>
-            <p>
-              Optional columns: <code>{OPTIONAL_COLUMNS.join(', ')}</code>.
-            </p>
-            <p className="mt-1">
-              Example: <code>product,asin,description</code>
-              <br />
-              <code>
-                Wireless Earbuds,B0EXAMPLE,&quot;Experience immersive sound with our latest wireless
-                earbuds...&quot;
-              </code>
-            </p>
-          </div>
-        </div>
+        <CsvRequirements
+  requiredColumns={['product', 'description']}
+  optionalColumns={['asin']}
+  maxFileSize="5MB"
+  className="mt-4"
+/>
 
         {/* Input Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

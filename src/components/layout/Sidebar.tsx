@@ -14,6 +14,7 @@ import {
   Wrench,
   Menu,
   X,
+  ClipboardList,
 } from 'lucide-react';
 
 const Sidebar = () => {
@@ -23,7 +24,7 @@ const Sidebar = () => {
   // Navigation items remain the same
   const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-    { name: 'TODO Dashboard', href: '/TODO-dashboard', icon: LayoutDashboard },
+    { name: 'TODO Dashboard', href: '/TODO-dashboard', icon: ClipboardList },
     { name: 'Search Analytics', href: '/search-analytics', icon: Search },
     { name: 'Campaign Manager', href: '/campaign-manager', icon: BarChart3 },
     { name: 'Products', href: '/products', icon: ShoppingBag },

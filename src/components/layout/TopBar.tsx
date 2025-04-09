@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input'; // Import standard Input componen
 
 const TopBar = () => {
   return (
-    <header className="border-b border-border bg-white dark:bg-sidebar h-16 px-6 flex items-center justify-between flex-shrink-0">
+    <header className="border-b border-border bg-white dark:bg-sidebar h-16 px-6 flex items-center justify-between flex-shrink-0 shadow-sm rounded-b-lg">
       {/* Left Section - Can be used for current page title or breadcrumbs */}
       <div className="flex items-center">
         {/* Placeholder for dynamic title or breadcrumbs if needed later */}

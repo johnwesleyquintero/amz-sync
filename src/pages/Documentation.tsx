@@ -36,22 +36,63 @@ const Documentation = () => {
           </section>
 
           {/* Potential Future Sections (Example Structure) */}
-          {/*
-          <section className="bg-white p-6 rounded-lg shadow-md dark:bg-gray-800 dark:border dark:border-gray-700">
-            <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Getting Started</h2>
-            <p className="text-gray-700 dark:text-gray-300">...</p>
-          </section>
+          <div className="space-y-6">
+            <section className="bg-white p-6 rounded-lg shadow-md dark:bg-gray-800 dark:border dark:border-gray-700">
+              <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">
+                Getting Started
+              </h2>
+              <div className="space-y-4">
+                <div className="border-l-4 border-primary pl-4">
+                  <h3 className="font-medium text-gray-900 dark:text-gray-100">Installation Guide</h3>
+                  <p className="text-gray-700 dark:text-gray-300 mt-1">
+                    Set up the development environment and install dependencies using npm or yarn.
+                  </p>
+                </div>
+                <div className="border-l-4 border-primary pl-4">
+                  <h3 className="font-medium text-gray-900 dark:text-gray-100">Configuration</h3>
+                  <p className="text-gray-700 dark:text-gray-300 mt-1">
+                    Environment variables and runtime configuration options.
+                  </p>
+                </div>
+              </div>
+            </section>
 
-          <section className="bg-white p-6 rounded-lg shadow-md dark:bg-gray-800 dark:border dark:border-gray-700">
-            <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Tool Guides</h2>
-            <p className="text-gray-700 dark:text-gray-300">...</p>
-          </section>
+            <section className="bg-white p-6 rounded-lg shadow-md dark:bg-gray-800 dark:border dark:border-gray-700">
+              <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Tool Guides</h2>
+              <div className="space-y-4">
+                <div className="border-l-4 border-primary pl-4">
+                  <h3 className="font-medium text-gray-900 dark:text-gray-100">ACOS Analyzer</h3>
+                  <p className="text-gray-700 dark:text-gray-300 mt-1">
+                    Detailed instructions for analyzing Advertising Cost of Sales metrics.
+                  </p>
+                </div>
+                <div className="border-l-4 border-primary pl-4">
+                  <h3 className="font-medium text-gray-900 dark:text-gray-100">Keyword Deduplicator</h3>
+                  <p className="text-gray-700 dark:text-gray-300 mt-1">
+                    Guide for optimizing PPC campaigns through keyword management.
+                  </p>
+                </div>
+              </div>
+            </section>
 
-          <section className="bg-white p-6 rounded-lg shadow-md dark:bg-gray-800 dark:border dark:border-gray-700">
-            <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">API Reference</h2>
-            <p className="text-gray-700 dark:text-gray-300">...</p>
-          </section>
-          */}
+            <section className="bg-white p-6 rounded-lg shadow-md dark:bg-gray-800 dark:border dark:border-gray-700">
+              <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">API Reference</h2>
+              <div className="space-y-4">
+                <div className="border-l-4 border-primary pl-4">
+                  <h3 className="font-medium text-gray-900 dark:text-gray-100">Authentication</h3>
+                  <p className="text-gray-700 dark:text-gray-300 mt-1">
+                    JWT-based authentication flow and token management.
+                  </p>
+                </div>
+                <div className="border-l-4 border-primary pl-4">
+                  <h3 className="font-medium text-gray-900 dark:text-gray-100">Data Endpoints</h3>
+                  <p className="text-gray-700 dark:text-gray-300 mt-1">
+                    REST API endpoints for sales data and analytics.
+                  </p>
+                </div>
+              </div>
+            </section>
+          </div>
         </div>
       </div>
     </MainLayout>
