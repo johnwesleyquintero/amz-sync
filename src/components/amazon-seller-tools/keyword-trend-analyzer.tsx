@@ -334,8 +334,12 @@ export default function KeywordTrendAnalyzer() {
         <div className="mt-4 rounded-lg border border-dashed p-4">
           <h4 className="text-sm font-medium mb-2">CSV Requirements</h4>
           <ul className="list-disc pl-5 space-y-1 text-sm">
-            <li>Required columns: <span className="font-medium">date</span></li>
-            <li>Maximum file size: <span className="font-medium">5MB</span></li>
+            <li>
+              Required columns: <span className="font-medium">date</span>
+            </li>
+            <li>
+              Maximum file size: <span className="font-medium">5MB</span>
+            </li>
           </ul>
           <Button variant="outline" size="sm" className="mt-3">
             <Download className="mr-2 h-4 w-4" />

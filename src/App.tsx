@@ -45,10 +45,11 @@ const App = () => (
       <Sonner />
       {/* Set up client-side routing */}
       <BrowserRouter
-  future={{
-    v7_startTransition: true,
-    v7_relativeSplatPath: true
-  }}>
+        future={{
+          v7_startTransition: true,
+          v7_relativeSplatPath: true,
+        }}
+      >
         {/* --- Optional: Add Suspense for Lazy Loading --- */}
         {/* <React.Suspense fallback={<div>Loading Page...</div>}> */}
         <Routes>

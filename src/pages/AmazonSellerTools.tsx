@@ -323,8 +323,11 @@ export default function AmazonSellerTools() {
                   <Badge variant="outline" size="sm" className="px-1.5 py-0.5 text-xs">
                     Sample
                   </Badge>
-                  <span>buttons within each tool to download example CSV files and understand the required
-                  format. You can upload your own data or use manual entry options where available.</span>
+                  <span>
+                    buttons within each tool to download example CSV files and understand the
+                    required format. You can upload your own data or use manual entry options where
+                    available.
+                  </span>
                 </div>
               </div>
             </div>
