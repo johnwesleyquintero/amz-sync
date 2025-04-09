@@ -15,7 +15,7 @@
             {
               "id": "p1-s1-t1",
               "text": "Reusable Tool Component: Create a reusable component to hold the tools and their functionalities.",
-              "completed": false,
+              "completed": true,
               "owner": null,
               "subTasks": []
             },
@@ -45,7 +45,22 @@
               "text": "Security & Compliance: Ensure the tools are secure and compliant with Amazon's API guidelines.",
               "completed": false,
               "owner": null,
-              "subTasks": []
+              "subTasks": [
+                {
+                  "id": "p1-s1-t5-sub1",
+                  "text": "Input Validation: Implement XSS prevention measures for all user inputs",
+                  "completed": false,
+                  "owner": "@dev/security",
+                  "subTasks": []
+                },
+                {
+                  "id": "p1-s1-t5-sub2",
+                  "text": "Rate Limiting: Add API rate limiting to protect against brute force attacks",
+                  "completed": false,
+                  "owner": "@dev/backend",
+                  "subTasks": []
+                }
+              ]
             },
             {
               "id": "p1-s1-t6",
@@ -556,7 +571,15 @@
                   "text": "Component Decomposition: Break down the `AmazonSellerTools` component into smaller, more focused components (e.g., `ToolCard`, `ToolTabs`).",
                   "completed": false,
                   "owner": null,
-                  "subTasks": []
+                  "subTasks": [
+                    {
+                      "id": "p1-s1-t16-sub6-sub1",
+                      "text": "UI Refinement: Implement responsive layout improvements for ToolCard components",
+                      "completed": false,
+                      "owner": "@dev/frontend",
+                      "subTasks": []
+                    }
+                  ]
                 }
               ]
             },
