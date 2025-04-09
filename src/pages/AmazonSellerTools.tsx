@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '../components/ui/badge';
 import { Button } from '@/components/ui/button'; // Import Button for sidebar navigation
@@ -172,6 +172,8 @@ const CATEGORY_ORDER: string[] = [
  * Renders a page showcasing various tools for Amazon sellers, organized by category.
  * Features a sidebar for navigation and a main content area to display the selected tool.
  */
+import { useEffect, useMemo } from 'react';
+
 export default function AmazonSellerTools() {
   // Set the default active tool to the first tool in the list
   const [activeToolId, setActiveToolId] = useState<string>(ALL_TOOLS[0].id);
