@@ -423,6 +423,7 @@ export default function FbaCalculator() {
         <ToolLabel
           title="FBA Calculator"
           description="Calculate FBA fees, profit margins, and ROI for your Amazon FBA products."
+          status="live"
         />
       </CardHeader>
       <CardContent className="space-y-6">

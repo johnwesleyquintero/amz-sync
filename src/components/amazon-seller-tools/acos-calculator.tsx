@@ -178,6 +178,7 @@ export default function AcosCalculator() {
         <ToolLabel
           title="ACoS & ROAS Calculator"
           description="Analyze Advertising Cost of Sales (ACoS) and Return on Ad Spend (ROAS) for your campaigns."
+          status="live"
         />
       </CardHeader>
       <CardContent className="space-y-6">
