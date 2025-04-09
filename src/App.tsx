@@ -44,7 +44,11 @@ const App = () => (
       {/* Render Sonner Toaster component */}
       <Sonner />
       {/* Set up client-side routing */}
-      <BrowserRouter>
+      <BrowserRouter
+  future={{
+    v7_startTransition: true,
+    v7_relativeSplatPath: true
+  }}>
         {/* --- Optional: Add Suspense for Lazy Loading --- */}
         {/* <React.Suspense fallback={<div>Loading Page...</div>}> */}
         <Routes>

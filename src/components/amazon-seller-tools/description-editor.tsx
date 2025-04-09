@@ -68,6 +68,7 @@ interface ManualInputState {
 // --- Constants ---
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 import { CsvRequirements } from '@/components/ui/csv-requirements';
+const REQUIRED_COLUMNS: (keyof RawProductData)[] = ['product', 'description'];
 const OPTIONAL_COLUMNS: (keyof RawProductData)[] = ['asin'];
 
 // --- Helper Functions (Keyword Counting & Scoring) ---
@@ -298,7 +299,6 @@ export default function DescriptionEditor() {
 
   const handleFileUpload = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      const { setProducts } = props;
       const file = event.target.files?.[0];
       if (event.target) event.target.value = ''; // Allow re-upload
 
@@ -441,7 +441,6 @@ export default function DescriptionEditor() {
   );
 
   const handleAddProduct = useCallback(() => {
-    const { setProducts } = props;
     if (!manualInput.product.trim() || !manualInput.description.trim()) {
       setError('Product Name and Description are required.');
       toast({
@@ -891,10 +890,10 @@ export default function DescriptionEditor() {
                         rows={15} // Increased rows for better editing
                         className="font-mono text-sm" // Monospace for easier char counting/alignment
                       />
-                      <p className="mt-2 text-xs text-muted-foreground">
+                      <div className="mt-2 text-xs text-muted-foreground">
                         Use HTML tags like &lt;b&gt;, &lt;p&gt;, &lt;ul&gt;, &lt;li&gt; if needed
                         for Amazon formatting (basic preview available).
-                      </p>
+                      </div>
                     </div>
                   )}
                 </CardContent>

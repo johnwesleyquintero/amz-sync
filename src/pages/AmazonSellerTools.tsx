@@ -318,14 +318,14 @@ export default function AmazonSellerTools() {
                   maximize profitability. Most tools support CSV uploads for bulk processing and
                   provide detailed analysis with actionable insights.
                 </p>
-                <p className="mt-2">
-                  Use the{' '}
+                <div className="mt-2 flex items-center gap-1">
+                  <span>Use the</span>
                   <Badge variant="outline" size="sm" className="px-1.5 py-0.5 text-xs">
                     Sample
-                  </Badge>{' '}
-                  buttons within each tool to download example CSV files and understand the required
-                  format. You can upload your own data or use manual entry options where available.
-                </p>
+                  </Badge>
+                  <span>buttons within each tool to download example CSV files and understand the required
+                  format. You can upload your own data or use manual entry options where available.</span>
+                </div>
               </div>
             </div>
           </main>
