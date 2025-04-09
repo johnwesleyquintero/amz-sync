@@ -15,9 +15,7 @@ export function calculatePercentage(base: number, total: number) {
   return total === 0 ? 0 : Math.round((base / total) * 100);
 }
 
-export function validateAmazonAsin(asin: string) {
-  return /^[A-Z0-9]{10}$/.test(asin);
-}
+export { validateAmazonAsin } from './validation-utils';
 
 export function generateExportFilename(toolName: string, format: ExportFormat) {
   const date = new Date().toISOString().slice(0, 10);
