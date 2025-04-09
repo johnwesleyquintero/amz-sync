@@ -417,7 +417,7 @@
                     {
                       "id": "p1-s1-t14-sub1-sub1",
                       "text": "Create UI style guide document outlining spacing, typography and container requirements",
-                      "completed": false,
+                      "completed": true,
                       "owner": null,
                       "subTasks": []
                     },
