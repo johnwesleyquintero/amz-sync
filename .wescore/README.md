@@ -123,7 +123,7 @@ Create a `.wescore.json` file in your project root for customization:
     "lint": "eslint . --max-warnings=0",
     "typecheck": "tsc --noEmit",
     "build": "vite build",
-    "cq": "node .wescore/scripts/code-quality.js"
+    "cq": "node .wescore/main.js"
   }
 }
 ```
@@ -177,11 +177,159 @@ jobs:
 
 ## Troubleshooting
 
-- **Command Not Found:** Verify tool installation and script paths
-- **Parallel Issues:** Switch to sequential mode for debugging
-- **Regex Errors:** Check error category patterns in configuration
-- **Process Timeouts:** Adjust `commandTimeout` in configuration
-- **Output Issues:** Check process stdout/stderr handling in commandRunner
+### Common Issues and Solutions
+
+#### Command Execution
+
+- **Command Not Found**
+  - Verify tool installation in package.json
+  - Check if scripts are correctly defined
+  - Ensure PATH environment is properly set
+  - Example fix:
+    ```json
+    {
+      "scripts": {
+        "format": "prettier --write .",
+        "lint": "eslint .",
+        "cq": "node .wescore/main.js"
+      }
+    }
+    ```
+
+#### Performance Issues
+
+- **Parallel Execution Problems**
+  - Switch to sequential mode by setting `"parallel": false`
+  - Monitor system resources during execution
+  - Adjust command timeouts based on project size:
+    ```json
+    {
+      "parallel": false,
+      "commandTimeout": 600000
+    }
+    ```
+
+#### Configuration Issues
+
+- **Regex Pattern Errors**
+  - Test patterns using regex validators
+  - Use escaped characters properly
+  - Example pattern fix:
+    ```json
+    {
+      "errorCategories": {
+        "style": {
+          "patterns": ["eslint", "prettier", "\\[Ss\\]tyle.*rule"]
+        }
+      }
+    }
+    ```
+
+#### Output and Reporting
+
+- **Missing or Incomplete Output**
+  - Check stdout/stderr handling in commandRunner
+  - Verify file permissions
+  - Enable debug mode for detailed logs
+
+## API Reference
+
+### Configuration Options
+
+#### Core Settings
+
+```json
+{
+  "parallel": boolean,      // Enable/disable parallel execution
+  "stopOnFail": boolean,   // Stop all checks if one fails
+  "commandTimeout": number // Timeout in milliseconds
+}
+```
+
+#### Check Configuration
+
+```json
+{
+  "checks": [{
+    "id": string,           // Unique identifier
+    "name": string,         // Display name
+    "command": string,      // Command to execute
+    "timeout": number      // Optional per-check timeout
+  }]
+}
+```
+
+#### Error Categories
+
+```json
+{
+  "errorCategories": {
+    "categoryName": {
+      "patterns": string[],  // Regex patterns
+      "suggestion": string   // Help message
+    }
+  }
+}
+```
+
+### Integration Examples
+
+#### Jenkins Pipeline
+
+```groovy
+pipeline {
+  agent any
+  stages {
+    stage('Quality Check') {
+      steps {
+        sh 'npm install'
+        sh 'npm run cq'
+      }
+    }
+  }
+}
+```
+
+#### GitLab CI
+
+```yaml
+quality_check:
+  script:
+    - npm install
+    - npm run cq
+  artifacts:
+    reports:
+      junit: test-results.xml
+```
+
+#### Azure Pipelines
+
+```yaml
+steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '18.x'
+  - script: |
+      npm install
+      npm run cq
+    displayName: 'Run Quality Checks'
+```
+
+## Performance Optimization
+
+### Best Practices
+
+- Use `.wesignore` to exclude unnecessary files
+- Implement caching for repeated checks
+- Configure appropriate timeouts per command
+- Optimize regex patterns for faster matching
+
+### Resource Management
+
+- Monitor memory usage in parallel mode
+- Implement graceful degradation
+- Use worker threads for CPU-intensive tasks
+- Implement proper cleanup on process termination
 
 ## Contributing
 
