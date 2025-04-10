@@ -1,7 +1,7 @@
 <div align="center">
   <img src="public/logo.svg" width="100" alt="AmzSync Logo" />
 
-# AmzSync - Formerly AmzSync
+# AmzSync - Formerly My Amazon Analytics
 
 ### Next-Gen Amazon Advertising Automation Platform
 
