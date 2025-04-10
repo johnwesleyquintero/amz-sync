@@ -65,7 +65,7 @@
             {
               "id": "p1-s1-t6",
               "text": "Testing:",
-              "completed": false,
+              "completed": true,
               "owner": null,
               "subTasks": [
                 {
@@ -94,7 +94,7 @@
             {
               "id": "p1-s1-t7",
               "text": "Technical Debt:",
-              "completed": false,
+              "completed": true,
               "owner": null,
               "subTasks": [
                 {

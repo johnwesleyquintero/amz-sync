@@ -1,6 +1,7 @@
 // src/types/todo.ts
 
 export interface Attachment {
+  filename: string;
   id: string;
   name: string;
   url: string;
@@ -59,6 +60,8 @@ export interface Phase {
   name: string;
   objective: string;
   priority: string | null;
+  completed: boolean;
+  dependsOn?: string[];
   sections: Section[];
 }
 

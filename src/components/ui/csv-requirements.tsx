@@ -3,7 +3,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Label } from '../ui/label';
 import { Info } from 'lucide-react';
 
-
 type CsvRequirementsProps = {
   requiredColumns: string[];
   optionalColumns?: string[];
@@ -59,12 +58,12 @@ export function CsvRequirements({
 
         <div className="pt-4">
           <button
-        type="button"
-        className="mt-4 text-sm text-blue-600 hover:text-blue-800 font-medium"
-        onClick={() => alert('Download sample CSV')}
-      >
-        Download Sample CSV
-      </button>
+            type="button"
+            className="mt-4 text-sm text-blue-600 hover:text-blue-800 font-medium"
+            onClick={() => alert('Download sample CSV')}
+          >
+            Download Sample CSV
+          </button>
         </div>
       </CardContent>
     </Card>
