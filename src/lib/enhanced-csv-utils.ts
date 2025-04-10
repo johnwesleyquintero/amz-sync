@@ -1,6 +1,7 @@
 import Papa from 'papaparse';
 import { toast } from '@/hooks/use-toast';
-import { validateCsvWithSchema, type CsvSchema } from './validation-utils';
+import { CsvSchemaValidator, type CsvSchemaDefinition } from './schema-validation';
+import { getSchema, validateSchemaKey, type SchemaKey } from './schema-registry';
 
 export interface BatchProcessingOptions {
   batchSize?: number;
@@ -50,9 +51,16 @@ export class BatchProcessor<T> {
   private errors: ProcessingError[] = [];
   private startTime: number = 0;
   private memoryPeak: number = 0;
+  private schemaValidator?: CsvSchemaValidator;
 
   constructor(options: Partial<BatchProcessingOptions> = {}) {
     this.options = { ...DEFAULT_OPTIONS, ...options };
+
+    if (options.schema) {
+      this.schemaValidator = new CsvSchemaValidator(options.schema);
+    } else if (options.schemaKey && validateSchemaKey(options.schemaKey)) {
+      this.schemaValidator = new CsvSchemaValidator(getSchema(options.schemaKey));
+    }
   }
 
   private checkMemoryUsage(): number {
@@ -76,10 +84,11 @@ export class BatchProcessor<T> {
     while (retryCount <= (this.options.retryAttempts || 0)) {
       try {
         for (let i = 0; i < batch.length; i++) {
-          const row = batch[i];
-          if (this.options.schema) {
+          let row = batch[i];
+          if (this.schemaValidator) {
             try {
-              validateCsvWithSchema([row], this.options.schema);
+              const validatedRow = this.schemaValidator.validate([row])[0];
+              row = validatedRow; // Use the transformed data
             } catch (error) {
               if (error instanceof AggregateError) {
                 error.errors.forEach((e: ValidationError) => {

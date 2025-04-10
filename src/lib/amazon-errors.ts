@@ -1,5 +1,15 @@
 import { ZodIssue } from 'zod';
 
+export class AggregateError extends Error {
+  constructor(
+    message: string,
+    public errors: Error[]
+  ) {
+    super(message);
+    this.name = 'AggregateError';
+  }
+}
+
 export class AmazonAPIError extends Error {
   readonly errorCode: string;
   constructor(
