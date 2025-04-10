@@ -14,6 +14,18 @@
   "phases": [
     {
       "id": "phase-1",
+      "name": "Initial Phase",
+      "description": "Core setup and configuration",
+      "objective": "Sample objective",
+      "priority": "high",
+      "completed": false,
+      "sections": [],
+      "dependencies": [],
+      "startDate": "2024-01-01",
+      "dueDate": "2024-12-31"
+    },
+    {
+      "id": "phase-1",
       "name": "Phase 1: Core Amazon Seller Tools",
       "objective": "Develop and refine the core Amazon Seller Tools to ensure they function correctly and provide immediate value to users.",
       "priority": "Highest Priority",
@@ -24,6 +36,24 @@
           "goal": "Implement the core components and functionalities for the Amazon Seller Tools.",
           "priority": "High",
           "tasks": [
+            {
+              "id": "p1-s1-t7",
+              "text": "Implement JSON schema validation for TODO.json",
+              "completed": false,
+              "owner": "@dev/core",
+              "subTasks": [
+                {
+                  "id": "p1-s1-t7-st1",
+                  "text": "Create JSON Schema definition file",
+                  "completed": false
+                },
+                {
+                  "id": "p1-s1-t7-st2",
+                  "text": "Implement validation middleware",
+                  "completed": false
+                }
+              ]
+            },
             {
               "id": "p1-s1-t1",
               "text": "Reusable Tool Component: Create a reusable component to hold the tools and their functionalities.",

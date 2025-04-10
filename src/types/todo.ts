@@ -47,12 +47,28 @@ export interface SubTask {
 // Task has the same structure as SubTask at the top level
 export type Task = SubTask;
 
+export interface TasksData {
+  phases: Phase[];
+}
+
+export interface TodoData {
+  phases: Phase[];
+}
+
 export interface Section {
   id: string;
   name: string;
-  goal: string | null;
-  priority: string | null;
   tasks: Task[];
+}
+
+export interface Phase {
+  id: string;
+  name: string;
+  objective: string;
+  priority: string | null;
+  sections: Section[];
+  completed: boolean;
+  dependsOn?: string[];
 }
 
 export interface Phase {
@@ -63,6 +79,10 @@ export interface Phase {
   completed: boolean;
   dependsOn?: string[];
   sections: Section[];
+}
+
+export interface TasksData {
+  phases: Phase[];
 }
 
 export interface TodoData {

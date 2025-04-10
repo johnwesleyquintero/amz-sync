@@ -16,17 +16,12 @@ export const TaskItem = ({ task, onToggle, className }: TaskItemProps) => (
       aria-label={task.completed ? 'Mark task incomplete' : 'Mark task complete'}
     >
       <CheckCircle2
-        className={cn(
-          'h-5 w-5',
-          task.completed ? 'text-green-500' : 'text-muted-foreground'
-        )}
+        className={cn('h-5 w-5', task.completed ? 'text-green-500' : 'text-muted-foreground')}
       />
       <span className={cn(task.completed && 'line-through text-muted-foreground')}>
         {task.title}
       </span>
     </button>
-    {task.isCritical && (
-      <AlertTriangle className="h-4 w-4 text-yellow-500" aria-hidden="true" />
-    )}
+    {task.isCritical && <AlertTriangle className="h-4 w-4 text-yellow-500" aria-hidden="true" />}
   </div>
 );

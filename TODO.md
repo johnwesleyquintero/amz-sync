@@ -48,6 +48,12 @@ This document outlines the development roadmap for My Amazon Analytics, an enter
     - [x] Add performance monitoring to core algorithms
     - [x] Migrate test framework to Vitest for faster execution
     - [x] Refactor utility functions into dedicated modules (owner: @dev/core)
+  - [ ] Implement JSON schema validation for TODO.json (owner: @dev/core)
+  - [ ] Modernize dashboard UI with data-grid component
+  - [ ] Add TypeScript strict mode enforcement
+  - [ ] Implement automated TODO file sync mechanism
+  - [ ] Optimize SVG assets using compression patterns
+  - [ ] Standardize CSS organization methodology
     - [x] Standardize error handling patterns across components (owner: @dev/frontend)
     - [x] Audit and optimize bundle size (owner: @dev/build)
   - [x] **Documentation & Support:** Document the tools and provide support.

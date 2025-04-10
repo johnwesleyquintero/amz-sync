@@ -15,29 +15,19 @@ import ErrorBoundary from '@/components/ErrorBoundary';
 import { CheckCircle2, Target, AlertTriangle } from 'lucide-react';
 import { TaskItem } from '@/components/ui/task-item';
 
-interface PhaseProps {
-  phase: {
-    id: string;
-    name: string;
-    objective?: string;
-    priority?: 'low' | 'medium' | 'high';
-    completed: boolean;
-    sections: {
-      id: string;
-      name: string;
-      tasks: any[];
-    }[];
-  };
-  onComplete: (phaseId: string) => void;
-  onToggleTask: (taskId: string, completed: boolean) => void;
+interface PhaseComponentProps {
+  phase: Phase;
 }
 
-export const PhaseComponent: React.FC<PhaseProps> = ({ phase, onComplete, onToggleTask }) => {
-  const calculateProgress = (tasks: any[]) => {
+import { Phase } from '@/types/todo';
+
+export function PhaseComponent({ phase, onComplete, onToggleTask }: PhaseComponentProps) {
+  const calculateProgress = (tasks: Task[]) => {
     const total = tasks.flatMap(t => t.subTasks || []).length + tasks.length;
     const completed =
       tasks.filter(t => t.completed).length +
-      tasks.flatMap(t => t.subTasks?.filter((st: any) => st.completed) || []).length;
+      tasks.flatMap(t => t.subTasks?.filter((st: { completed: boolean }) => st.completed) || [])
+        .length;
     return total > 0 ? Math.round((completed / total) * 100) : 0;
   };
 
@@ -116,4 +106,4 @@ export const PhaseComponent: React.FC<PhaseProps> = ({ phase, onComplete, onTogg
       </CardContent>
     </Card>
   );
-};
+}
