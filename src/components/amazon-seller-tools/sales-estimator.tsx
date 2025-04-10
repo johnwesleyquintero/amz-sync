@@ -441,7 +441,7 @@ export default function SalesEstimator() {
         <ToolLabel
           title="Sales Estimator"
           description="Estimate potential monthly sales and revenue based on product category, price, and competition level."
-          status="beta" // Keep status if needed
+          status="beta"
         />
       </CardHeader>
       <CardContent className="space-y-6">

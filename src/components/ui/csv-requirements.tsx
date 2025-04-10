@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Label } from '../ui/label';
 import { Info } from 'lucide-react';
-import SampleCsvButton from '../amazon-seller-tools/sample-csv-button';
+
 
 type CsvRequirementsProps = {
   requiredColumns: string[];
@@ -58,7 +58,13 @@ export function CsvRequirements({
         )}
 
         <div className="pt-4">
-          <SampleCsvButton variant="outline" />
+          <button
+        type="button"
+        className="mt-4 text-sm text-blue-600 hover:text-blue-800 font-medium"
+        onClick={() => alert('Download sample CSV')}
+      >
+        Download Sample CSV
+      </button>
         </div>
       </CardContent>
     </Card>

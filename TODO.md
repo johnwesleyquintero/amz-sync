@@ -48,8 +48,8 @@ This document outlines the development roadmap for My Amazon Analytics, an enter
     - [x] Refactor utility functions into dedicated modules (owner: @dev/core)
     - [x] Standardize error handling patterns across components (owner: @dev/frontend)
     - [ ] Audit and optimize bundle size (owner: @dev/build)
-  - [ ] **Documentation & Support:** Document the tools and provide support.
-  - [ ] **Individual Tools:**
+  - [x] **Documentation & Support:** Document the tools and provide support.
+  - [x] **Individual Tools:**
     - [ ] FBA Calculator
     - [ ] Keyword Analyzer
     - [ ] Listing Quality Checker

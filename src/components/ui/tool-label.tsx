@@ -3,7 +3,7 @@ import React from 'react';
 interface ToolLabelProps {
   title: string;
   description: string;
-  status?: 'beta' | 'new' | string;
+  status?: 'beta' | 'new' | 'live' | 'deprecated';
 }
 
 const ToolLabel: React.FC<ToolLabelProps> = ({ title, description, status }) => {
