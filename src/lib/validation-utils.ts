@@ -69,6 +69,20 @@ const trendDataSchema = z.object({
   competitionLevel: z.enum(['low', 'medium', 'high']).optional(),
 });
 
+const todoSchema = z.object({
+  id: z.string().uuid(),
+  title: z.string().min(1, 'Title is required'),
+  description: z.string().optional(),
+  priority: z.enum(['low', 'medium', 'high']),
+  status: z.enum(['open', 'in-progress', 'completed', 'archived']),
+  createdAt: z.string().datetime(),
+  updatedAt: z.string().datetime().optional()
+});
+
+export const validateTodoItem = (data: unknown) => {
+  return todoSchema.safeParse(data);
+};
+
 // Product pricing data validation schema
 const productPricingSchema = z.object({
   cost: z.number().min(0, 'Cost must be non-negative'),
