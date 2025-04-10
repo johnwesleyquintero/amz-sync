@@ -1,4 +1,16 @@
 {
+  "recentUpdates": [
+    {
+      "id": "update-2024-02",
+      "description": "Added codebase analysis documentation to architecture docs",
+      "completed": false
+    },
+    {
+      "id": "update-2024-03",
+      "description": "Created standardized TODO file maintenance process",
+      "completed": false
+    }
+  ],
   "phases": [
     {
       "id": "phase-1",
