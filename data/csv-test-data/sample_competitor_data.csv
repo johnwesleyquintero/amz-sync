@@ -1,6 +1,6 @@
-asin,price,reviews,rating,conversion_rate,click_through_rate,brands,keywords,niche
-B02HIJKLMN,34.99,850,4.3,10.2,0.38,AcousticPro,wireless earbuds,bluetooth headphones,sport earbuds,Wireless Earbuds
-B03OPQRSTU,24.99,1500,4.7,14.8,0.52,EarBliss,bluetooth earbuds,noise cancelling headphones,in-ear headphones,Wireless Earbuds
-B04VWXYZ12,49.99,250,4.1,8.5,0.25,SonicBoom,premium wireless earbuds,audiophile earbuds,high fidelity earbuds,Wireless Earbuds
-B051234567,19.99,2200,4.8,16.2,0.60,ClearTone,budget wireless earbuds,cheap bluetooth earbuds,long battery life earbuds,Wireless Earbuds
-B068901234,39.99,500,4.2,9.5,0.30,BassBoost,bass earbuds,deep bass headphones,wireless sport earbuds,Wireless Earbuds
+asin,price,reviews,rating,conversion_rate,click_through_rate,market_share,product_features,brands,keywords,niche
+B08H293LMP,299.99,4850,4.8,18.5,0.42,15.2,"Noise cancellation, 30hr battery, Wireless charging case",Bose,Sony,Apple headphones,wireless over-ear,noise cancelling,Headphones
+B07P9V2JXQ,199.00,9200,4.6,15.8,0.55,22.1,"Alexa built-in, IPX7 waterproof, Heart rate monitor",Fitbit,Garmin,Smartwatch,fitness tracker,health monitoring,Wearable Tech
+B0C1SV3RL9,149.99,3200,4.4,12.3,0.38,8.7,"4K streaming, Voice remote, HDR support",Amazon,Fire TV,Roku,streaming device,media player,Streaming Devices
+B09B8V5L2K,79.95,6700,4.9,20.1,0.62,18.4,"Auto-follow camera, 360° panorama, 4K video",DJI,GoPro,Action Camera,drone accessories,outdoor gear,Smart Home
+B098LKXRG2,49.99,12500,4.7,22.4,0.68,25.9,"Wireless charging, IP68 waterproof, Sleep tracking",Samsung,Apple,Xiaomi,smartwatch,fitness band,Wearable Tech
