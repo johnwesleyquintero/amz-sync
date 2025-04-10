@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 import chalk from 'chalk';
-import { loadConfig } from '../config/loader.js';
-import { runCommand } from '../runner/commandRunner.js';
-import { Reporter } from '../reporting/reporter.js';
+import { loadConfig } from './config/loader.js';
+import { runCommand } from './runner/commandRunner.js';
+import { Reporter } from './reporting/reporter.js';
 
 async function main() {
   try {
