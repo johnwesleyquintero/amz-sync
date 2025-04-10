@@ -13,7 +13,7 @@ The framework automates essential code quality checks within your project, ensur
 - **Consolidated Reporting:** Provides a clear summary of failed checks and their output
 - **Error Categorization:** Groups errors based on configurable patterns with custom suggestions
 - **Easy Integration:** Designed for simple setup and use in local development and CI pipelines
-- **Configurable:** Uses an optional `.code-quality.json` file for advanced customization
+- **Configurable:** Uses an optional `.wescore.json` file for advanced customization
 - **Modular Architecture:** Organized into logical units for better maintainability and testing
 - **Robust Process Management:** Uses Node.js spawn for reliable command execution
 - **Type Safety:** Implements configuration validation using Zod schema
@@ -61,13 +61,12 @@ The framework is organized into the following modules:
 │   └── reporter.js   # Output formatting and reporting
 ├── utils/
 │   └── errorCategorizer.js  # Error pattern matching
-└── scripts/
-    └── code-quality.js  # Main orchestrator
+└── main.js  # Main orchestrator
 ```
 
 ## Configuration
 
-Create a `.code-quality.json` file in your project root for customization:
+Create a `.wescore.json` file in your project root for customization:
 
 ```json
 {
