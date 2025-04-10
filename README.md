@@ -14,7 +14,7 @@
 
 **Transform Your Amazon Advertising Strategy with Data-Driven Insights**
 
-[▲ Vercel](https://amzsync.vercel.app/) • [✳ Netlify](https://amzsync.netlify.app/) • [📚 Documentation/Roadmap](https://github.com/johnwesleyquintero/amzsync/blob/main/TODO.md) • [🐞 Report Issue](https://github.com/johnwesleyquintero/amzsync/issues)
+[▲ Vercel - Latest ](https://amzsync.vercel.app/) • [✳ Netlify - Old My Amazon Analytics Version](https://amazonsync.netlify.app/)(https://github.com/johnwesleyquintero/amzsync/blob/main/TODO.md) • [🐞 Report Issue](https://github.com/johnwesleyquintero/amzsync/issues)
 
 </div>
 
