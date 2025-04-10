@@ -76,7 +76,7 @@ const todoSchema = z.object({
   priority: z.enum(['low', 'medium', 'high']),
   status: z.enum(['open', 'in-progress', 'completed', 'archived']),
   createdAt: z.string().datetime(),
-  updatedAt: z.string().datetime().optional()
+  updatedAt: z.string().datetime().optional(),
 });
 
 export const validateTodoItem = (data: unknown) => {

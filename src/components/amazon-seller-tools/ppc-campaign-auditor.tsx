@@ -34,6 +34,7 @@ import { BatchProcessor } from '@/lib/enhanced-csv-utils'; // Using the enhanced
 import SampleCsvButton from './sample-csv-button';
 import { cn } from '@/lib/utils';
 import Papa from 'papaparse'; // Keep Papa for export
+import { generateSampleCsv } from '@/lib/generate-sample-csv';
 
 // --- Interfaces and Types ---
 
@@ -308,7 +309,7 @@ export default function PpcCampaignAuditor() {
       try {
         const batchProcessor = new BatchProcessor<RawCampaignData>();
         const result = await batchProcessor.processFile(
-          file,
+          file, 
           progress => setUploadProgress(progress * 100),
           REQUIRED_COLUMNS
         );
@@ -316,7 +317,7 @@ export default function PpcCampaignAuditor() {
         if (result.errors.length > 0) {
           const errorMsg = `CSV processing completed with errors: ${result.errors
             .slice(0, 3)
-            .map(e => `Row ${e.row}: ${e.message}`)
+            .map(e => `Row ${e.row + 1}: ${e.message}`)
             .join('; ')}...`;
           console.warn('CSV Processing Errors:', result.errors);
           setError(errorMsg);
@@ -766,3 +767,20 @@ export default function PpcCampaignAuditor() {
     </Card>
   );
 }
+
+const handleDownloadSample = () => {
+  const csvData = generateSampleCsv('ppc-campaign-auditor');
+  const blob = new Blob([csvData], { type: 'text/csv' });
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'ppc-campaign-sample.csv';
+  document.body.appendChild(a);
+  a.click();
+  window.URL.revokeObjectURL(url);
+  document.body.removeChild(a);
+};
+<Button variant="outline" onClick={handleDownloadSample}>
+  <Download className="mr-2 h-4 w-4" />
+  Download Sample CSV
+</Button>;

@@ -1,5 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
-    <rect x="4" y="6.4" width="2.4" height="6.2" fill="#ED595B" />
-    <rect x="6.8" y="4.8" width="2.4" height="7.8" fill="#FFD600" />
-    <rect x="9.6" y="3.2" width="2.4" height="9.4" fill="#4FBBDA" />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    <defs>
+        <!-- Gradient from primary blue to a slightly lighter blue -->
+        <linearGradient id="primaryTonalGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#3A6EA5;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#5F8BC7;stop-opacity:1" />
+        </linearGradient>
+    </defs>
+    <!-- Use the new subtle gradient -->
+    <circle cx="50" cy="50" r="40" fill="url(#primaryTonalGradient)" />
+    <!-- Keep the white strokes for contrast -->
+    <path d="M35,50 L25,35 M35,50 L25,65 M65,50 L75,35 M65,50 L75,65" stroke="white" stroke-width="4"
+        stroke-linecap="round" fill="none" />
 </svg>

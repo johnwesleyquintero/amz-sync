@@ -1,4 +1,7 @@
+/* c:\Users\johnw\OneDrive\Desktop\my-amazon-analytics\src\App.css */
+
 #root {
+  /* Keep existing layout styles */
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
@@ -6,16 +9,24 @@
 }
 
 .logo {
+  /* Keep existing styles */
   height: 6em;
   padding: 1.5em;
   will-change: filter;
   transition: filter 300ms;
 }
+
 .logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+  /* Use primary color with alpha for the drop shadow */
+  /* #646cffaa is roughly 66% alpha */
+  filter: drop-shadow(0 0 2em hsla(var(--primary), 0.66));
 }
+
 .logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+  /* Use primary color with alpha for consistency, or keep React blue if preferred */
+  /* Using primary for theme consistency: */
+  filter: drop-shadow(0 0 2em hsla(var(--primary), 0.66));
+  /* Or keep React blue: filter: drop-shadow(0 0 2em #61dafbaa); */
 }
 
 @keyframes logo-spin {
@@ -34,9 +45,11 @@
 }
 
 .card {
+  /* Keep existing padding. Background/text color should come from Tailwind classes or inherited */
   padding: 2em;
 }
 
 .read-the-docs {
-  color: #888;
+  /* Use text-muted color from the theme */
+  color: hsl(var(--text-muted)); /* Replaced #888 */
 }

@@ -1,3 +1,4 @@
+import Papa from 'papaparse';
 import { CsvSchema, csvSchemas } from './validation-utils';
 import { ValidationError, AggregateError } from './amazon-errors';
 
@@ -7,15 +8,23 @@ export function generateExportFilename(toolName: string, format: string): string
 }
 
 export function parseCsvValue(value: string, schemaType?: 'string' | 'number' | 'date'): unknown {
+  // Handle quoted values and escaped characters
+  const parsed = Papa.parse(value, {
+    delimiter: '',
+    escapeChar: '\\',
+    skipEmptyLines: true,
+    transform: val => val.trim(),
+  }).data[0][0];
+
   if (schemaType === 'number') {
-    const num = parseFloat(value.replace(/[^0-9.-]/g, ''));
+    const num = parseFloat(parsed.replace(/[^0-9.-]/g, ''));
     return isNaN(num) ? null : num;
   }
   if (schemaType === 'date') {
-    const date = new Date(value);
-    return isNaN(date.getTime()) ? value : date;
+    const date = new Date(parsed);
+    return isNaN(date.getTime()) ? parsed : date;
   }
-  return value.trim();
+  return parsed;
 }
 
 export function validateCsvAgainstSchema(

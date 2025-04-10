@@ -1,6 +1,6 @@
 {
-  "name": "My Amazon Analytics",
-  "short_name": "MyAmzAnalytics",
+  "name": "AmzSync",
+  "short_name": "AmzSync",
   "icons": [
     {
       "src": "/favicon.svg",
@@ -15,7 +15,7 @@
       "purpose": "any maskable"
     }
   ],
-  "theme_color": "#ED595B",
+  "theme_color": "#146EB4",
   "background_color": "#ffffff",
   "display": "standalone",
   "start_url": "/",

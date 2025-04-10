@@ -1,6 +1,6 @@
 // src/pages/TODO-dashboard.tsx
 import React, { useState, useCallback, useMemo } from 'react';
-import todoDataJson from '../../TODO.json'; // Assuming this path is correct
+import todoDataJson from '../data/TODO.json'; // Assuming this path is correct
 import type { TodoData, Phase, Section, Task, SubTask } from '../types/todo'; // Assuming types are defined here
 import MainLayout from '@/components/layout/MainLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -90,7 +90,7 @@ const updateTaskStatus = (
   completed: boolean
 ): (Task | SubTask)[] => {
   return tasks.map(task => {
-    let updatedTask = { ...task }; // Shallow copy
+    const updatedTask = { ...task }; // Shallow copy
 
     if (updatedTask.id === taskId) {
       updatedTask.completed = completed; // Update the target task
@@ -432,7 +432,6 @@ const TODODashboard: React.FC = () => {
           toast({
             title: 'Incomplete Tasks',
             description: `Cannot mark phase "${phaseToComplete.name}" as complete: ${phaseProgress.total - phaseProgress.completed} task(s) still pending.`,
-            variant: 'warning',
           });
           return currentData;
         }
@@ -445,13 +444,12 @@ const TODODashboard: React.FC = () => {
         toast({
           title: 'Phase Completed',
           description: `Phase "${phaseToComplete.name}" marked as complete.`,
-          variant: 'success',
         });
 
         return { ...currentData, phases: updatedPhases };
       });
     },
-    [toast] // Added toast as dependency
+    [toast]
   );
 
   // --- Task Toggle Handler ---
@@ -465,7 +463,7 @@ const TODODashboard: React.FC = () => {
             phaseUpdated = true;
             return { ...section, tasks: updatedTasks };
           }
-          return section;
+          return section as Section;
         });
 
         if (phaseUpdated) {
@@ -599,11 +597,6 @@ const TODODashboard: React.FC = () => {
                               <div className="flex flex-col sm:flex-row sm:items-center justify-between w-full gap-2 pr-2">
                                 <div className="flex items-center gap-2">
                                   <h3 className="text-base font-semibold">{section.name}</h3>
-                                  {section.priority && (
-                                    <Badge variant="outline" className="text-xs">
-                                      {section.priority}
-                                    </Badge>
-                                  )}
                                 </div>
                                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
                                   <span>
@@ -620,11 +613,6 @@ const TODODashboard: React.FC = () => {
                             </AccordionTrigger>
                             <AccordionContent className="px-0 pb-2">
                               <div className="section space-y-1 px-2">
-                                {section.goal && (
-                                  <p className="text-sm text-muted-foreground italic mb-3 px-2">
-                                    Goal: {section.goal}
-                                  </p>
-                                )}
                                 {/* Tasks within the Section */}
                                 <div className="tasks space-y-0.5">
                                   {section.tasks.length > 0 ? (
@@ -699,8 +687,7 @@ const TODODashboard: React.FC = () => {
                       </TooltipTrigger>
                       <TooltipContent>
                         <p>
-                          Requires completion of:{' '}
-                          {lockedPhase.dependsOn?.join(', ') || 'Unknown'}
+                          Requires completion of: {lockedPhase.dependsOn?.join(', ') || 'Unknown'}
                         </p>
                       </TooltipContent>
                     </Tooltip>

@@ -1,6 +1,6 @@
-# My Amazon Analytics - Development Roadmap
+# AmzSync - Development Roadmap
 
-This document outlines the development roadmap for My Amazon Analytics, an enterprise-grade Amazon advertising analytics platform. It's structured into phases, each with specific objectives and tasks, prioritized for efficient development.
+This document outlines the development roadmap for AmzSync, an enterprise-grade Amazon advertising analytics platform. It's structured into phases, each with specific objectives and tasks, prioritized for efficient development.
 
 ## Project Overview
 

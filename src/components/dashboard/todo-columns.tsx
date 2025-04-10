@@ -1,3 +1,4 @@
+// c:\Users\johnw\OneDrive\Desktop\my-amazon-analytics\src\components\dashboard\todo-columns.tsx
 import { ColumnDef } from '@tanstack/react-table';
 import type { Phase, Task } from '@/types/todo';
 import { Progress } from '@/components/ui/progress';
@@ -9,6 +10,7 @@ export const columns: ColumnDef<Phase>[] = [
     id: 'select',
     header: ({ table }) => (
       <Checkbox
+        // Checkbox component uses theme variables internally (primary, border)
         checked={table.getIsAllPageRowsSelected()}
         onCheckedChange={value => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Select all"
@@ -16,6 +18,7 @@ export const columns: ColumnDef<Phase>[] = [
     ),
     cell: ({ row }) => (
       <Checkbox
+        // Checkbox component uses theme variables internally (primary, border)
         checked={row.getIsSelected()}
         onCheckedChange={value => row.toggleSelected(!!value)}
         aria-label="Select row"
@@ -32,6 +35,7 @@ export const columns: ColumnDef<Phase>[] = [
       return (
         <div className="font-medium">
           {phase.name}
+          {/* text-muted-foreground uses theme variable --text-muted */}
           <div className="text-sm text-muted-foreground">{phase.objective}</div>
         </div>
       );
@@ -49,7 +53,9 @@ export const columns: ColumnDef<Phase>[] = [
 
       return (
         <div className="flex items-center gap-2">
+          {/* Progress component uses theme variable --primary internally */}
           <Progress value={(progress / totalTasks) * 100} className="w-[200px]" />
+          {/* text-muted-foreground uses theme variable --text-muted */}
           <span className="text-muted-foreground">
             {progress} / {totalTasks}
           </span>
@@ -64,6 +70,7 @@ export const columns: ColumnDef<Phase>[] = [
       const priority = row.original.priority.toLowerCase();
       return (
         <Badge
+          // Badge variants (destructive, secondary) use theme variables internally
           variant={priority === 'highest priority' ? 'destructive' : 'secondary'}
           className="capitalize"
         >

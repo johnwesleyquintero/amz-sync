@@ -4,87 +4,145 @@
 
 @layer base {
   :root {
-    --background: 220 80% 98%; /* Solid color */
-    --catskill-white: 220 80% 98%; /* ED F2 F7 in HSL */
-    --foreground: 222 47% 11%;
+    /* --- NEW Professional Palette --- */
 
-    --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    /* Base Colors */
+    --background: 0 0% 100%; /* #FFFFFF - Keeping white for clean base */
+    --foreground: 220 15% 25%; /* #353B45 - Dark, slightly blue-ish gray */
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    /* Brand Colors */
+    --primary: 215 60% 48%; /* #3A6EA5 - Sophisticated Blue */
+    --primary-foreground: 0 0% 100%; /* #FFFFFF */
+    --primary-hover: 215 60% 42%; /* #2D5A8C */
+    --primary-light: 215 60% 95%; /* #EBF1F7 */
 
-    --primary: 359 80% 64%;
-    --primary-foreground: 210 40% 98%;
+    --accent: 170 45% 45%; /* #408277 - Muted Teal/Green */
+    --accent-foreground: 0 0% 100%; /* #FFFFFF */
+    --accent-hover: 170 45% 40%; /* #33685F */
+    --accent-light: 170 45% 95%; /* #EBF7F5 */
 
-    --secondary: 199 65% 58%;
-    --secondary-foreground: 222 47% 11%;
+    /* Text Colors */
+    --text-primary: 220 15% 25%; /* #353B45 */
+    --text-secondary: 220 10% 45%; /* #6A707C */
+    --text-muted: 220 10% 65%; /* #9CA1AB */
 
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
+    /* Background Colors */
+    --background-subtle: 220 30% 96%; /* #F0F3F7 - Very light cool gray */
+    --background-muted: 220 20% 94%; /* #EAEFF4 - Slightly darker cool gray */
 
-    --accent: 48 100% 50%;
-    --accent-foreground: 222 47% 11%;
+    /* Component Colors */
+    --card: 0 0% 100%; /* #FFFFFF */
+    --card-foreground: 220 15% 25%; /* #353B45 */
 
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 210 40% 98%;
+    --popover: 0 0% 100%; /* #FFFFFF */
+    --popover-foreground: 220 15% 25%; /* #353B45 */
 
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 222 84% 5%;
+    /* Status Colors (Slightly desaturated for premium feel) */
+    --success: 150 60% 40%; /* #299966 - Muted Green */
+    --success-hover: 150 60% 35%; /* #207A52 */
+    --success-light: 150 60% 94%; /* #EAF7F0 */
 
-    --radius: 0.5rem;
+    --error: 0 70% 55%; /* #E85C5C - Muted Red */
+    --error-hover: 0 70% 50%; /* #E04747 */
+    --error-light: 0 70% 96%; /* #FDEAEA */
 
-    --sidebar-background: 220 80% 98%; /* Solid color */
-    --sidebar-foreground: 240 5% 26%;
-    --sidebar-primary: 240 6% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 5% 96%;
-    --sidebar-accent-foreground: 240 6% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217 91% 60%;
+    --warning: 40 80% 55%; /* #F5B84D - Muted Orange/Gold */
+    --warning-hover: 40 80% 50%; /* #F2A933 */
+    --warning-light: 40 80% 96%; /* #FEF6E9 */
+
+    --info: 215 60% 48%; /* #3A6EA5 - Using Primary Blue */
+    --info-hover: 215 60% 42%; /* #2D5A8C */
+    --info-light: 215 60% 95%; /* #EBF1F7 */
+
+    /* Border and Input Colors */
+    --border: 220 15% 88%; /* #D7DCE3 - Light cool gray border */
+    --border-light: 220 20% 94%; /* #EAEFF4 */
+    --input: 220 30% 96%; /* #F0F3F7 - Matches subtle background */
+    --ring: 215 60% 55%; /* #5F8BC7 - Slightly lighter blue for focus */
+
+    --radius: 0.5rem; /* Keeping radius */
+
+    /* Sidebar Colors (Light Theme) */
+    --sidebar-background: 220 30% 97%; /* #F3F5F9 - Slightly different light cool gray */
+    --sidebar-foreground: 220 15% 35%; /* #4C5360 */
+    --sidebar-primary: var(--primary); /* Use main primary */
+    --sidebar-primary-foreground: var(--primary-foreground);
+    --sidebar-accent: var(--accent); /* Use main accent */
+    --sidebar-accent-foreground: var(--accent-foreground);
+    --sidebar-border: 220 15% 88%; /* #D7DCE3 */
+    --sidebar-ring: var(--ring);
   }
 
   .dark {
-    --background: 222 47% 11%; /* Dark mode background */
-    --foreground: 210 40% 98%;
+    /* --- NEW Professional Palette (Dark Mode) --- */
 
-    --card: 222 47% 11%;
-    --card-foreground: 210 40% 98%;
+    /* Base Colors */
+    --background: 220 25% 12%; /* #161B22 - Deep cool dark blue/gray */
+    --foreground: 210 40% 96%; /* #F0F6FC - Light text */
 
-    --popover: 222 47% 11%;
-    --popover-foreground: 210 40% 98%;
+    /* Brand Colors */
+    --primary: 215 60% 55%; /* #5F8BC7 - Lighter blue for dark mode contrast */
+    --primary-foreground: 220 15% 15%; /* #1F2329 - Dark text on light blue */
+    --primary-hover: 215 60% 60%; /* #78A1D3 */
+    --primary-light: 215 60% 20%; /* #212C3D */
 
-    --primary: 359 80% 64%;
-    --primary-foreground: 0 0% 100%;
+    --accent: 170 45% 55%; /* #5FB0A3 - Lighter teal for dark mode contrast */
+    --accent-foreground: 170 20% 15%; /* #1F2A28 - Dark text on light teal */
+    --accent-hover: 170 45% 60%; /* #73C2B6 */
+    --accent-light: 170 45% 20%; /* #223834 */
 
-    --secondary: 199 65% 58%;
-    --secondary-foreground: 222 47% 11%;
+    /* Text Colors */
+    --text-primary: 210 40% 96%; /* #F0F6FC */
+    --text-secondary: 210 30% 80%; /* #B4C1D0 */
+    --text-muted: 210 25% 65%; /* #8E9AAA */
 
-    --muted: 217 33% 18%;
-    --muted-foreground: 215 20% 65%;
+    /* Background Colors */
+    --background-subtle: 220 25% 16%; /* #1E242E - Slightly lighter dark */
+    --background-muted: 220 25% 14%; /* #1A1F28 - Slightly darker dark */
 
-    --accent: 48 100% 50%;
-    --accent-foreground: 222 47% 11%;
+    /* Component Colors */
+    --card: 220 25% 14%; /* #1A1F28 - Slightly darker than base bg */
+    --card-foreground: 210 40% 96%; /* #F0F6FC */
 
-    --destructive: 0 63% 31%;
-    --destructive-foreground: 210 40% 98%;
+    --popover: 220 25% 10%; /* #11151C - Even darker for popovers */
+    --popover-foreground: 210 40% 96%; /* #F0F6FC */
 
-    --border: 217 33% 18%;
-    --input: 217 33% 18%;
-    --ring: 213 27% 84%;
+    /* Status Colors (Adjusted for dark mode) */
+    --success: 150 60% 50%; /* #40BF80 - Brighter green */
+    --success-hover: 150 60% 55%; /* #59C693 */
+    --success-light: 150 60% 20%; /* #1A3D2B */
 
-    --sidebar-background: 240 6% 10%; /* Dark mode sidebar */
-    --sidebar-foreground: 240 5% 96%;
-    --sidebar-primary: 224 76% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 4% 16%;
-    --sidebar-accent-foreground: 240 5% 96%;
-    --sidebar-border: 240 4% 16%;
-    --sidebar-ring: 217 91% 60%;
+    --error: 0 70% 65%; /* #ED7575 - Brighter red */
+    --error-hover: 0 70% 70%; /* #F18F8F */
+    --error-light: 0 70% 22%; /* #4A1E1E */
+
+    --warning: 40 80% 65%; /* #F7C66B - Brighter orange/gold */
+    --warning-hover: 40 80% 70%; /* #F9D185 */
+    --warning-light: 40 80% 22%; /* #4D3A17 */
+
+    --info: 215 60% 55%; /* #5F8BC7 - Using Primary Blue */
+    --info-hover: 215 60% 60%; /* #78A1D3 */
+    --info-light: 215 60% 20%; /* #212C3D */
+
+    /* Border and Input Colors */
+    --border: 220 15% 30%; /* #3E4553 - Darker cool gray border */
+    --border-light: 220 20% 25%; /* #333A46 */
+    --input: 220 25% 16%; /* #1E242E - Matches subtle background */
+    --ring: 215 60% 60%; /* #78A1D3 - Matches primary hover */
+
+    /* Sidebar Colors (Dark Theme) */
+    --sidebar-background: 220 25% 10%; /* #11151C - Darker than main bg */
+    --sidebar-foreground: 210 30% 80%; /* #B4C1D0 */
+    --sidebar-primary: var(--primary); /* Use main primary */
+    --sidebar-primary-foreground: var(--primary-foreground);
+    --sidebar-accent: var(--accent); /* Use main accent */
+    --sidebar-accent-foreground: var(--accent-foreground);
+    --sidebar-border: 220 15% 25%; /* #333A46 */
+    --sidebar-ring: var(--ring);
   }
 }
 
+/* --- Keep existing base styles --- */
 @layer base {
   * {
     @apply border-border;
@@ -92,36 +150,47 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', sans-serif; /* Assuming Inter is loaded */
+    -webkit-font-smoothing: antialiased; /* Smoother fonts */
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 
+/* --- Keep existing component styles (they use the variables) --- */
 @layer components {
   .analytics-card {
-    @apply bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300;
+    /* Updated to use CSS variables */
+    @apply bg-card text-card-foreground rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300;
   }
 
   .dashboard-stat {
-    @apply text-3xl font-bold;
+    @apply text-3xl font-bold text-text-primary; /* Use text variable */
   }
 
   .stat-label {
-    @apply text-sm text-muted-foreground font-medium;
+    @apply text-sm text-text-muted font-medium; /* Use text variable */
   }
 
+  /* Trend colors now use status variables */
   .trend-up {
-    @apply text-green-600;
+    @apply text-success;
   }
 
   .trend-down {
-    @apply text-burnt-sienna;
+    @apply text-error; /* Changed from burnt-sienna to error */
   }
 
   .nav-link {
-    @apply flex items-center gap-2 px-4 py-2 rounded-md hover:bg-muted transition-colors duration-200;
+    /* Updated to use CSS variables */
+    @apply flex items-center gap-2 px-4 py-2 rounded-md text-text-secondary hover:bg-background-muted hover:text-text-primary transition-colors duration-200;
   }
 
   .nav-link.active {
-    @apply bg-primary/10 text-primary font-medium;
+    /* Updated to use CSS variables */
+    @apply bg-primary-light text-primary font-medium;
+    /* Dark mode adjustments might be needed here depending on visual preference */
+    /* Example dark mode override if needed: */
+    /* .dark & { @apply bg-primary/20 text-primary; } */
   }
 }
+

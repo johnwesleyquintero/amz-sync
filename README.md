@@ -1,20 +1,20 @@
 <div align="center">
-  <img src="public/logo.svg" width="100" alt="My Amazon Analytics Logo" />
+  <img src="public/logo.svg" width="100" alt="AmzSync Logo" />
 
-# My Amazon Analytics
+# AmzSync - Formerly AmzSync
 
-### Enterprise-Grade Amazon Advertising Analytics Platform
+### Next-Gen Amazon Advertising Automation Platform
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/5e8f7348-e74c-4014-b1be-1aba4dd5043c/deploy-status)](https://app.netlify.com/sites/amazonsync/deploys)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/5e8f7348-e74c-4014-b1be-1aba4dd5043c/deploy-status)](https://app.netlify.com/sites/amzsync/deploys)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-3178C6.svg)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-18.2+-61DAFB.svg)](https://reactjs.org/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
-[![Twitter](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fgithub.com%2Fjohnwesleyquintero%2Fmy-amazon-analytics)](https://twitter.com/intent/tweet?text=Check%20out%20My%20Amazon%20Analytics%20-%20The%20ultimate%20Amazon%20Advertising%20dashboard&url=https%3A%2F%2Fgithub.com%2Fjohnwesleyquintero%2Fmy-amazon-analytics)
+[![Twitter](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fgithub.com%2Fjohnwesleyquintero%2Famzsync)](https://twitter.com/intent/tweet?text=Check%20out%20AmzSync%20-%20Automated%20Amazon%20Advertising%20Platform&url=https%3A%2F%2Fgithub.com%2Fjohnwesleyquintero%2Famzsync)
 
 **Transform Your Amazon Advertising Strategy with Data-Driven Insights**
 
-[▲ Vercel](https://myamazonanalytics.vercel.app/) • [✳ Netlify](https://amazonsync.netlify.app/) • [📚 Documentation/Roadmap](https://github.com/johnwesleyquintero/my-amazon-analytics/blob/main/TODO.md) • [🐞 Report Issue](https://github.com/johnwesleyquintero/my-amazon-analytics/issues)
+[▲ Vercel](https://amzsync.vercel.app/) • [✳ Netlify](https://amzsync.netlify.app/) • [📚 Documentation/Roadmap](https://github.com/johnwesleyquintero/amzsync/blob/main/TODO.md) • [🐞 Report Issue](https://github.com/johnwesleyquintero/amzsync/issues)
 
 </div>
 
@@ -63,8 +63,8 @@ graph TD
 ### Installation
 
 ```bash
-git clone https://github.com/johnwesleyquintero/my-amazon-analytics.git
-cd my-amazon-analytics
+git clone https://github.com/johnwesleyquintero/amzsync.git
+cd amzsync
 npm install
 cp .env.example .env
 ```
@@ -123,6 +123,6 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 John Wesley Quintero - [@wescode](https://twitter.com/wescode) - info.wescode@gmail.com
 
-Project Link: https://github.com/johnwesleyquintero/my-amazon-analytics
+Project Link: https://github.com/johnwesleyquintero/amzsync
 
 ---

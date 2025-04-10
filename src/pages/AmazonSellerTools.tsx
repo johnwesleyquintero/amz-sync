@@ -1,9 +1,10 @@
+// c:\Users\johnw\OneDrive\Desktop\my-amazon-analytics\src\pages\AmazonSellerTools.tsx
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react'; // Added useEffect, useMemo
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '../components/ui/badge';
-import { Button } from '@/components/ui/button'; // Import Button for sidebar navigation
+import { Button } from '@/components/ui/button';
 import FbaCalculator from '../components/amazon-seller-tools/fba-calculator';
 import KeywordAnalyzer from '../components/amazon-seller-tools/keyword-analyzer';
 import ListingQualityChecker from '../components/amazon-seller-tools/listing-quality-checker';
@@ -172,8 +173,6 @@ const CATEGORY_ORDER: string[] = [
  * Renders a page showcasing various tools for Amazon sellers, organized by category.
  * Features a sidebar for navigation and a main content area to display the selected tool.
  */
-import { useEffect, useMemo } from 'react';
-
 export default function AmazonSellerTools() {
   // Set the default active tool to the first tool in the list
   const [activeToolId, setActiveToolId] = useState<string>(ALL_TOOLS[0].id);
@@ -229,11 +228,14 @@ export default function AmazonSellerTools() {
   return (
     <section
       id="tools"
-      className="py-12 md:py-16 bg-gradient-to-b from-white to-blue-50 dark:from-gray-900 dark:to-slate-950" // Consistent background gradient
+      // Use theme background instead of gradient
+      className="py-12 md:py-16 bg-background"
     >
       <div className="container px-4 md:px-6 max-w-[1200px] mx-auto">
         <div className="mb-8 md:mb-12 text-center space-y-4">
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl flex items-center justify-center gap-2 text-gray-900 dark:text-gray-100">
+          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl flex items-center justify-center gap-2 text-foreground">
+            {' '}
+            {/* Use theme foreground */}
             <Wrench className="h-7 w-7 text-primary" /> Amazon Seller Tools
           </h2>
           <p className="mt-3 text-lg text-muted-foreground max-w-3xl mx-auto">
@@ -247,12 +249,11 @@ export default function AmazonSellerTools() {
           {/* Sidebar Navigation */}
           <aside className="w-full md:w-64 lg:w-72 flex-shrink-0">
             {/* Sticky container for the sidebar content */}
-            <div className="sticky top-20 space-y-6 p-4 bg-card rounded-lg shadow-sm border dark:border-border">
-              {' '}
-              {/* Consistent card styling */}
+            {/* Use theme card/border/background */}
+            <div className="sticky top-20 space-y-6 p-4 bg-card rounded-lg shadow-sm border border-border">
               {categories.map(category => (
                 <div key={category}>
-                  {/* Category Title */}
+                  {/* Category Title - uses text-muted-foreground */}
                   <h3 className="mb-3 px-2 text-sm font-semibold text-muted-foreground uppercase tracking-wider">
                     {category}
                   </h3>
@@ -261,17 +262,25 @@ export default function AmazonSellerTools() {
                     {categorizedTools[category].map(tool => (
                       <Button
                         key={tool.id}
-                        variant="ghost" // Ghost variant for subtle sidebar items
+                        variant="ghost"
                         onClick={() => setActiveToolId(tool.id)}
                         className={cn(
-                          'w-full justify-start items-center gap-3 px-3 py-2 text-sm font-medium h-auto rounded-md', // Base styles
+                          'w-full justify-start items-center gap-3 px-3 py-2 text-sm font-medium h-auto rounded-md',
                           activeToolId === tool.id
-                            ? 'bg-primary/10 text-primary dark:bg-primary/20' // Active state styling (matches Sidebar.tsx)
-                            : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground' // Default/hover state (matches Sidebar.tsx)
+                            ? // Active state: Use primary-light background and primary text (matches Sidebar.tsx)
+                              'bg-primary-light text-primary dark:bg-primary/20 dark:text-primary'
+                            : // Default/hover state: Use muted text, hover with muted background and foreground text (matches Sidebar.tsx)
+                              'text-muted-foreground hover:bg-background-muted hover:text-foreground'
                         )}
                       >
-                        {/* Icon wrapper */}
-                        <span className={cn(activeToolId === tool.id ? 'text-primary' : '')}>
+                        {/* Icon wrapper - Ensure icon color matches text state */}
+                        <span
+                          className={cn(
+                            activeToolId === tool.id
+                              ? 'text-primary' // Active icon color
+                              : 'text-muted-foreground group-hover:text-foreground' // Default/hover icon color
+                          )}
+                        >
                           {tool.icon}
                         </span>
                         {/* Tool Name (truncated if long) */}
@@ -279,8 +288,8 @@ export default function AmazonSellerTools() {
                         {/* Beta Badge (if applicable) */}
                         {tool.status === 'beta' && (
                           <Badge
-                            variant="secondary" // Subtle badge variant
-                            className="ml-auto px-1.5 py-0.5 text-xs scale-90 rounded-sm font-normal" // Small, rounded badge
+                            variant="secondary"
+                            className="ml-auto px-1.5 py-0.5 text-xs scale-90 rounded-sm font-normal"
                           >
                             Beta
                           </Badge>
@@ -296,7 +305,6 @@ export default function AmazonSellerTools() {
           {/* Content Area */}
           <main className="flex-1 min-w-0">
             {/* Render the active tool's component */}
-            {/* The individual tool components already contain their own <Card> wrapper */}
             {activeTool ? (
               activeTool.component
             ) : (
@@ -308,11 +316,11 @@ export default function AmazonSellerTools() {
             )}
 
             {/* Footer Section (Provides context about the tools) */}
-            <div className="mt-8 p-6 bg-muted/50 dark:bg-muted/30 rounded-lg border dark:border-border">
+            {/* Use theme muted background/border */}
+            <div className="mt-8 p-6 bg-muted rounded-lg border border-border">
               <div className="text-sm text-muted-foreground">
-                <p className="font-medium mb-2 text-foreground dark:text-gray-200">
-                  About These Tools:
-                </p>
+                {/* Use theme foreground for heading */}
+                <p className="font-medium mb-2 text-foreground">About These Tools:</p>
                 <p>
                   This suite helps Amazon sellers optimize listings, analyze performance, and
                   maximize profitability. Most tools support CSV uploads for bulk processing and

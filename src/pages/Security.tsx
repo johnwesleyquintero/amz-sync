@@ -26,7 +26,7 @@ const Security = () => {
               Our Commitment to Security
             </h2>
             <p className="text-gray-700 dark:text-gray-300">
-              At My Amazon Analytics, the security of your data is a top priority. We understand the
+              At AmzSync, the security of your data is a top priority. We understand the
               sensitivity of your business information and are committed to implementing robust
               security measures to protect it.
             </p>

@@ -37,7 +37,7 @@ const Index = () => {
     <MainLayout>
       <div className="animate-fade-in">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold">Welcome to My Amazon Analytics</h1>
+          <h1 className="text-2xl font-bold">Welcome to AmzSync</h1>
           <p className="text-muted-foreground">View your analytics dashboard and insights</p>
         </div>
 
