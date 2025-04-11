@@ -88,10 +88,10 @@ npm run build
 
 ### Pro Tip
 
-If you're using [Bun] as your package manager, you can use the following command to run the project:
+If you're using [npm] as your package manager, you can use the following command to run the project:
 
 ```bash
-bun cq
+npm run cq
 ```
 
 ## 📈 Feature Roadmap

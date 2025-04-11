@@ -55,7 +55,7 @@ This document outlines the development roadmap for AmzSync, an enterprise-grade 
   - [ ] Optimize SVG assets using compression patterns
   - [ ] Standardize CSS organization methodology
     - [x] Standardize error handling patterns across components (owner: @dev/frontend)
-    - [x] Audit and optimize bundle size (owner: @dev/build)
+    - [x] Audit and optimize npmdle size (owner: @dev/build)
   - [x] **Documentation & Support:** Document the tools and provide support.
   - [x] **Individual Tools:**
     - [ ] FBA Calculator

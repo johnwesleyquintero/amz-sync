@@ -103,6 +103,15 @@ export default {
           ring: 'hsl(var(--sidebar-ring))',
         },
       },
+      // Premium Theme Colors
+      premium: {
+        blue: '#146EB4',
+        orange: '#FF9900',
+        'blue-light': 'rgba(20, 110, 180, 0.05)',
+        'orange-light': 'rgba(255, 153, 0, 0.05)',
+        'blue-dark': 'rgba(20, 110, 180, 0.15)',
+        'orange-dark': 'rgba(255, 153, 0, 0.15)',
+      },
       // --- Keep existing borderRadius, keyframes, animation ---
       borderRadius: {
         lg: 'var(--radius)', // Uses the CSS variable defined in index.css
