@@ -1,12 +1,67 @@
 import Papa from 'papaparse';
+import { toast } from '@/hooks/use-toast';
 import { CsvSchema, csvSchemas } from './validation-utils';
 import { ValidationError, AggregateError } from './amazon-errors';
+import { CsvSchemaValidator, type CsvSchemaDefinition } from './schema-validation';
+import { getSchema, validateSchemaKey, type SchemaKey } from './schema-registry';
 
-// Importing core utility functions
-import { generateExportFilename } from './core-utils';
+export interface CsvParseOptions {
+  header?: boolean;
+  skipEmptyLines?: boolean;
+  transformHeader?: (header: string) => string;
+}
 
-// Re-export for backward compatibility
-export { generateExportFilename };
+export interface CsvExportOptions {
+  fileName?: string;
+  includeHeaders?: boolean;
+  delimiter?: string;
+}
+
+export interface BatchProcessingOptions {
+  batchSize?: number;
+  memoryThreshold?: number;
+  retryAttempts?: number;
+  cacheResults?: boolean;
+  validateRow?: (row: Record<string, unknown>) => boolean;
+}
+
+export interface ProcessingProgress {
+  processedRows: number;
+  totalRows: number;
+  currentBatch: number;
+  errorCount: number;
+  memoryUsage: number;
+  status: 'processing' | 'completed' | 'error';
+}
+
+export interface ProcessingResult<T> {
+  data: T[];
+  errors: ProcessingError[];
+  stats: {
+    totalProcessed: number;
+    errorCount: number;
+    processingTime: number;
+    memoryPeak: number;
+  };
+}
+
+interface ProcessingError {
+  row: number;
+  error: string;
+  data?: Record<string, unknown>;
+}
+
+const DEFAULT_OPTIONS: BatchProcessingOptions = {
+  batchSize: 1000,
+  memoryThreshold: 100 * 1024 * 1024, // 100MB
+  retryAttempts: 3,
+  cacheResults: true,
+};
+
+export function generateExportFilename(toolName: string, format: string) {
+  const date = new Date().toISOString().slice(0, 10);
+  return `${toolName.replace(/ /g, '-')}_${date}.${format.toLowerCase()}`;
+}
 
 export function parseCsvValue(value: string, schemaType?: 'string' | 'number' | 'date'): unknown {
   // Handle quoted values and escaped characters
