@@ -32,10 +32,12 @@ export function PhaseComponent({ phase, onComplete, onToggleTask }: PhaseCompone
   };
 
   return (
-    <Card className={cn(phase.completed ? 'opacity-70' : '')}>
-      <CardHeader>
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <CardTitle className="flex items-center gap-2 text-xl">
+    <Card className={cn(phase.completed ? 'opacity-70' : '', 'group relative overflow-hidden transition-all duration-300 hover:shadow-lg dark:hover:shadow-primary/5')}>
+      {/* Premium gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.03] to-accent/[0.03] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+      <CardHeader className="relative space-y-1">
+        <div className="flex items-start justify-between gap-4">
+          <CardTitle className="flex items-center gap-2 text-xl font-semibold">
             {phase.name}
             {phase.priority && (
               <Badge
@@ -82,8 +84,8 @@ export function PhaseComponent({ phase, onComplete, onToggleTask }: PhaseCompone
       <CardContent>
         <Accordion type="multiple">
           {phase.sections.map(section => (
-            <AccordionItem key={section.id} value={section.id}>
-              <AccordionTrigger className="hover:no-underline">
+            <AccordionItem key={section.id} value={section.id} className="border-none [&[data-state=open]]:bg-muted/40">
+              <AccordionTrigger className="rounded-lg px-4 py-2 hover:bg-muted/60 hover:no-underline [&[data-state=open]]:rounded-b-none">
                 <div className="flex items-center gap-2">
                   <span className="font-medium">{section.name}</span>
                   <Badge variant="outline" className="text-xs">
@@ -91,7 +93,7 @@ export function PhaseComponent({ phase, onComplete, onToggleTask }: PhaseCompone
                   </Badge>
                 </div>
               </AccordionTrigger>
-              <AccordionContent>
+              <AccordionContent className="space-y-2 rounded-b-lg bg-muted/40 px-4 pb-4 pt-2">
                 <div className="space-y-2">
                   {section.tasks.map(task => (
                     <ErrorBoundary key={task.id} fallback={<div>Error rendering task</div>}>
