@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Import enhanced theme styles */
+@import './lib/styles/enhanced-theme.css';
+
 @layer base {
   :root {
     /* --- NEW Professional Palette --- */

@@ -1,0 +1,54 @@
+:root {
+  /* Brand Colors */
+  --brand-primary: #146EB4;
+  --brand-accent: #FF9900;
+  --text-primary: #333333;
+
+  /* Light Theme */
+  --premium-gradient-light: linear-gradient(135deg, rgba(20, 110, 180, 0.05), rgba(255, 153, 0, 0.05));
+  --accent-overlay-light: linear-gradient(45deg, rgba(20, 110, 180, 0.1), rgba(255, 153, 0, 0.1));
+  --pattern-light: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 10px,
+    rgba(20, 110, 180, 0.03) 10px,
+    rgba(20, 110, 180, 0.03) 11px
+  );
+
+  /* Dark Theme */
+  --premium-gradient-dark: linear-gradient(135deg, rgba(20, 110, 180, 0.15), rgba(255, 153, 0, 0.15));
+  --accent-overlay-dark: linear-gradient(45deg, rgba(20, 110, 180, 0.2), rgba(255, 153, 0, 0.2));
+  --pattern-dark: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 10px,
+    rgba(20, 110, 180, 0.08) 10px,
+    rgba(20, 110, 180, 0.08) 11px
+  );
+}
+
+/* Premium Background Classes */
+.bg-premium-light {
+  background: var(--premium-gradient-light), var(--pattern-light);
+}
+
+.bg-premium-dark {
+  background: var(--premium-gradient-dark), var(--pattern-dark);
+}
+
+.bg-accent-light {
+  background: var(--accent-overlay-light);
+}
+
+.bg-accent-dark {
+  background: var(--accent-overlay-dark);
+}
+
+/* Shadow Effects */
+.shadow-premium {
+  box-shadow: 0 4px 6px -1px rgba(20, 110, 180, 0.1), 0 2px 4px -1px rgba(20, 110, 180, 0.06);
+}
+
+.shadow-premium-dark {
+  box-shadow: 0 4px 6px -1px rgba(20, 110, 180, 0.2), 0 2px 4px -1px rgba(20, 110, 180, 0.12);
+}
