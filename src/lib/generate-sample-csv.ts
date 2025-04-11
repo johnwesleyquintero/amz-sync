@@ -305,6 +305,56 @@ export function generateSampleData(dataType: string): SampleData[] {
       ];
       break;
 
+    case 'ppc-campaign-auditor':
+      data = [
+        {
+          campaign: 'Auto - Bestsellers',
+          'Ad Group': 'Auto Targeting',
+          'Keyword/Target': 'Auto',
+          'Match Type': 'Auto',
+          impressions: 15000,
+          clicks: 450,
+          spend: 225.50,
+          sales: 1200.00,
+          orders: 48,
+          acos: 18.79,
+          'Conversion Rate': 10.67,
+          ctr: 3.00,
+          cpc: 0.50
+        },
+        {
+          campaign: 'Manual - Brand Defense',
+          'Ad Group': 'Brand Keywords',
+          'Keyword/Target': 'brand name products',
+          'Match Type': 'Phrase',
+          impressions: 8500,
+          clicks: 380,
+          spend: 190.00,
+          sales: 950.00,
+          orders: 38,
+          acos: 20.00,
+          'Conversion Rate': 10.00,
+          ctr: 4.47,
+          cpc: 0.50
+        },
+        {
+          campaign: 'Manual - Category',
+          'Ad Group': 'Category Keywords',
+          'Keyword/Target': 'premium category items',
+          'Match Type': 'Broad',
+          impressions: 12000,
+          clicks: 360,
+          spend: 216.00,
+          sales: 864.00,
+          orders: 36,
+          acos: 25.00,
+          'Conversion Rate': 10.00,
+          ctr: 3.00,
+          cpc: 0.60
+        }
+      ];
+      break;
+
     default:
       console.warn(`Unknown sample data type requested: ${dataType}`);
       data = [];
