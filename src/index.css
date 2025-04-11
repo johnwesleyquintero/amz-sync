@@ -145,23 +145,23 @@
 @layer base {
   :root {
     /* Professional Background Accents */
-    --bg-gradient-light: linear-gradient(135deg, rgba(20, 110, 180, 0.03) 0%, rgba(255, 153, 0, 0.02) 100%);
-    --bg-pattern-light: repeating-linear-gradient(45deg, var(--background-subtle) 0px, var(--background-subtle) 1px, transparent 1px, transparent 10px);
-    --bg-accent-overlay: linear-gradient(180deg, rgba(20, 110, 180, 0.015) 0%, rgba(255, 153, 0, 0.01) 100%);
+    --bg-gradient-light: linear-gradient(135deg, rgba(20, 110, 180, 0.05) 0%, rgba(255, 153, 0, 0.03) 100%);
+    --bg-pattern-light: repeating-linear-gradient(45deg, var(--background-subtle) 0px, var(--background-subtle) 1px, transparent 1px, transparent 12px);
+    --bg-accent-overlay: linear-gradient(180deg, rgba(20, 110, 180, 0.02) 0%, rgba(255, 153, 0, 0.015) 100%);
 
-    /* Shadow Effects */
-    --premium-shadow: 0 8px 32px -8px rgba(20, 110, 180, 0.08);
-    --depth-shadow: 0 4px 16px -4px rgba(0, 0, 0, 0.05);
+    /* Premium Shadow Effects */
+    --premium-shadow: 0 12px 36px -8px rgba(20, 110, 180, 0.12), 0 4px 12px -4px rgba(20, 110, 180, 0.08);
+    --depth-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.08), 0 2px 8px -2px rgba(0, 0, 0, 0.05);
   }
 
   .dark {
     /* Dark Mode Background Accents */
-    --bg-gradient-dark: linear-gradient(135deg, rgba(20, 110, 180, 0.08) 0%, rgba(255, 153, 0, 0.04) 100%);
-    --bg-pattern-dark: repeating-linear-gradient(45deg, rgba(20, 110, 180, 0.04) 0px, rgba(20, 110, 180, 0.04) 1px, transparent 1px, transparent 10px);
-    --bg-accent-overlay-dark: linear-gradient(180deg, rgba(20, 110, 180, 0.03) 0%, rgba(255, 153, 0, 0.02) 100%);
+    --bg-gradient-dark: linear-gradient(135deg, rgba(20, 110, 180, 0.12) 0%, rgba(255, 153, 0, 0.06) 100%);
+    --bg-pattern-dark: repeating-linear-gradient(45deg, rgba(20, 110, 180, 0.06) 0px, rgba(20, 110, 180, 0.06) 1px, transparent 1px, transparent 12px);
+    --bg-accent-overlay-dark: linear-gradient(180deg, rgba(20, 110, 180, 0.04) 0%, rgba(255, 153, 0, 0.03) 100%);
 
     /* Dark Mode Shadow Effects */
-    --premium-shadow-dark: 0 8px 32px -8px rgba(20, 110, 180, 0.12);
+    --premium-shadow-dark: 0 12px 36px -8px rgba(20, 110, 180, 0.16), 0 4px 12px -4px rgba(20, 110, 180, 0.12);
     --depth-shadow-dark: 0 4px 16px -4px rgba(0, 0, 0, 0.15);
   }
 }
@@ -222,22 +222,33 @@
 .bg-premium-light {
   background-image: var(--bg-gradient-light), var(--bg-pattern-light);
   box-shadow: var(--premium-shadow);
+  transition: background-image 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  position: relative;
+  overflow: hidden;
 }
 
 .bg-premium-dark {
   background-image: var(--bg-gradient-dark), var(--bg-pattern-dark);
   box-shadow: var(--premium-shadow-dark);
+  transition: background-image 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  position: relative;
+  overflow: hidden;
 }
 
 .bg-accent-overlay {
   @apply relative;
+  transition: transform 0.3s ease-in-out;
   &::before {
     content: "";
     @apply absolute inset-0;
     background-image: var(--bg-accent-overlay);
     pointer-events: none;
+    transition: background-image 0.3s ease-in-out, opacity 0.3s ease-in-out;
   }
   .dark &::before {
     background-image: var(--bg-accent-overlay-dark);
+  }
+  &:hover::before {
+    opacity: 0.8;
   }
 }
