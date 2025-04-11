@@ -7,32 +7,32 @@
     /* --- NEW Professional Palette --- */
 
     /* Base Colors */
-    --background: 0 0% 100%; /* #FFFFFF - Keeping white for clean base */
-    --foreground: 220 15% 25%; /* #353B45 - Dark, slightly blue-ish gray */
+    --background: 0 0% 100%; /* #FFFFFF - Pure white for maximum contrast */
+    --foreground: 220 25% 15%; /* #1F242D - Even darker text for better readability */
 
     /* Brand Colors */
-    --primary: 215 60% 48%; /* #3A6EA5 - Sophisticated Blue */
-    --primary-foreground: 0 0% 100%; /* #FFFFFF */
-    --primary-hover: 215 60% 42%; /* #2D5A8C */
-    --primary-light: 215 60% 95%; /* #EBF1F7 */
+    --primary: 215 70% 40%; /* #2B5584 - Stronger blue for better contrast */
+    --primary-foreground: 0 0% 100%; /* #FFFFFF - Pure white text */
+    --primary-hover: 215 70% 35%; /* #244670 - Darker hover state */
+    --primary-light: 215 70% 97%; /* #F2F6FB - Lighter background */
 
-    --accent: 170 45% 45%; /* #408277 - Muted Teal/Green */
-    --accent-foreground: 0 0% 100%; /* #FFFFFF */
-    --accent-hover: 170 45% 40%; /* #33685F */
-    --accent-light: 170 45% 95%; /* #EBF7F5 */
+    --accent: 170 55% 35%; /* #2C6359 - Stronger teal for better contrast */
+    --accent-foreground: 0 0% 100%; /* #FFFFFF - Pure white text */
+    --accent-hover: 170 55% 30%; /* #255249 - Darker hover state */
+    --accent-light: 170 55% 97%; /* #F2FAF8 - Lighter background */
 
     /* Text Colors */
-    --text-primary: 220 15% 25%; /* #353B45 */
-    --text-secondary: 220 10% 45%; /* #6A707C */
-    --text-muted: 220 10% 65%; /* #9CA1AB */
+    --text-primary: 220 25% 15%; /* #1F242D - Darker for better contrast */
+    --text-secondary: 220 20% 30%; /* #424B59 - More visible secondary text */
+    --text-muted: 220 15% 40%; /* #5A6270 - More visible muted text */
 
     /* Background Colors */
-    --background-subtle: 220 30% 96%; /* #F0F3F7 - Very light cool gray */
-    --background-muted: 220 20% 94%; /* #EAEFF4 - Slightly darker cool gray */
+    --background-subtle: 220 35% 97%; /* #F4F6FA - Subtle contrast with pure white */
+    --background-muted: 220 25% 95%; /* #EDF1F6 - Slightly more contrast */
 
     /* Component Colors */
-    --card: 0 0% 100%; /* #FFFFFF */
-    --card-foreground: 220 15% 25%; /* #353B45 */
+    --card: 0 0% 100%; /* #FFFFFF - Pure white for cards */
+    --card-foreground: 220 20% 20%; /* #2A2F38 - Darker text for better contrast */
 
     --popover: 0 0% 100%; /* #FFFFFF */
     --popover-foreground: 220 15% 25%; /* #353B45 */
@@ -77,24 +77,24 @@
     /* --- NEW Professional Palette (Dark Mode) --- */
 
     /* Base Colors */
-    --background: 220 25% 12%; /* #161B22 - Deep cool dark blue/gray */
-    --foreground: 210 40% 96%; /* #F0F6FC - Light text */
+    --background: 220 30% 8%; /* #0D1116 - Even darker background for better contrast */
+    --foreground: 210 45% 98%; /* #F6FAFD - Brighter text for better readability */
 
     /* Brand Colors */
-    --primary: 215 60% 55%; /* #5F8BC7 - Lighter blue for dark mode contrast */
-    --primary-foreground: 220 15% 15%; /* #1F2329 - Dark text on light blue */
-    --primary-hover: 215 60% 60%; /* #78A1D3 */
-    --primary-light: 215 60% 20%; /* #212C3D */
+    --primary: 215 75% 65%; /* #7EAEE9 - Brighter blue for dark mode contrast */
+    --primary-foreground: 220 20% 8%; /* #0F1216 - Darker text on light blue */
+    --primary-hover: 215 75% 70%; /* #97BEF0 - Brighter hover state */
+    --primary-light: 215 75% 15%; /* #182538 - Subtle background */
 
-    --accent: 170 45% 55%; /* #5FB0A3 - Lighter teal for dark mode contrast */
-    --accent-foreground: 170 20% 15%; /* #1F2A28 - Dark text on light teal */
-    --accent-hover: 170 45% 60%; /* #73C2B6 */
-    --accent-light: 170 45% 20%; /* #223834 */
+    --accent: 170 65% 65%; /* #73D1C3 - Brighter teal for dark mode contrast */
+    --accent-foreground: 170 25% 8%; /* #0E1615 - Darker text on light teal */
+    --accent-hover: 170 65% 70%; /* #8DDAD0 - Brighter hover state */
+    --accent-light: 170 65% 15%; /* #182927 - Subtle background */
 
     /* Text Colors */
-    --text-primary: 210 40% 96%; /* #F0F6FC */
-    --text-secondary: 210 30% 80%; /* #B4C1D0 */
-    --text-muted: 210 25% 65%; /* #8E9AAA */
+    --text-primary: 210 45% 98%; /* #F6FAFD - Brighter for better contrast */
+    --text-secondary: 210 40% 92%; /* #E1EAF5 - More visible secondary text */
+    --text-muted: 210 35% 80%; /* #B8C7DA - More visible muted text */
 
     /* Background Colors */
     --background-subtle: 220 25% 16%; /* #1E242E - Slightly lighter dark */

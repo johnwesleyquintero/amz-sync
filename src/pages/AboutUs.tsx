@@ -13,7 +13,7 @@ const AboutUs = () => {
         <div className="space-y-6">
           <section className="bg-white p-6 rounded-lg shadow-md">
             <h2 className="text-xl font-semibold mb-4">Our Mission</h2>
-            <p className="text-gray-700">
+            <p className="text-text-secondary">
               At AmzSync, our mission is to empower Amazon sellers with the tools and insights they
               need to succeed in the competitive e-commerce landscape. We strive to simplify complex
               data, provide actionable recommendations, and foster a community of informed and
@@ -23,7 +23,7 @@ const AboutUs = () => {
 
           <section className="bg-white p-6 rounded-lg shadow-md">
             <h2 className="text-xl font-semibold mb-4">Our Story</h2>
-            <p className="text-gray-700">
+            <p className="text-text-secondary">
               Founded by a team of experienced e-commerce professionals and data analysts, My Amazon
               Analytics was born out of a shared passion for helping businesses thrive on Amazon. We
               recognized the challenges sellers face in navigating the vast amounts of data and the
@@ -33,7 +33,7 @@ const AboutUs = () => {
 
           <section className="bg-white p-6 rounded-lg shadow-md">
             <h2 className="text-xl font-semibold mb-4">Our Team</h2>
-            <p className="text-gray-700">
+            <p className="text-text-secondary">
               Our team is composed of dedicated individuals with diverse backgrounds in e-commerce,
               data science, software development, and customer support. We are committed to
               continuous improvement and innovation, ensuring our platform evolves with the
@@ -43,7 +43,7 @@ const AboutUs = () => {
 
           <section className="bg-white p-6 rounded-lg shadow-md">
             <h2 className="text-xl font-semibold mb-4">Our Values</h2>
-            <ul className="list-disc list-inside text-gray-700">
+            <ul className="list-disc list-inside text-text-secondary">
               <li>
                 Data-Driven Insights: We believe in the power of data to drive informed decisions.
               </li>

@@ -2,6 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Bell, Search, Wrench } from 'lucide-react';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input'; // Import standard Input component
 
@@ -32,6 +33,9 @@ const TopBar = () => {
             className="pl-10 pr-4 h-9 w-64 bg-input focus:ring-ring"
           />
         </div>
+
+        {/* Theme Toggle */}
+        <ThemeToggle />
 
         {/* Notification Button */}
         <Button variant="ghost" size="icon" className="relative rounded-full text-foreground">

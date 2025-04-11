@@ -81,15 +81,15 @@ const Index = () => {
           <TopSearchTerms terms={searchTerms} />
         </div>
 
-        <div className="bg-gradient-to-r from-burnt-sienna to-shakespeare p-6 rounded-lg text-white">
-          <div className="flex flex-col md:flex-row items-center justify-between">
+        <div className="bg-gradient-to-r from-primary to-accent p-6 rounded-lg text-white shadow-lg">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div>
-              <h2 className="text-xl font-bold mb-2">Connect to Google Sheets</h2>
-              <p className="mb-4 md:mb-0">
+              <h2 className="text-xl font-bold mb-2 text-white">Connect to Google Sheets</h2>
+              <p className="mb-4 md:mb-0 text-white/90">
                 Sync your Amazon data with Google Sheets for advanced analysis
               </p>
             </div>
-            <button className="bg-white text-burnt-sienna font-medium px-6 py-2 rounded-md hover:bg-opacity-90 transition-colors">
+            <button className="bg-white text-primary font-medium px-6 py-2 rounded-md hover:bg-background-subtle hover:text-primary-hover transition-colors shadow-sm">
               Connect Now
             </button>
           </div>
