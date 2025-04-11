@@ -8,7 +8,7 @@ const attachmentSchema = z.object({
   url: z.string().url(),
   type: z.string(),
   size: z.number().positive(),
-  createdAt: z.string().datetime()
+  createdAt: z.string().datetime(),
 });
 
 const commentSchema = z.object({
@@ -16,13 +16,13 @@ const commentSchema = z.object({
   text: z.string(),
   author: z.string(),
   createdAt: z.string().datetime(),
-  attachments: z.array(attachmentSchema).default([])
+  attachments: z.array(attachmentSchema).default([]),
 });
 
 const labelSchema = z.object({
   id: z.string(),
   name: z.string(),
-  color: z.string().regex(/^#[0-9A-Fa-f]{6}$/)
+  color: z.string().regex(/^#[0-9A-Fa-f]{6}$/),
 });
 
 // Recursive schema for tasks and subtasks
@@ -46,7 +46,7 @@ export const subTaskSchema = z.lazy(() =>
     watchers: z.array(z.string()).optional(),
     createdAt: z.string().datetime().optional(),
     updatedAt: z.string().datetime().optional(),
-    subTasks: z.array(z.lazy(() => subTaskSchema)).optional()
+    subTasks: z.array(z.lazy(() => subTaskSchema)).optional(),
   })
 );
 
@@ -59,7 +59,7 @@ export const sectionSchema = z.object({
   name: z.string(),
   goal: z.string().optional(),
   priority: z.string().optional(),
-  tasks: z.array(taskSchema)
+  tasks: z.array(taskSchema),
 });
 
 // Phase schema
@@ -70,12 +70,12 @@ export const phaseSchema = z.object({
   priority: z.string().optional(),
   dependsOn: z.array(z.string()).optional(),
   completed: z.boolean(),
-  sections: z.array(sectionSchema)
+  sections: z.array(sectionSchema),
 });
 
 // Root TODO schema
 export const todoSchema = z.object({
-  phases: z.array(phaseSchema)
+  phases: z.array(phaseSchema),
 });
 
 // Type inference

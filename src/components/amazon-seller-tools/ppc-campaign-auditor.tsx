@@ -34,7 +34,7 @@ import { BatchProcessor } from '@/lib/enhanced-csv-utils'; // Using the enhanced
 import SampleCsvButton from './sample-csv-button';
 import { cn } from '@/lib/utils';
 import Papa from 'papaparse'; // Keep Papa for export
-import { generateSampleCsv } from '@/lib/generate-sample-csv';
+import { downloadSampleCsv } from '@/lib/generate-sample-csv';
 
 // --- Interfaces and Types ---
 

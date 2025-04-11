@@ -32,7 +32,8 @@ const CustomTooltip = ({ active, payload, label }: TooltipProps<ValueType, NameT
         <p className="text-sm font-medium text-foreground">{label}</p>
         {payload.map((entry, index) => (
           <p key={`item-${index}`} className="text-xs text-muted-foreground">
-            <span style={{ color: entry.color }}>{entry.name}</span>: {entry.value?.toLocaleString()}
+            <span style={{ color: entry.color }}>{entry.name}</span>:{' '}
+            {entry.value?.toLocaleString()}
           </p>
         ))}
       </div>

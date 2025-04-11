@@ -34,7 +34,7 @@ const TodoDataGrid: React.FC<TodoDataGridProps> = ({ tasks, onToggleTask }) => {
         cell: ({ row }) => (
           <Checkbox
             checked={row.original.completed}
-            onCheckedChange={(checked) => onToggleTask(row.original.id, !!checked)}
+            onCheckedChange={checked => onToggleTask(row.original.id, !!checked)}
           />
         ),
         enableSorting: true,
@@ -44,15 +44,11 @@ const TodoDataGrid: React.FC<TodoDataGridProps> = ({ tasks, onToggleTask }) => {
         header: 'Task',
         cell: ({ row }) => (
           <div className="flex flex-col gap-1">
-            <span
-              className={row.original.completed ? 'line-through text-muted-foreground' : ''}
-            >
+            <span className={row.original.completed ? 'line-through text-muted-foreground' : ''}>
               {row.original.text}
             </span>
             {row.original.description && (
-              <span className="text-sm text-muted-foreground">
-                {row.original.description}
-              </span>
+              <span className="text-sm text-muted-foreground">{row.original.description}</span>
             )}
           </div>
         ),
@@ -69,8 +65,8 @@ const TodoDataGrid: React.FC<TodoDataGridProps> = ({ tasks, onToggleTask }) => {
                 priority === 'high'
                   ? 'destructive'
                   : priority === 'medium'
-                  ? 'default'
-                  : 'secondary'
+                    ? 'default'
+                    : 'secondary'
               }
             >
               {priority}
@@ -98,7 +94,7 @@ const TodoDataGrid: React.FC<TodoDataGridProps> = ({ tasks, onToggleTask }) => {
         cell: ({ row }) => {
           const subtasks = row.original.subTasks || [];
           if (subtasks.length === 0) return null;
-          const completed = subtasks.filter((t) => t.completed).length;
+          const completed = subtasks.filter(t => t.completed).length;
           const percentage = Math.round((completed / subtasks.length) * 100);
           return (
             <div className="flex items-center gap-2">
@@ -134,16 +130,16 @@ const TodoDataGrid: React.FC<TodoDataGridProps> = ({ tasks, onToggleTask }) => {
         <Input
           placeholder="Search tasks..."
           value={globalFilter}
-          onChange={(e) => setGlobalFilter(e.target.value)}
+          onChange={e => setGlobalFilter(e.target.value)}
           className="max-w-sm"
         />
       </div>
       <div className="rounded-md border">
         <table className="w-full">
           <thead>
-            {table.getHeaderGroups().map((headerGroup) => (
+            {table.getHeaderGroups().map(headerGroup => (
               <tr key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
+                {headerGroup.headers.map(header => (
                   <th
                     key={header.id}
                     className="border-b px-4 py-2 text-left font-medium text-muted-foreground"
@@ -153,14 +149,11 @@ const TodoDataGrid: React.FC<TodoDataGridProps> = ({ tasks, onToggleTask }) => {
                         className={`flex items-center gap-2 ${header.column.getCanSort() ? 'cursor-pointer select-none' : ''}`}
                         onClick={header.column.getToggleSortingHandler()}
                       >
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                        {{asc: <ChevronUp className="h-4 w-4" />,
-                          desc: <ChevronDown className="h-4 w-4" />}[
-                          header.column.getIsSorted() as string
-                        ] ?? null}
+                        {flexRender(header.column.columnDef.header, header.getContext())}
+                        {{
+                          asc: <ChevronUp className="h-4 w-4" />,
+                          desc: <ChevronDown className="h-4 w-4" />,
+                        }[header.column.getIsSorted() as string] ?? null}
                       </div>
                     )}
                   </th>
@@ -169,9 +162,9 @@ const TodoDataGrid: React.FC<TodoDataGridProps> = ({ tasks, onToggleTask }) => {
             ))}
           </thead>
           <tbody>
-            {table.getRowModel().rows.map((row) => (
+            {table.getRowModel().rows.map(row => (
               <tr key={row.id} className="border-b last:border-b-0">
-                {row.getVisibleCells().map((cell) => (
+                {row.getVisibleCells().map(cell => (
                   <td key={cell.id} className="px-4 py-2">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>

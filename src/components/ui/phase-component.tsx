@@ -34,7 +34,12 @@ export function PhaseComponent({ phase, onComplete, onToggleTask }: PhaseCompone
   };
 
   return (
-    <Card className={cn(phase.completed ? 'opacity-70' : '', 'group relative overflow-hidden transition-all duration-300 hover:shadow-lg dark:hover:shadow-primary/5')}>
+    <Card
+      className={cn(
+        phase.completed ? 'opacity-70' : '',
+        'group relative overflow-hidden transition-all duration-300 hover:shadow-lg dark:hover:shadow-primary/5'
+      )}
+    >
       {/* Premium gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.03] to-accent/[0.03] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
       <CardHeader className="relative space-y-1">
@@ -86,7 +91,11 @@ export function PhaseComponent({ phase, onComplete, onToggleTask }: PhaseCompone
       <CardContent>
         <Accordion type="multiple">
           {phase.sections.map(section => (
-            <AccordionItem key={section.id} value={section.id} className="border-none [&[data-state=open]]:bg-muted/40">
+            <AccordionItem
+              key={section.id}
+              value={section.id}
+              className="border-none [&[data-state=open]]:bg-muted/40"
+            >
               <AccordionTrigger className="rounded-lg px-4 py-2 hover:bg-muted/60 hover:no-underline [&[data-state=open]]:rounded-b-none">
                 <div className="flex items-center gap-2">
                   <span className="font-medium">{section.name}</span>

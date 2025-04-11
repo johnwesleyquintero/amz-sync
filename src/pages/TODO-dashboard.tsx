@@ -27,7 +27,7 @@ import {
   Users,
   CheckCircle,
   Grid as GridIcon,
-  List as ListIcon
+  List as ListIcon,
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
