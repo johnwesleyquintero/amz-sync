@@ -309,7 +309,7 @@ export default function PpcCampaignAuditor() {
       try {
         const batchProcessor = new BatchProcessor<RawCampaignData>();
         const result = await batchProcessor.processFile(
-          file, 
+          file,
           progress => setUploadProgress(progress * 100),
           REQUIRED_COLUMNS
         );

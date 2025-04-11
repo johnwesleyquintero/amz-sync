@@ -26,10 +26,9 @@ const PrivacyPolicy = () => {
               Introduction
             </h2>
             <p className="text-gray-700 dark:text-gray-300">
-              Welcome to AmzSync. We are committed to protecting your personal
-              information and your right to privacy. If you have any questions or concerns about
-              this privacy notice, or our practices with regards to your personal information,
-              please contact us.
+              Welcome to AmzSync. We are committed to protecting your personal information and your
+              right to privacy. If you have any questions or concerns about this privacy notice, or
+              our practices with regards to your personal information, please contact us.
             </p>
             <p className="text-gray-700 dark:text-gray-300 mt-2">
               This privacy notice describes how we might use your information if you visit our

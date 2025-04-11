@@ -26,7 +26,7 @@ export function createValidationMiddleware(
         allErrors: true,
         removeAdditional: options.additionalProperties === false,
         useDefaults: true,
-        coerceTypes: true
+        coerceTypes: true,
       });
 
       const validate = ajv.compile(schema);
@@ -38,10 +38,7 @@ export function createValidationMiddleware(
           return `${path}: ${err.message}`;
         });
 
-        throw new ValidationError(
-          'Validation failed',
-          errors || ['Unknown validation error']
-        );
+        throw new ValidationError('Validation failed', errors || ['Unknown validation error']);
       }
 
       next();
@@ -49,7 +46,7 @@ export function createValidationMiddleware(
       if (error instanceof ValidationError) {
         res.status(400).json({
           error: 'Validation Error',
-          details: error.details
+          details: error.details,
         });
       } else {
         next(error);

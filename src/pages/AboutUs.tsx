@@ -14,10 +14,10 @@ const AboutUs = () => {
           <section className="bg-white p-6 rounded-lg shadow-md">
             <h2 className="text-xl font-semibold mb-4">Our Mission</h2>
             <p className="text-gray-700">
-              At AmzSync, our mission is to empower Amazon sellers with the tools and
-              insights they need to succeed in the competitive e-commerce landscape. We strive to
-              simplify complex data, provide actionable recommendations, and foster a community of
-              informed and successful sellers.
+              At AmzSync, our mission is to empower Amazon sellers with the tools and insights they
+              need to succeed in the competitive e-commerce landscape. We strive to simplify complex
+              data, provide actionable recommendations, and foster a community of informed and
+              successful sellers.
             </p>
           </section>
 

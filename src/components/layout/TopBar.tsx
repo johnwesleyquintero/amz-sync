@@ -47,7 +47,10 @@ const TopBar = () => {
         {/* Seller Tools Button */}
         <Link to="/tools">
           {/* Use accent color */}
-          <Button variant="outline" className="bg-accent text-accent-foreground hover:bg-accent-hover">
+          <Button
+            variant="outline"
+            className="bg-accent text-accent-foreground hover:bg-accent-hover"
+          >
             <Wrench className="mr-2 h-4 w-4" />
             Seller Tools
           </Button>
@@ -56,7 +59,10 @@ const TopBar = () => {
         {/* Connect Google Sheets Button */}
         <Link to="/sheets-integration">
           {/* Use primary color */}
-          <Button variant="outline" className="bg-primary text-primary-foreground hover:bg-primary-hover">
+          <Button
+            variant="outline"
+            className="bg-primary text-primary-foreground hover:bg-primary-hover"
+          >
             Connect Google Sheets
           </Button>
         </Link>

@@ -43,27 +43,27 @@ export const todoSchema: Schema = {
                             subTasks: {
                               type: 'array',
                               items: {
-                                $ref: '#/properties/phases/items/properties/sections/items/properties/tasks/items'
+                                $ref: '#/properties/phases/items/properties/sections/items/properties/tasks/items',
                               },
-                              default: []
-                            }
+                              default: [],
+                            },
                           },
-                          additionalProperties: false
+                          additionalProperties: false,
                         },
-                        default: []
-                      }
+                        default: [],
+                      },
                     },
-                    additionalProperties: false
-                  }
-                }
+                    additionalProperties: false,
+                  },
+                },
               },
-              additionalProperties: false
-            }
-          }
+              additionalProperties: false,
+            },
+          },
         },
-        additionalProperties: false
-      }
-    }
+        additionalProperties: false,
+      },
+    },
   },
-  additionalProperties: false
+  additionalProperties: false,
 };

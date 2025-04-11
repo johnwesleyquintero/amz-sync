@@ -176,141 +176,140 @@ function createCompetitorAnalyzerSampleData(): SampleData[] {
 export function generateSampleCsv(dataType: string): string {
   // Generate sample data based on the data type
   const data = generateSampleData(dataType);
-  
+
   // Convert the data to CSV format
   return generateCsvFromData(data);
 }
-
 
 export function generateSampleData(dataType: string): SampleData[] {
   let data: SampleData[] = [];
 
   switch (dataType) {
-  // --- Tools Requiring New/Enhanced Sample Data ---
+    // --- Tools Requiring New/Enhanced Sample Data ---
 
-  case 'sales-estimator':
-    // Input data likely used by a sales estimator tool
-    data = [
-      {
-        ASIN: 'B08J4S5T7N',
-        Category: 'Electronics > Headphones > Earbud Headphones',
-        BSR: 580,
-        price: 79.99,
-        'Review Count': 1520,
-        Rating: 4.4,
-      },
-      {
-        ASIN: 'B07PXV77YQ',
-        Category: 'Electronics > Headphones > Earbud Headphones',
-        BSR: 120,
-        price: 49.99,
-        'Review Count': 185430,
-        Rating: 4.3,
-      },
-      {
-        ASIN: 'B08G4K8CY8',
-        Category: 'Electronics > Headphones > Earbud Headphones',
-        BSR: 85,
-        price: 25.99,
-        'Review Count': 310550,
-        Rating: 4.4,
-      },
-      {
-        ASIN: 'B094N6S3LP',
-        Category: 'Electronics > Headphones > Earbud Headphones',
-        BSR: 350,
-        price: 99.95,
-        'Review Count': 88760,
-        Rating: 4.3,
-      },
-      {
-        ASIN: 'B09JQS51C1',
-        Category: 'Electronics > Headphones > Earbud Headphones',
-        BSR: 950,
-        price: 279.0,
-        'Review Count': 15980,
-        Rating: 4.2,
-      },
-      {
-        ASIN: 'B07XJ8C8F5',
-        Category: 'Home & Kitchen > Kitchen & Dining > Small Appliances',
-        BSR: 2100,
-        price: 129.99,
-        'Review Count': 25000,
-        Rating: 4.7,
-      },
-      {
-        ASIN: 'B08H8VZYF5',
-        Category: 'Sports & Outdoors > Outdoor Recreation > Camping & Hiking',
-        BSR: 550,
-        price: 35.5,
-        'Review Count': 800,
-        Rating: 4.1,
-      },
-      {
-        ASIN: 'B01N0XPBB3',
-        Category: 'Toys & Games > Building Toys > Building Sets',
-        BSR: 150,
-        price: 19.99,
-        'Review Count': 45000,
-        Rating: 4.8,
-      },
-    ];
-    break;
+    case 'sales-estimator':
+      // Input data likely used by a sales estimator tool
+      data = [
+        {
+          ASIN: 'B08J4S5T7N',
+          Category: 'Electronics > Headphones > Earbud Headphones',
+          BSR: 580,
+          price: 79.99,
+          'Review Count': 1520,
+          Rating: 4.4,
+        },
+        {
+          ASIN: 'B07PXV77YQ',
+          Category: 'Electronics > Headphones > Earbud Headphones',
+          BSR: 120,
+          price: 49.99,
+          'Review Count': 185430,
+          Rating: 4.3,
+        },
+        {
+          ASIN: 'B08G4K8CY8',
+          Category: 'Electronics > Headphones > Earbud Headphones',
+          BSR: 85,
+          price: 25.99,
+          'Review Count': 310550,
+          Rating: 4.4,
+        },
+        {
+          ASIN: 'B094N6S3LP',
+          Category: 'Electronics > Headphones > Earbud Headphones',
+          BSR: 350,
+          price: 99.95,
+          'Review Count': 88760,
+          Rating: 4.3,
+        },
+        {
+          ASIN: 'B09JQS51C1',
+          Category: 'Electronics > Headphones > Earbud Headphones',
+          BSR: 950,
+          price: 279.0,
+          'Review Count': 15980,
+          Rating: 4.2,
+        },
+        {
+          ASIN: 'B07XJ8C8F5',
+          Category: 'Home & Kitchen > Kitchen & Dining > Small Appliances',
+          BSR: 2100,
+          price: 129.99,
+          'Review Count': 25000,
+          Rating: 4.7,
+        },
+        {
+          ASIN: 'B08H8VZYF5',
+          Category: 'Sports & Outdoors > Outdoor Recreation > Camping & Hiking',
+          BSR: 550,
+          price: 35.5,
+          'Review Count': 800,
+          Rating: 4.1,
+        },
+        {
+          ASIN: 'B01N0XPBB3',
+          Category: 'Toys & Games > Building Toys > Building Sets',
+          BSR: 150,
+          price: 19.99,
+          'Review Count': 45000,
+          Rating: 4.8,
+        },
+      ];
+      break;
 
-  case 'keyword-optimization':
-  case 'keyword-analyzer': // Reusing the same data for general analysis
-    // Data focused on keyword metrics for optimization/analysis
-    data = [
-      {
-        product: 'Organic Facial Cleanser',
-        name: 'Sponsored Products - Facial Cleanser',
-        type: 'Sponsored Products',
-        spend: 150.0,
-        sales: 850.0,
-        impressions: 10000,
-        clicks: 250,
-        ctr: 2.5,
-        cpc: 0.6,
-        acos: 17.65,
-      },
-      {
-        product: 'Vitamin C Serum',
-        name: 'Sponsored Products - Vitamin C',
-        type: 'Sponsored Products',
-        spend: 180.0,
-        sales: 950.0,
-        impressions: 12000,
-        clicks: 300,
-        ctr: 2.5,
-        cpc: 0.6,
-        acos: 18.95,
-      },
-    ];
-    break;
+    case 'keyword-optimization':
+    case 'keyword-analyzer': // Reusing the same data for general analysis
+      // Data focused on keyword metrics for optimization/analysis
+      data = [
+        {
+          product: 'Organic Facial Cleanser',
+          name: 'Sponsored Products - Facial Cleanser',
+          type: 'Sponsored Products',
+          spend: 150.0,
+          sales: 850.0,
+          impressions: 10000,
+          clicks: 250,
+          ctr: 2.5,
+          cpc: 0.6,
+          acos: 17.65,
+        },
+        {
+          product: 'Vitamin C Serum',
+          name: 'Sponsored Products - Vitamin C',
+          type: 'Sponsored Products',
+          spend: 180.0,
+          sales: 950.0,
+          impressions: 12000,
+          clicks: 300,
+          ctr: 2.5,
+          cpc: 0.6,
+          acos: 18.95,
+        },
+      ];
+      break;
 
-  case 'description': // Same as description-editor
-    data = [
-      {
-        product: 'Organic Facial Cleanser',
-        ASIN: 'B01ABCDEF1',
-        description:
-          'Our organic facial cleanser gently removes impurities and makeup, leaving your skin feeling refreshed and clean. Made with natural ingredients, it is perfect for all skin types.',
-      },
-      {
-        product: 'Vitamin C Serum',
-        ASIN: 'B02ABCDEF2',
-        description:
-          'Brighten and rejuvenate your skin with our Vitamin C Serum. This powerful antioxidant serum helps reduce the appearance of fine lines and wrinkles while improving skin tone and texture.',
-      },
-    ];
-    break;
+    case 'description': // Same as description-editor
+      data = [
+        {
+          product: 'Organic Facial Cleanser',
+          ASIN: 'B01ABCDEF1',
+          description:
+            'Our organic facial cleanser gently removes impurities and makeup, leaving your skin feeling refreshed and clean. Made with natural ingredients, it is perfect for all skin types.',
+        },
+        {
+          product: 'Vitamin C Serum',
+          ASIN: 'B02ABCDEF2',
+          description:
+            'Brighten and rejuvenate your skin with our Vitamin C Serum. This powerful antioxidant serum helps reduce the appearance of fine lines and wrinkles while improving skin tone and texture.',
+        },
+      ];
+      break;
 
-  default:
-    console.warn(`Unknown sample data type requested: ${dataType}`);
-    data = [];
-    break;
-}
+    default:
+      console.warn(`Unknown sample data type requested: ${dataType}`);
+      data = [];
+      break;
+  }
   return data;
 }
 
@@ -324,7 +323,7 @@ const generateCsvFromData = (data: SampleData[]): string => {
 // Initialize test data mapping
 interface PapaParseResult<T> {
   data: T[];
-};
+}
 
 interface TestDataMapping {
   seller: string;
@@ -356,25 +355,25 @@ const sellerData = Papa.unparse([
     SKU: 'SELLER-001',
     product: 'Premium Wireless Earbuds',
     price: 79.99,
-    cost: 25.00,
-    fees: 15.00,
+    cost: 25.0,
+    fees: 15.0,
     'FBA Fee Estimate': 5.99,
     'Referral Fee Estimate': 9.01,
     Rating: 4.4,
-    'Review Count': 1520
+    'Review Count': 1520,
   },
   {
     ASIN: 'B08H8VZYF5',
     SKU: 'SELLER-002',
     product: 'Camping Backpack',
-    price: 35.50,
-    cost: 12.00,
-    fees: 8.50,
+    price: 35.5,
+    cost: 12.0,
+    fees: 8.5,
     'FBA Fee Estimate': 4.99,
     'Referral Fee Estimate': 3.51,
     Rating: 4.1,
-    'Review Count': 800
-  }
+    'Review Count': 800,
+  },
 ]);
 
 // Generate sample competitor data
@@ -386,7 +385,7 @@ const competitorData = Papa.unparse([
     Rating: 4.3,
     'Review Count': 185430,
     BSR: 120,
-    'Seller Type': 'FBA'
+    'Seller Type': 'FBA',
   },
   {
     ASIN: 'B08G4K8CY8',
@@ -395,8 +394,8 @@ const competitorData = Papa.unparse([
     Rating: 4.4,
     'Review Count': 310550,
     BSR: 85,
-    'Seller Type': 'FBA'
-  }
+    'Seller Type': 'FBA',
+  },
 ]);
 
 const testDataMapping: TestDataMapping = {

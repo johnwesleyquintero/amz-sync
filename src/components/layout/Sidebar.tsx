@@ -83,7 +83,6 @@ const Sidebar = () => {
             </Button>
           </div>
         </div>
-
         {/* Navigation Section */}
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
           {navigation.map(item => (
@@ -110,15 +109,12 @@ const Sidebar = () => {
                       : 'text-muted-foreground group-hover:text-foreground' // Default/hover icon color
                   )}
                 />
-                <span className={cn('truncate', !isOpen && 'md:hidden')}>
-                  {item.name}
-                </span>{' '}
+                <span className={cn('truncate', !isOpen && 'md:hidden')}>{item.name}</span>{' '}
                 {/* Hide text when collapsed on md+ */}
               </Button>
             </Link>
           ))}
         </nav>
-
         {/* Footer/User Section */}
         <div className="p-4 border-t border-border mt-auto">
           {' '}

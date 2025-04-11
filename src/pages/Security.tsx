@@ -26,9 +26,9 @@ const Security = () => {
               Our Commitment to Security
             </h2>
             <p className="text-gray-700 dark:text-gray-300">
-              At AmzSync, the security of your data is a top priority. We understand the
-              sensitivity of your business information and are committed to implementing robust
-              security measures to protect it.
+              At AmzSync, the security of your data is a top priority. We understand the sensitivity
+              of your business information and are committed to implementing robust security
+              measures to protect it.
             </p>
             <p className="text-gray-700 dark:text-gray-300 mt-2">
               This page outlines some of the key practices and technologies we employ to safeguard
