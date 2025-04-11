@@ -15,11 +15,13 @@ import ErrorBoundary from '@/components/ErrorBoundary';
 import { CheckCircle2, Target, AlertTriangle } from 'lucide-react';
 import { TaskItem } from '@/components/ui/task-item';
 
+import { Task, Phase } from '@/types/todo';
+
 interface PhaseComponentProps {
   phase: Phase;
+  onComplete: (id: string) => void;
+  onToggleTask: (id: string) => void;
 }
-
-import { Phase } from '@/types/todo';
 
 export function PhaseComponent({ phase, onComplete, onToggleTask }: PhaseComponentProps) {
   const calculateProgress = (tasks: Task[]) => {
@@ -97,7 +99,7 @@ export function PhaseComponent({ phase, onComplete, onToggleTask }: PhaseCompone
                 <div className="space-y-2">
                   {section.tasks.map(task => (
                     <ErrorBoundary key={task.id} fallback={<div>Error rendering task</div>}>
-                      <TaskItem task={task} onToggleTask={onToggleTask} />
+                      <TaskItem task={task} onToggle={onToggleTask} />
                     </ErrorBoundary>
                   ))}
                 </div>

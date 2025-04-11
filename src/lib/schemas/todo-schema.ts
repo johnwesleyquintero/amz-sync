@@ -28,7 +28,7 @@ const labelSchema = z.object({
 // Recursive schema for tasks and subtasks
 const priorityEnum = z.enum(['low', 'medium', 'high']).nullable();
 
-export const subTaskSchema: z.ZodType<any> = z.lazy(() =>
+export const subTaskSchema = z.lazy(() =>
   z.object({
     id: z.string(),
     text: z.string(),
