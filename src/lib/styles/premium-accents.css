@@ -1,0 +1,85 @@
+:root {
+  --brand-primary: #146EB4;
+  --brand-secondary: #FF9900;
+  --brand-primary-alpha: rgba(20, 110, 180, 0.1);
+  --brand-secondary-alpha: rgba(255, 153, 0, 0.1);
+  --premium-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --premium-shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.dark {
+  --brand-primary-alpha: rgba(20, 110, 180, 0.2);
+  --brand-secondary-alpha: rgba(255, 153, 0, 0.2);
+  --premium-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --premium-shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+/* Premium Background Accents */
+.bg-premium-light {
+  background: linear-gradient(135deg, var(--brand-primary-alpha), var(--brand-secondary-alpha));
+  position: relative;
+}
+
+.bg-premium-dark {
+  background: linear-gradient(135deg, var(--brand-secondary-alpha), var(--brand-primary-alpha));
+  position: relative;
+}
+
+/* Diagonal Pattern Overlay */
+.bg-premium-pattern {
+  position: relative;
+}
+
+.bg-premium-pattern::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 2px,
+    var(--brand-primary-alpha) 2px,
+    var(--brand-primary-alpha) 4px
+  );
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+/* Premium Shadow Effects */
+.shadow-premium {
+  box-shadow: var(--premium-shadow);
+  transition: box-shadow 0.3s ease;
+}
+
+.shadow-premium:hover {
+  box-shadow: var(--premium-shadow-hover);
+}
+
+/* Accent Overlays */
+.bg-accent-overlay {
+  position: relative;
+  overflow: hidden;
+}
+
+.bg-accent-overlay::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    45deg,
+    var(--brand-primary-alpha),
+    var(--brand-secondary-alpha)
+  );
+  opacity: 0.15;
+  transition: opacity 0.3s ease;
+}
+
+.bg-accent-overlay:hover::after {
+  opacity: 0.25;
+}
