@@ -309,8 +309,8 @@ export default function PpcCampaignAuditor() {
       try {
         const batchProcessor = new BatchProcessor<RawCampaignData>();
         const result = await batchProcessor.processFile(
-          file,
-          progress => setUploadProgress(progress * 100),
+          file as File,
+          progress => setUploadProgress(progress),
           REQUIRED_COLUMNS
         );
 
@@ -784,3 +784,6 @@ const handleDownloadSample = () => {
   <Download className="mr-2 h-4 w-4" />
   Download Sample CSV
 </Button>;
+function generateSampleCsv(arg0: string) {
+  throw new Error('Function not implemented.');
+}

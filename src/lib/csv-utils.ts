@@ -2,10 +2,11 @@ import Papa from 'papaparse';
 import { CsvSchema, csvSchemas } from './validation-utils';
 import { ValidationError, AggregateError } from './amazon-errors';
 
-export function generateExportFilename(toolName: string, format: string): string {
-  const date = new Date().toISOString().slice(0, 10);
-  return `${toolName.replace(/ /g, '-')}_${date}.${format.toLowerCase()}`;
-}
+// Importing core utility functions
+import { generateExportFilename } from './core-utils';
+
+// Re-export for backward compatibility
+export { generateExportFilename };
 
 export function parseCsvValue(value: string, schemaType?: 'string' | 'number' | 'date'): unknown {
   // Handle quoted values and escaped characters

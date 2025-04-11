@@ -2,6 +2,15 @@ import Papa from 'papaparse';
 import { toast } from '@/hooks/use-toast';
 import { CsvSchemaValidator, type CsvSchemaDefinition } from './schema-validation';
 import { getSchema, validateSchemaKey, type SchemaKey } from './schema-registry';
+import type { CsvParseOptions, CsvExportOptions } from './utils-core';
+
+// Improved type definitions for CSV parsing
+export interface ParseResult<T = Record<string, unknown>> {
+  data: T[];
+  errors: Papa.ParseError[];
+  meta: Papa.ParseMeta;
+}
+
 
 export interface BatchProcessingOptions {
   batchSize?: number;
