@@ -92,12 +92,12 @@ export default function CampaignCard({ campaign }: CampaignCardProps) {
 
         <div className="grid gap-4 md:grid-cols-3">
           {/* ACoS */}
-          <div className="rounded-lg border p-3">
+          <div className="rounded-lg border border-destructive bg-destructive/10 p-3 text-destructive">
             <div className="text-sm text-muted-foreground flex items-center gap-1">
               ACoS
-              {isAcosHigh && <TrendingDown className="h-4 w-4 text-red-500" />}
+              {isAcosHigh && <TrendingDown className="h-4 w-4 text-destructive" />}
               {!isAcosHigh && campaign.acos !== undefined && (
-                <CheckCircle className="h-4 w-4 text-green-500" />
+                <CheckCircle className="h-4 w-4 text-success" />
               )}
             </div>
             <div className={cn('text-xl font-semibold', isAcosHigh && 'text-red-500')}>

@@ -29,10 +29,10 @@ const CustomTooltip = ({ active, payload, label }: TooltipProps<ValueType, NameT
     return (
       // Use popover styles for the tooltip background/text
       <div className="rounded-lg border bg-popover p-2 shadow-sm text-popover-foreground">
-        <p className="text-sm font-medium">{label}</p>
+        <p className="text-sm font-medium text-foreground">{label}</p>
         {payload.map((entry, index) => (
-          <p key={`item-${index}`} style={{ color: entry.color }} className="text-xs">
-            {`${entry.name}: ${entry.value?.toLocaleString()}`}
+          <p key={`item-${index}`} className="text-xs text-muted-foreground">
+            <span style={{ color: entry.color }}>{entry.name}</span>: {entry.value?.toLocaleString()}
           </p>
         ))}
       </div>

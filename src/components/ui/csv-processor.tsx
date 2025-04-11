@@ -68,7 +68,7 @@ export function CsvProcessor({
   return (
     <Card className="p-6 space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold">CSV Processor</h3>
+        <h3 className="text-lg font-semibold text-foreground">CSV Processor</h3>
         <Button
           variant="outline"
           disabled={isProcessing}
@@ -100,7 +100,7 @@ export function CsvProcessor({
                 : undefined
             }
           />
-          <div className="flex justify-between text-sm text-gray-500">
+          <div className="flex justify-between text-sm text-muted-foreground">
             <span>Memory usage: {formatBytes(progress.memoryUsage)}</span>
             <span>Errors: {progress.errorCount}</span>
           </div>
@@ -115,7 +115,7 @@ export function CsvProcessor({
       )}
 
       {progress?.status === 'completed' && !error && (
-        <div className="flex items-center space-x-2 text-green-500">
+        <div className="flex items-center space-x-2 text-success">
           <CheckCircle className="w-4 h-4" />
           <span>Processing completed successfully</span>
         </div>
