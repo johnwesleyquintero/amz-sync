@@ -62,7 +62,14 @@ export enum InventoryHealthStatus {
   CRITICAL = 'critical',
 }
 
-export type MetricType = 'price' | 'reviews' | 'rating' | 'conversion_rate' | 'click_through_rate';
+export type MetricType =
+  | 'price'
+  | 'reviews'
+  | 'rating'
+  | 'conversion_rate'
+  | 'click_through_rate'
+  | 'sales_velocity'
+  | 'inventory_levels';
 
 export interface ChartDataPoint {
   name: string;

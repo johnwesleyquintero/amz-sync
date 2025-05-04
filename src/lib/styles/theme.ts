@@ -34,7 +34,10 @@ export const themeConfig = {
 export type ThemeConfig = typeof themeConfig;
 
 // Utility function to get theme values
-export const getThemeValue = <T extends keyof ThemeConfig>(category: T, ...path: string[]): string => {
+export const getThemeValue = <T extends keyof ThemeConfig>(
+  category: T,
+  ...path: string[]
+): string => {
   let value: any = themeConfig[category];
   for (const key of path) {
     value = value?.[key];

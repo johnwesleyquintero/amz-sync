@@ -41,7 +41,9 @@ export const getPremiumClasses = ({
   const accentOpacity = isDark ? 0.2 : 0.1;
 
   return {
-    background: withAccent ? generateAccentOverlay(accentOpacity) : generatePremiumGradient(baseOpacity),
+    background: withAccent
+      ? generateAccentOverlay(accentOpacity)
+      : generatePremiumGradient(baseOpacity),
     pattern: generateDiagonalPattern(brandBlue, baseOpacity / 2),
   };
 };

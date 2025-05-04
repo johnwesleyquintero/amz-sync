@@ -1,5 +1,5 @@
 {
-  "runInParallel": true,
+  "runInParallel": false,
   "stopOnFail": true,
   "commandTimeout": 300000,
   "logLevel": "info",
@@ -11,9 +11,15 @@
       "description": "Checks code formatting using Prettier based on .prettierrc.json"
     },
     {
-      "id": "lint smells",
-      "name": "Linting / Code Smell Analysis (ESLint/SonarJS)",
+      "id": "lint",
+      "name": "Linting (ESLint)",
       "command": "npm run lint",
+      "description": "Checks for code style and potential errors using ESLint based on eslint.config.mjs"
+    },
+    {
+      "id": "smells",
+      "name": "Code Smell Analysis (ESLint/SonarJS)",
+      "command": "npm run lint:smells",
       "enabled": true,
       "description": "Detects potential code smells and maintainability issues."
     },
@@ -22,6 +28,18 @@
       "name": "Type Checking (TSC)",
       "command": "npm run typecheck",
       "description": "Performs static type checking using the TypeScript Compiler based on tsconfig.json"
+    },
+    {
+      "id": "test",
+      "name": "Unit & Integration Tests (Jest)",
+      "command": "npm run test",
+      "description": "Executes the test suite using Jest to ensure code correctness."
+    },
+    {
+      "id": "build",
+      "name": "Production Build (Next.js)",
+      "command": "npm run build",
+      "description": "Attempts a production build to catch build-time errors and ensure deployability."
     }
   ],
   "errorCategories": {
@@ -42,11 +60,9 @@
         "Parsing error:",
         "@typescript-eslint/",
         "Error:",
-        "eslint",
-        "code smell",
-        "maintainability"
+        "eslint"
       ],
-      "suggestion": "Execute `npm run lint --fix` for auto-fixable issues. Manually address remaining violations and code smells reported in the output. Repeat until the lint check passes cleanly."
+      "suggestion": "Execute `npm run lint --fix` for auto-fixable issues. Manually address remaining violations reported in the output. Repeat until the lint check passes cleanly."
     },
     "typecheck": {
       "patterns": [

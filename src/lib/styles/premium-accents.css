@@ -1,6 +1,6 @@
 :root {
-  --brand-primary: #146EB4;
-  --brand-secondary: #FF9900;
+  --brand-primary: #146eb4;
+  --brand-secondary: #ff9900;
   --brand-primary-alpha: rgba(20, 110, 180, 0.1);
   --brand-secondary-alpha: rgba(255, 153, 0, 0.1);
   --premium-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -71,11 +71,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(
-    45deg,
-    var(--brand-primary-alpha),
-    var(--brand-secondary-alpha)
-  );
+  background: linear-gradient(45deg, var(--brand-primary-alpha), var(--brand-secondary-alpha));
   opacity: 0.15;
   transition: opacity 0.3s ease;
 }

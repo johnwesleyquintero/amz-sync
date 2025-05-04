@@ -1,11 +1,15 @@
 :root {
   /* Brand Colors */
-  --brand-primary: #146EB4;
-  --brand-accent: #FF9900;
+  --brand-primary: #146eb4;
+  --brand-accent: #ff9900;
   --text-primary: #333333;
 
   /* Light Theme */
-  --premium-gradient-light: linear-gradient(135deg, rgba(20, 110, 180, 0.05), rgba(255, 153, 0, 0.05));
+  --premium-gradient-light: linear-gradient(
+    135deg,
+    rgba(20, 110, 180, 0.05),
+    rgba(255, 153, 0, 0.05)
+  );
   --accent-overlay-light: linear-gradient(45deg, rgba(20, 110, 180, 0.1), rgba(255, 153, 0, 0.1));
   --pattern-light: repeating-linear-gradient(
     45deg,
@@ -16,7 +20,11 @@
   );
 
   /* Dark Theme */
-  --premium-gradient-dark: linear-gradient(135deg, rgba(20, 110, 180, 0.15), rgba(255, 153, 0, 0.15));
+  --premium-gradient-dark: linear-gradient(
+    135deg,
+    rgba(20, 110, 180, 0.15),
+    rgba(255, 153, 0, 0.15)
+  );
   --accent-overlay-dark: linear-gradient(45deg, rgba(20, 110, 180, 0.2), rgba(255, 153, 0, 0.2));
   --pattern-dark: repeating-linear-gradient(
     45deg,
@@ -46,9 +54,13 @@
 
 /* Shadow Effects */
 .shadow-premium {
-  box-shadow: 0 4px 6px -1px rgba(20, 110, 180, 0.1), 0 2px 4px -1px rgba(20, 110, 180, 0.06);
+  box-shadow:
+    0 4px 6px -1px rgba(20, 110, 180, 0.1),
+    0 2px 4px -1px rgba(20, 110, 180, 0.06);
 }
 
 .shadow-premium-dark {
-  box-shadow: 0 4px 6px -1px rgba(20, 110, 180, 0.2), 0 2px 4px -1px rgba(20, 110, 180, 0.12);
+  box-shadow:
+    0 4px 6px -1px rgba(20, 110, 180, 0.2),
+    0 2px 4px -1px rgba(20, 110, 180, 0.12);
 }
