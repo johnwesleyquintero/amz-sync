@@ -4,8 +4,8 @@ import fs from 'fs';
 import path from 'path';
 import { ISSUE_CATEGORIES, issueLogger } from '../src/reporting/error-logger.mjs';
 
-const resultsFilePath = path.join(process.cwd(), 'jest-results.json');
-const reportFilePath = path.join(process.cwd(), 'jest-failure-report.log');
+const resultsFilePath = path.join(process.cwd(), 'Vitest-results.json');
+const reportFilePath = path.join(process.cwd(), 'Vitest-failure-report.log');
 
 // Verify file paths are valid
 function validateFilePath(filePath) {
@@ -16,15 +16,15 @@ function validateFilePath(filePath) {
   }
 }
 
-console.log('Parsing Jest results...');
+console.log('Parsing Vitest results...');
 
 // Validate JSON structure
-function validateJestResults(results) {
+function validateVitestResults(results) {
   if (!results || typeof results !== 'object') {
-    throw new Error('Invalid Jest results: Not an object');
+    throw new Error('Invalid Vitest results: Not an object');
   }
   if (!Array.isArray(results.testResults)) {
-    throw new Error('Invalid Jest results: Missing testResults array');
+    throw new Error('Invalid Vitest results: Missing testResults array');
   }
   return true;
 }
@@ -32,7 +32,7 @@ function validateJestResults(results) {
 // Helper function to format error messages
 function formatErrorMessage(message) {
   if (!message) return '';
-  // Clean up Jest's error stack format
+  // Clean up Vitest's error stack format
   return message
     .replace(/^\s*at.*?:\d+:\d+\)?$/gm, '') // Remove stack trace lines
     .replace(/\n\s*\n/g, '\n') // Remove extra newlines
@@ -46,11 +46,11 @@ function formatDuration(ms) {
 }
 
 if (!validateFilePath(resultsFilePath)) {
-  const errorMsg = `Jest results file not found at: ${resultsFilePath}\nExpected location: ${path.resolve(resultsFilePath)}`;
+  const errorMsg = `Vitest results file not found at: ${resultsFilePath}\nExpected location: ${path.resolve(resultsFilePath)}`;
   issueLogger.logInternalError(new Error(errorMsg), {
     category: ISSUE_CATEGORIES.FILESYSTEM,
     context: {
-      action: 'parse-jest-results',
+      action: 'parse-Vitest-results',
       expectedPath: path.resolve(resultsFilePath),
       currentDir: process.cwd(),
     },
@@ -58,7 +58,7 @@ if (!validateFilePath(resultsFilePath)) {
 
   fs.writeFileSync(
     reportFilePath,
-    `${errorMsg}\n\nPossible solutions:\n1. Ensure Jest ran successfully with --json flag\n2. Check if file exists at expected location\n3. Verify working directory when running this script`
+    `${errorMsg}\n\nPossible solutions:\n1. Ensure Vitest ran successfully with --json flag\n2. Check if file exists at expected location\n3. Verify working directory when running this script`
   );
   process.exit(1);
 }
@@ -66,7 +66,7 @@ if (!validateFilePath(resultsFilePath)) {
 try {
   const rawData = fs.readFileSync(resultsFilePath, 'utf8');
   const results = JSON.parse(rawData);
-  validateJestResults(results);
+  validateVitestResults(results);
   const now = new Date();
 
   // Format date for report header
@@ -91,7 +91,7 @@ try {
 
   // Generate report header for all cases
   let failureReport = [
-    `JEST TEST REPORT - ${formattedDate}`,
+    `Vitest TEST REPORT - ${formattedDate}`,
     '='.repeat(50),
     `Total Tests: ${results.numTotalTests}`,
     `Passed Tests: ${results.numPassedTests}`,
@@ -165,7 +165,7 @@ try {
   if (failedCount === 0 && !results.success) {
     const generalError = [
       `❌ Test Run Failed (No specific test failures found)`,
-      `Check Jest's console output or logs for global errors.`,
+      `Check Vitest's console output or logs for global errors.`,
       results.failureMessage
         ? '\nOverall Failure Message:\n' +
           formatErrorMessage(results.failureMessage)
@@ -180,7 +180,7 @@ try {
     failureReport += generalError;
   } else if (failedCount === 0 && results.success) {
     failureReport = [
-      `JEST TEST REPORT - ${formattedDate}`,
+      `Vitest TEST REPORT - ${formattedDate}`,
       '='.repeat(50),
       `All ${results.numTotalTests} tests passed successfully.`,
       `Pass Rate: ${passRate}%`,
@@ -211,7 +211,7 @@ try {
   }
 
   fs.writeFileSync(reportFilePath, failureReport);
-  console.log(`Jest failure report generated: ${reportFilePath}`);
+  console.log(`Vitest failure report generated: ${reportFilePath}`);
 
   if (failedCount > 0 || !results.success) {
     process.exit(1);
@@ -219,13 +219,13 @@ try {
     process.exit(0);
   }
 } catch (error) {
-  const errorMsg = `Error parsing Jest results: ${error.message}`;
+  const errorMsg = `Error parsing Vitest results: ${error.message}`;
   console.error(errorMsg);
 
   issueLogger.logInternalError(error, {
     category: ISSUE_CATEGORIES.INTERNAL,
     context: {
-      action: 'parse-jest-results',
+      action: 'parse-Vitest-results',
       file: resultsFilePath,
     },
   });

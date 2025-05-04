@@ -1,57 +1,29 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
-  <style>
-    /* Adjusted text color for better contrast on the new gradient */
-    .title {
-      font: bold 72px 'Inter', sans-serif;
-      fill: #333333;
-    }
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#146EB4" />
 
-    /* Was #ffffff */
-    .subtitle {
-      font: 500 48px 'Inter', sans-serif;
-      fill: rgba(51, 51, 51, 0.9);
-    }
+  <!-- Logo/Title Area -->
+  <rect x="100" y="100" width="400" height="150" rx="10" fill="#FFFFFF" />
+  <text x="300" y="190" font-family="Arial" font-size="60" font-weight="bold" text-anchor="middle" fill="#146EB4">AmzSync</text>
 
-    /* Was rgba(255,255,255,0.9) */
-    .description {
-      font: 400 36px 'Inter', sans-serif;
-      fill: rgba(51, 51, 51, 0.7);
-    }
+  <!-- Tagline -->
+  <text x="600" y="300" font-family="Arial" font-size="36" text-anchor="middle" fill="#FFFFFF">Amazon Advertising Analytics Platform</text>
 
-    /* Was rgba(255,255,255,0.7) */
-  </style>
+  <!-- Social Media Icons -->
+  <g transform="translate(450, 400)">
+    <!-- Facebook -->
+    <circle cx="0" cy="0" r="40" fill="#1877F2" />
+    <text x="0" y="10" font-family="Arial" font-size="30" text-anchor="middle" fill="#FFFFFF">f</text>
 
-  <defs>
-    <!-- Updated gradient using logo colors -->
-    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#FF9900" /> <!-- Logo Orange -->
-      <stop offset="100%" stop-color="#146EB4" /> <!-- Logo Blue -->
-    </linearGradient>
-  </defs>
+    <!-- Twitter -->
+    <circle cx="100" cy="0" r="40" fill="#1DA1F2" />
+    <path d="M70,0 a30,30 0 1,0 60,0 a30,30 0 1,0 -60,0" fill="#FFFFFF" />
 
-  <!-- Gradient background -->
-  <rect width="1200" height="630" fill="url(#gradient)" />
-
-  <!-- Your AmzSync logo embedded -->
-  <!-- Positioned at (60, 60), scaled to 150px wide (maintaining aspect ratio) -->
-  <g transform="translate(60 60) scale(0.75)">
-    <!-- Logo Icon Path (references the gradient defined above) -->
-    <path d="M30,38 L10,18 M30,38 L10,58 M50,38 L70,18 M50,38 L70,58" stroke="url(#gradient)" stroke-width="6"
-      stroke-linecap="round" fill="none" />
-    <!-- Logo Text -->
-    <text x="90" y="42" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#333">AmzSync</text>
-    <text x="90" y="58" font-family="Arial, sans-serif" font-size="7" fill="#666">Amazon Advertising Automation</text>
+    <!-- LinkedIn -->
+    <circle cx="200" cy="0" r="40" fill="#0077B5" />
+    <text x="200" y="10" font-family="Arial" font-size="30" text-anchor="middle" fill="#FFFFFF">in</text>
   </g>
 
-  <!-- Text Content -->
-  <!-- Adjusted position slightly and text color -->
-  <g transform="translate(60 250)">
-    <!-- Adjusted Y position -->
-    <text x="0" y="0" class="title">AmzSync</text>
-    <text x="0" y="80" class="subtitle">Enterprise Advertising Platform</text> <!-- Adjusted spacing -->
-    <text x="0" y="160" class="description">
-      <!-- Adjusted spacing and used class -->
-      Data-Driven Insights for Amazon Sellers
-    </text>
-  </g>
+  <!-- Website URL -->
+  <text x="600" y="550" font-family="Arial" font-size="24" text-anchor="middle" fill="#FFFFFF">amz-sync.com</text>
 </svg>

@@ -1,4 +1,4 @@
-// c:\Users\johnw\OneDrive\Desktop\portfolio\.wescore\src\reporting\error-logger.mjs
+// c:\Users\johnw\OneDrive\Desktop\amz-sync\.wescore\src\reporting\error-logger.mjs
 // ===================================================================
 // Wescore Issue Logging Module (Enhanced Robustness)
 // ===================================================================

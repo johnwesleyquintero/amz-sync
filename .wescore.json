@@ -76,7 +76,7 @@
         "expect\\(.*?\\)\\.",
         " encountered an error"
       ],
-      "suggestion": "Test failures detected. Review test output for specific failures, check test assertions and mock data. Run individual test files (e.g., `npx jest path/to/test.spec.ts`) to isolate issues. Ensure test environment and dependencies are properly configured. Fix failing tests before proceeding."
+      "suggestion": "Test failures detected. Review test output for specific failures, check test assertions and mock data. Run individual test files (e.g., `npx Vitest path/to/test.spec.ts`) to isolate issues. Ensure test environment and dependencies are properly configured. Fix failing tests before proceeding."
     }
   }
 }

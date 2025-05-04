@@ -1,4 +1,4 @@
-import '@testing-library/jest-dom/vitest';
+import '@testing-library/Vitest-dom/vitest';
 import { TextEncoder, TextDecoder } from 'util';
 import { vi } from 'vitest';
 

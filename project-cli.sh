@@ -12,6 +12,20 @@ LOG_PATTERNS=("*.log" "*.tmp" "*.temp" "*.bak" "*.cache")
 REQUIRED_PROJECT_FILES=("package.json" "tsconfig.json" "next.config.js")
 CONFIG_FILE=""
 
+# --- Error Codes ---
+ERROR_CODES=(
+    [100]="General error"
+    [101]="Command not found"
+    [102]="Permission denied"
+    [103]="File not found"
+    [104]="Timeout"
+    [105]="Invalid input"
+    [106]="Dependency missing"
+    [107]="Configuration error"
+    [108]="Network error"
+    [109]="Process failure"
+)
+
 # --- ANSI Colors ---
 ANSI_Reset='\e[0m'
 ANSI_Bold='\e[1m'
@@ -104,11 +118,27 @@ log_warn() {
 }
 
 log_error() {
-    echo -e "${ANSI_Red}[ERROR]${ANSI_Reset} $1"
-    log "ERROR" "$1"
+    local error_code=100
+
+    # Map error type to error code
+    if [[ "$1" =~ "command not found" ]]; then
+        error_code=101
+    elif [[ "$1" =~ "permission denied" ]]; then
+        error_code=102
+    elif [[ "$1" =~ "no such file" ]]; then
+        error_code=103
+    elif [[ "$1" =~ "timed out" ]]; then
+        error_code=104
+    fi
+
+    echo -e "${ANSI_Red}[ERROR ${error_code}]${ANSI_Reset} $1"
+    log "ERROR" "[${error_code}] ${1}"
 
     # Rotate error log if needed
     rotate_log "$ERROR_LOG_FILE"
+
+    # Capture stderr from commands
+    exec 2>>"$ERROR_LOG_FILE"
 
     local timestamp=$(date +'%Y-%m-%d %T.%3N')
     local error_context="${1//\n/ }"
@@ -251,6 +281,7 @@ show_menu() {
     # Testing & Quality Section
     echo -e "\n${ANSI_Bold}${ANSI_Blue}Testing & Quality${ANSI_Reset}"
     echo -e "${ANSI_Bold}${ANSI_Green} 2) ${ANSI_Reset}Run Tests              ${ANSI_Yellow}[t]${ANSI_Reset} - Execute test suite"
+    echo -e "${ANSI_Bold}${ANSI_Green}12) ${ANSI_Reset}Run Vite Tests         ${ANSI_Yellow}[v]${ANSI_Reset} - Execute Vite test suite"
     echo -e "${ANSI_Bold}${ANSI_Green} 7) ${ANSI_Reset}Run Code Checks        ${ANSI_Yellow}[c]${ANSI_Reset} - Lint and analyze code"
     echo -e "${ANSI_Bold}${ANSI_Green} 8) ${ANSI_Reset}Security Audit         ${ANSI_Yellow}[a]${ANSI_Reset} - Check dependencies"
 
@@ -359,15 +390,45 @@ main() {
                 timestamp=$(date +'%Y-%m-%d %T')
                 echo "[${timestamp}] Running: npm run check" >> "$ERROR_LOG_FILE"
                 npm run ci 2>&1 | while IFS= read -r line; do
+                    # Enhanced error categorization using wescore.json patterns
+                    for category in "${!ERROR_CATEGORIES[@]}"; do
+                        for pattern in "${ERROR_CATEGORIES[$category]}"; do
+                            if [[ "$line" =~ $pattern ]]; then
+                                echo "[${timestamp}] [${category}] $line" >> "$ERROR_LOG_FILE"
+                                break
+                            fi
+                        done
+                    done
+
+                    # Fallback for uncategorized errors/warnings
                     if [[ "$line" =~ [Ee]rror|[Ww]arning ]]; then
-                        echo "[${timestamp}] $line" >> "$ERROR_LOG_FILE"
+                        echo "[${timestamp}] [UNCATEGORIZED] $line" >> "$ERROR_LOG_FILE"
                     fi
 done
-                log_info "Code checks completed. Errors logged to $ERROR_LOG_FILE"
+                log_info "Code checks completed with enhanced categorization. Errors logged to $ERROR_LOG_FILE"
+
+                    # Print summary of error categories
+                    if [[ -f "$ERROR_LOG_FILE" ]]; then
+                        echo -e "\n${ANSI_Cyan}[INFO]${ANSI_Reset} Error Category Summary:"
+                        grep -oP '(?<=\[)[^\]]*(?=\])' "$ERROR_LOG_FILE" | sort | uniq -c | sort -nr
+                    fi
             } ;;
             8|"a") npm audit fix;;
             9|"l") cat "$LOG_FILE" ;;
             10|"q") exit 0 ;;
+            12|"v") {
+                log_info "Running Vite tests..."
+                start_spinner "Running Vite tests..."
+                if npm run test:vite > .vite-test.log 2>&1; then
+                    stop_spinner
+                    log_info "Vite tests completed successfully"
+                    echo -e "${ANSI_Green}[SUCCESS]${ANSI_Reset} Vite tests completed successfully"
+                else
+                    stop_spinner
+                    log_error "Vite tests failed"
+                    echo -e "${ANSI_Red}[ERROR]${ANSI_Reset} Vite tests failed - check .vite-test.log for details"
+                fi
+            } ;;
             11|"u") {
                 log_info "Updating project tracker..."
                 node ./.wescore/scripts/update-tracker.mjs 2>&1 | tee -a "$LOG_FILE"

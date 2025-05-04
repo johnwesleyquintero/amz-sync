@@ -74,11 +74,10 @@ export default function CsvUploader<T extends CsvRow>({
   dataType,
   fileName,
 }: CsvUploaderProps<T>) {
-  const [isDragging, setIsDragging] = useState(false); // Keep state if needed for styling
-  const [validationErrors, setValidationErrors] = useState<string[]>([]); // Keep if using validation
-  const [parsingProgress, setParsingProgress] = useState(0); // Keep if showing progress
+  const [isDragging, setIsDragging] = useState(false);
+  const [parsingProgress, setParsingProgress] = useState(0);
   const [parsingError, setParsingError] = useState<string | null>(null);
-  const [isParsing, setIsParsing] = useState(false); // Renamed from isLoading to avoid conflict
+  const [isParsing, setIsParsing] = useState(false);
 
   const { toast } = useToast();
 

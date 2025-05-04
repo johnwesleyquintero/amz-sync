@@ -16,19 +16,19 @@ export async function loadStaticData<T extends keyof StaticDataTypes>(
   file: T
 ): Promise<StaticDataTypes[T]> {
   if (file === 'projects') {
-    return (await import('../data/portfolio-data/projects.json')).default;
+    return (await import('../data/amz-sync-data/projects.json')).default;
   }
   if (file === 'blog') {
-    return (await import('../data/portfolio-data/blog.json')).default;
+    return (await import('../data/amz-sync-data/blog.json')).default;
   }
   if (file === 'case-studies') {
-    return (await import('../data/portfolio-data/case-studies.json')).default;
+    return (await import('../data/amz-sync-data/case-studies.json')).default;
   }
   if (file === 'changelog') {
-    return (await import('../data/portfolio-data/changelog.json')).default;
+    return (await import('../data/amz-sync-data/changelog.json')).default;
   }
   if (file === 'experience') {
-    return (await import('../data/portfolio-data/experience.json')).default;
+    return (await import('../data/amz-sync-data/experience.json')).default;
   }
   throw new Error(`Invalid file type: ${file}`);
 }

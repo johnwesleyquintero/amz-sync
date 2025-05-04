@@ -1,5 +1,5 @@
 // .wescore/scripts/update-tracker.mjs
-// Purpose: Automates moving completed tasks '[x]' in project-tracker.mdx
+// Purpose: Automates moving completed tasks '[x]' in project-tracker.md
 //          to the 'COMPLETED TASKS' section, preserving original section context.
 
 import chalk from 'chalk'; // Optional: for styled console output
@@ -8,7 +8,7 @@ import path from 'node:path';
 import process from 'node:process';
 
 // === CONFIGURATION ===
-const TRACKER_FILENAME = 'src/app/content/blog/project-tracker.mdx'; // Path relative to project root
+const TRACKER_FILENAME = './project-tracker.md'; // Path relative to project root
 const TRACKER_PATH = path.resolve(process.cwd(), TRACKER_FILENAME);
 const COMPLETED_SECTION_HEADING = '## COMPLETED TASKS';
 const COMPLETED_SUBHEADING_PREFIX = '### Completed: ';

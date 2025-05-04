@@ -20,12 +20,14 @@ const ACOS_SCHEMA: CsvSchemaDefinition = {
       dataType: 'number',
       required: true,
       min: 0,
+      format: /^\d+$/,
       description: 'Number of ad impressions',
     },
     Clicks: {
       dataType: 'number',
       required: true,
       min: 0,
+      format: /^\d+$/,
       description: 'Number of ad clicks',
     },
     CTR: {
@@ -92,6 +94,7 @@ const ACOS_SCHEMA: CsvSchemaDefinition = {
     Date: {
       dataType: 'date',
       required: true,
+      format: /^\d{4}-\d{2}-\d{2}$/,
       description: 'Report date',
     },
   },

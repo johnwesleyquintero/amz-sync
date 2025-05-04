@@ -1,7 +1,8 @@
 'use client';
 
+import { BatchProcessor } from '@/lib/enhanced-csv-utils';
 import React, { useState, useCallback, useEffect, useRef } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import {
   ResponsiveContainer,
   LineChart,
@@ -18,13 +19,11 @@ import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { useToast } from '../ui/use-toast';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
-import { Info, FileText, Upload, AlertCircle, BarChartHorizontalBig } from 'lucide-react';
+import { Info, Upload, AlertCircle, BarChartHorizontalBig } from 'lucide-react';
 import { useIsMobile } from '../../hooks/use-mobile';
-import { ProcessedRow, ChartDataPoint, MetricType } from '@/lib/amazon-types'; // Combined MetricType here
+import { ProcessedRow, ChartDataPoint, MetricType } from '@/lib/amazon-types';
 import { Progress } from '../ui/progress';
-import { cn } from '@/lib/utils';
-import { BatchProcessor } from '@/lib/enhanced-csv-utils';
+
 import SampleCsvButton from './sample-csv-button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 

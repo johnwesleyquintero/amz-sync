@@ -1,10 +1,10 @@
 'use client';
 
-import { CampaignData } from './ppc-campaign-auditor';
+import CampaignData from './ppc-campaign-auditor';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils'; // Assuming you have a utility for class name merging
-import { AlertCircle, CheckCircle, TrendingDown, TrendingUp } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { AlertCircle, CheckCircle, TrendingDown } from 'lucide-react';
 
 interface CampaignCardProps {
   campaign: CampaignData;

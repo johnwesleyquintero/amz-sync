@@ -1,3 +1,4 @@
+import { AggregateError } from './amazon-errors';
 import { z } from 'zod';
 import { CampaignData, TrendData } from './acos-utils';
 import {
@@ -6,14 +7,6 @@ import {
   ValidationError,
   SecurityError,
 } from './amazon-errors';
-
-// Common validation patterns
-const patterns = {
-  email: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/,
-  url: /^https?:\/\/[\w-_]+(\.[\w-_]+)+[\w-.,@?^=%&:/~#]*$/,
-  asin: /^[A-Z0-9]{10}$/,
-  sku: /^[A-Za-z0-9-_]{1,40}$/,
-};
 
 // Security configurations
 export const securityConfig = {
@@ -32,10 +25,11 @@ export const securityConfig = {
 
 // Input sanitization functions
 export function sanitizeString(input: string): string {
-  return input
-    .trim()
-    .replace(/[<>]/g, '') // Remove potential HTML tags
-    .replace(/[\p{Cc}]/gu, ''); // Remove control characters using Unicode property escapes
+  input = input.trim();
+  input = input.replace(/<script.*?<\/script>/g, 'script');
+  input = input.replace(/<p.*?<\/p>/g, 'p');
+  input = input.replace(/<[^>]*>/g, '');
+  return input.replace(/[\p{Cc}]/gu, ''); // Remove control characters using Unicode property escapes
 }
 
 // CSRF token validation
@@ -95,28 +89,22 @@ const productPricingSchema = z.object({
  * Validates campaign data and returns the validated data or throws an error
  */
 export function validateCampaignData(data: unknown): CampaignData {
-  try {
-    return campaignDataSchema.parse(data);
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      throw new InventoryOptimizationError('Invalid campaign data', error.issues);
-    }
-    throw error;
+  const result = campaignDataSchema.safeParse(data);
+  if (!result.success) {
+    throw new InventoryOptimizationError('Invalid campaign data', result.error.issues);
   }
+  return result.data as CampaignData;
 }
 
 /**
  * Validates trend data and returns the validated data or throws an error
  */
 export function validateTrendData(data: unknown): TrendData {
-  try {
-    return trendDataSchema.parse(data);
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      throw new InventoryOptimizationError('Invalid trend data', error.issues);
-    }
-    throw error;
+  const result = trendDataSchema.safeParse(data);
+  if (!result.success) {
+    throw new InventoryOptimizationError('Invalid trend data', result.error.issues);
   }
+  return result.data as TrendData;
 }
 
 /**
@@ -128,14 +116,16 @@ export function validateProductPricingData(data: unknown): {
   seasonalityFactor?: number;
   marketStrategy?: 'premium' | 'competitive' | 'economy';
 } {
-  try {
-    return productPricingSchema.parse(data);
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      throw new PricingOptimizationError('Invalid product pricing data');
-    }
-    throw error;
+  const result = productPricingSchema.safeParse(data);
+  if (!result.success) {
+    throw new PricingOptimizationError('Invalid product pricing data');
   }
+  return result.data as {
+    cost: number;
+    targetMargin: number;
+    seasonalityFactor?: number;
+    marketStrategy?: 'premium' | 'competitive' | 'economy';
+  };
 }
 
 /**
@@ -179,60 +169,72 @@ export function getSecurityHeaders(): Record<string, string> {
 
 // CSV Schema Validation
 
+function validateColumn(
+  row: Record<string, unknown>,
+  colName: string,
+  def: CsvSchema['columns'][string],
+  index: number,
+  errors: ValidationError[]
+) {
+  if (def.required && !(colName in row)) {
+    errors.push(new ValidationError(`Missing required column '${colName}' at row ${index + 1}`));
+    return;
+  }
+
+  if (!row[colName]) {
+    return;
+  }
+
+  // Type checking
+  const actualType = detectDataType(row[colName]);
+  if (actualType !== def.dataType) {
+    errors.push(
+      new ValidationError(
+        `Invalid type for '${colName}' at row ${index + 1}: Expected ${def.dataType} but got ${actualType}`
+      )
+    );
+    return;
+  }
+
+  // Format validation
+  if (def.format && !def.format.test(String(row[colName]))) {
+    errors.push(new ValidationError(`Invalid format for '${colName}' at row ${index + 1}`));
+    return;
+  }
+
+  // Value range checks
+  const value = Number(row[colName]);
+  if (typeof def.min === 'number' && value < def.min) {
+    errors.push(
+      new ValidationError(`Value too low for '${colName}' at row ${index + 1}: Minimum ${def.min}`)
+    );
+    return;
+  }
+
+  if (typeof def.max === 'number' && value > def.max) {
+    errors.push(
+      new ValidationError(`Value too high for '${colName}' at row ${index + 1}: Maximum ${def.max}`)
+    );
+    return;
+  }
+
+  // Allowed values check
+  if (def.allowedValues && !def.allowedValues.includes(String(row[colName]))) {
+    errors.push(
+      new ValidationError(
+        `Invalid value for '${colName}' at row ${index + 1}: Not in allowed values`
+      )
+    );
+  }
+}
+
 export function validateCsvWithSchema(data: Record<string, unknown>[], schema: CsvSchema): void {
   const errors: ValidationError[] = [];
 
   data.forEach((row, index) => {
     // Validate required columns
     Object.entries(schema.columns).forEach(([colName, def]) => {
-      if (def.required && !(colName in row)) {
-        errors.push(
-          new ValidationError(`Missing required column '${colName}' at row ${index + 1}`)
-        );
-      }
-
-      if (row[colName]) {
-        // Type checking
-        const actualType = detectDataType(row[colName]);
-        if (actualType !== def.dataType) {
-          errors.push(
-            new ValidationError(
-              `Invalid type for '${colName}' at row ${index + 1}: Expected ${def.dataType} but got ${actualType}`
-            )
-          );
-        }
-
-        // Format validation
-        if (def.format && !def.format.test(String(row[colName]))) {
-          errors.push(new ValidationError(`Invalid format for '${colName}' at row ${index + 1}`));
-        }
-
-        // Value range checks
-        if (typeof def.min === 'number' && Number(row[colName]) < def.min) {
-          errors.push(
-            new ValidationError(
-              `Value too low for '${colName}' at row ${index + 1}: Minimum ${def.min}`
-            )
-          );
-        }
-
-        if (typeof def.max === 'number' && Number(row[colName]) > def.max) {
-          errors.push(
-            new ValidationError(
-              `Value too high for '${colName}' at row ${index + 1}: Maximum ${def.max}`
-            )
-          );
-        }
-
-        // Allowed values check
-        if (def.allowedValues && !def.allowedValues.includes(String(row[colName]))) {
-          errors.push(
-            new ValidationError(
-              `Invalid value for '${colName}' at row ${index + 1}: Not in allowed values`
-            )
-          );
-        }
-      }
+      validateColumn(row, colName, def, index, errors);
     });
 
     // Strict mode validation

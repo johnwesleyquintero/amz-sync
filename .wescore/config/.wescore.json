@@ -31,13 +31,13 @@
     },
     {
       "id": "test",
-      "name": "Unit & Integration Tests (Jest)",
+      "name": "Unit & Integration Tests (Vitest)",
       "command": "npm run test",
-      "description": "Executes the test suite using Jest to ensure code correctness."
+      "description": "Executes the test suite using Vitest to ensure code correctness."
     },
     {
       "id": "build",
-      "name": "Production Build (Next.js)",
+      "name": "Production Build (Vite + Typescript)",
       "command": "npm run build",
       "description": "Attempts a production build to catch build-time errors and ensure deployability."
     }
@@ -92,7 +92,7 @@
         "expect\\(.*?\\)\\.",
         " encountered an error"
       ],
-      "suggestion": "Test failures detected. Review test output for specific failures, check test assertions and mock data. Run individual test files (e.g., `npx jest path/to/test.spec.ts`) to isolate issues. Ensure test environment and dependencies are properly configured. Fix failing tests before proceeding."
+      "suggestion": "Test failures detected. Review test output for specific failures, check test assertions and mock data. Run individual test files (e.g., `npx Vitest path/to/test.spec.ts`) to isolate issues. Ensure test environment and dependencies are properly configured. Fix failing tests before proceeding."
     }
   }
 }

@@ -2,7 +2,7 @@
   "folders": [
     {
       "path": ".",
-      "name": "my-amazon-analytics",
+      "name": "amz-sync",
     },
   ],
   "settings": {
